@@ -17,9 +17,13 @@ The first DOI-backed release must not be published until every mandatory gate be
 - [x] **Hypernatural free-access state scoped.** Official plan-specific support explicitly states no free plan and no free trial. Generic `Start for free` CTA is not treated as evidence of a plan entitlement.
 - [x] **Relationship disclosures populated from evidence-scoped connected-mail review.** Confirmed commercial relationships are disclosed; application/inquiry-only states are not promoted to confirmed relationships.
 - [x] **Automated research validation enabled.** GitHub Actions validates reconciliation parity, release-candidate parity, source-manifest coverage, relationship-disclosure consistency and candidate metric derivation.
+- [x] **Metadata preflight and release safety guard enabled.** CI validates `CITATION.cff`, the inert Zenodo custom-rights template, absence of an active `.zenodo.json`, manifest HOLD semantics, null DOI/ORCID and `publication_authorized=false` while status is HOLD.
+- [x] **Full CI passes on the current pre-DOI state.** Reconciliation, release-candidate parity, evidence coverage, disclosures, citation/Zenodo metadata, HOLD guard and candidate metric derivation all complete successfully.
 - [x] **Candidate metric derivation reproducible.** Current HOLD candidate has 10 normalized paid references, median $19.50/month or monthly-equivalent, range $6–$29. These are not final published benchmark figures.
 - [x] **Public Dataset License & Usage Terms verified.** Canonical terms: `https://aivideosignal.com/dataset-license/`, effective 2026-08-31.
-- [x] **Zenodo rights path mapped.** Use a custom AI Video Signal rights statement rather than silently accepting Zenodo's default CC BY 4.0.
+- [x] **Zenodo rights path mapped.** Use a custom AI Video Signal rights statement rather than silently accepting a broader default license.
+- [x] **Zenodo pre-publish worksheet prepared.** `release-candidate/ZENODO_DEPOSIT_FIELDS.md` contains the title, creator, description, keywords, related identifier, custom rights statement, file list and final publish checks without inventing DOI, ORCID, version or publication date.
+- [x] **DOI release playbook prepared.** `release-candidate/RELEASE_PLAYBOOK.md` defines the exact freeze, validation, GitHub release, Zenodo and post-DOI sequence while preserving the Production firewall.
 
 ## Open provider reconciliation issues
 
@@ -53,6 +57,7 @@ Google Veo is intentionally endpoint-priced and remains `not_normalized` as a mo
 - [ ] Derived metrics reproducible from **final released inputs**. (Current candidate derivation is reproducible.)
 - [x] Relationship disclosures populated and evidence-scoped for the current candidate.
 - [x] Methodology included.
+- [x] Pre-release citation/Zenodo metadata validated while HOLD; final version/date/DOI remain intentionally absent.
 - [ ] Citation metadata final-release valid.
 - [ ] License/usage terms final-deposit verified in Zenodo preview.
 - [ ] Immutable package reproducible from a frozen final source state.
