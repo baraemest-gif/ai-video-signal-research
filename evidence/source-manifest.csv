@@ -7,9 +7,10 @@ SRC-HEYGEN-CREDITS,HeyGen,https://help.heygen.com/en/articles/15126059-how-to-us
 SRC-INVIDEO-PRICING,InVideo AI,https://invideo.io/pricing/,A,2026-09-17,pricing_and_credits,verified_material_change
 SRC-FLIKI-PRICING,Fliki,https://fliki.ai/pricing,A,2026-09-17,pricing_and_plan_state,verified
 SRC-PIKA-PRICING,Pika,https://pika.art/pricing,A,2026-09-17,pricing_credits_and_free_plan,verified_material_change
-SRC-HAILUO-TERMS,Hailuo AI,https://hailuoai.video/doc/payment-policy.html,A,2026-09-17,subscription_terms_and_credits,verified_conflicting_first_party_context
-SRC-HAILUO-MARKETING-699,Hailuo AI,https://blog.hailuoai.video/blog/create-stunning-visuals-ai-image-generator,A,2026-09-17,official_marketing_price_6_99,verified_conflicting_first_party_context
-SRC-HAILUO-MARKETING-999,Hailuo AI,https://blog.hailuoai.video/blog/paid-vs-free-ai-video-generators,A,2026-09-17,official_marketing_price_9_99,verified_conflicting_first_party_context
+SRC-HAILUO-LIVE-PRICING,Hailuo AI,https://hailuoai.video/,A,2026-09-17,current_live_annual_billing_ui_and_free_tier,verified_current
+SRC-HAILUO-TERMS,Hailuo AI,https://hailuoai.video/doc/payment-policy.html,A,2026-09-17,monthly_subscription_terms_and_credits,verified_current
+SRC-HAILUO-MARKETING-699,Hailuo AI,https://blog.hailuoai.video/blog/create-stunning-visuals-ai-image-generator,A,2026-09-17,older_official_marketing_price_6_99,not_promoted_as_current
+SRC-HAILUO-MARKETING-999,Hailuo AI,https://blog.hailuoai.video/blog/paid-vs-free-ai-video-generators,A,2026-09-17,older_official_marketing_price_9_99,not_promoted_as_current
 SRC-HAILUO-23,Hailuo AI,https://blog.hailuoai.video/blog/introducing-hailuo-2-3-ai-video-generator,A,2026-09-17,model_credit_burn,verified
 SRC-SYNTHESIA-PRICING,Synthesia,https://www.synthesia.io/pricing,A,2026-09-17,pricing_and_allowances,verified
 SRC-ELEVENLABS-PRICING,ElevenLabs,https://elevenlabs.io/pricing,A,2026-09-17,pricing_credits_and_commercial_license,verified
