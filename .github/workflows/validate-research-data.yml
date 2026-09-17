@@ -8,6 +8,10 @@ on:
       - 'evidence/**'
       - 'reconciliation/**'
       - 'reproducibility/**'
+      - 'release-candidate/**'
+      - 'CITATION.cff'
+      - '.zenodo.json.template'
+      - 'RELEASE_STATUS.md'
       - '.github/workflows/validate-research-data.yml'
   pull_request:
     paths:
@@ -15,6 +19,10 @@ on:
       - 'evidence/**'
       - 'reconciliation/**'
       - 'reproducibility/**'
+      - 'release-candidate/**'
+      - 'CITATION.cff'
+      - '.zenodo.json.template'
+      - 'RELEASE_STATUS.md'
       - '.github/workflows/validate-research-data.yml'
 
 permissions:
@@ -40,6 +48,12 @@ jobs:
 
       - name: Validate evidence coverage and relationship disclosures
         run: python reproducibility/validate_evidence_and_disclosures.py
+
+      - name: Validate citation and Zenodo metadata
+        run: python reproducibility/validate_metadata.py
+
+      - name: Enforce HOLD release safety guard
+        run: python reproducibility/validate_release_guard.py
 
       - name: Derive HOLD candidate metrics
         run: python reproducibility/derive_release_candidate_metrics.py
