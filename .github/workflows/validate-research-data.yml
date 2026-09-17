@@ -40,6 +40,23 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Determine release phase
+        id: release_phase
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          manifest = json.loads(Path('release-candidate/release-manifest.json').read_text(encoding='utf-8'))
+          status = manifest.get('status')
+          phase = 'published' if status == 'PUBLISHED_ZENODO_DOI' else 'prepublication'
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as handle:
+              handle.write(f'phase={phase}\n')
+          print(f'Release phase: {phase} ({status})')
+          PY
+
       - name: Validate provider reconciliation
         run: python reproducibility/validate_reconciliation.py
 
@@ -55,22 +72,22 @@ jobs:
       - name: Validate citation and Zenodo metadata
         run: python reproducibility/validate_metadata.py
 
-      - name: Validate pre-freeze readiness
+      - name: Validate freeze integrity
         run: python reproducibility/validate_freeze_readiness.py
 
-      - name: Enforce HOLD release safety guard
+      - name: Enforce release state guard
         run: python reproducibility/validate_release_guard.py
 
-      - name: Derive HOLD candidate metrics
+      - name: Derive historical candidate metrics
         run: python reproducibility/derive_release_candidate_metrics.py
 
-      - name: Build reproducible HOLD candidate package
+      - name: Build reproducible historical HOLD candidate package
         run: python reproducibility/build_candidate_package.py
 
-      - name: Validate HOLD candidate package checksums
+      - name: Validate historical HOLD candidate package checksums
         run: python reproducibility/validate_candidate_package.py
 
-      - name: Upload verified HOLD candidate package
+      - name: Upload verified historical HOLD candidate package
         uses: actions/upload-artifact@v4
         with:
           name: AI-Video-Signal-RC-2026-09-17-HOLD
@@ -79,15 +96,24 @@ jobs:
           retention-days: 30
 
       - name: Build frozen v2026.09.17 prepublication package
+        if: steps.release_phase.outputs.phase == 'prepublication'
         run: python reproducibility/build_frozen_prepublish_package.py
 
       - name: Validate frozen v2026.09.17 prepublication package
+        if: steps.release_phase.outputs.phase == 'prepublication'
         run: python reproducibility/validate_frozen_prepublish_package.py
 
       - name: Upload frozen v2026.09.17 prepublication artifact
+        if: steps.release_phase.outputs.phase == 'prepublication'
         uses: actions/upload-artifact@v4
         with:
           name: AI-Video-Signal-v2026.09.17-PREPUBLISH-${{ github.sha }}
           path: build/v2026.09.17/
           if-no-files-found: error
           retention-days: 90
+
+      - name: Confirm post-DOI state
+        if: steps.release_phase.outputs.phase == 'published'
+        run: |
+          echo 'Published DOI state detected. Historical prepublication artifact rebuild is intentionally skipped.'
+          echo 'The authoritative published package is the Zenodo record referenced by release-manifest.json.'
