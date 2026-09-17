@@ -30,6 +30,9 @@ The Zenodo record provides an independently retrievable immutable research packa
 - **Dataset JSON-LD:** `metadata/dataset.schema.jsonld`
 - **Release status:** `RELEASE_STATUS.md`
 - **Citation metadata:** `CITATION.cff`
+- **BibTeX:** `CITATION.bib`
+- **RIS:** `CITATION.ris`
+- **CSL-JSON:** `CITATION.json`
 
 ## Current scope
 
