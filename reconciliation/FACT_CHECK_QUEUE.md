@@ -10,10 +10,10 @@ Purpose: close material provider ambiguities before the first DOI-backed release
 | Vizard | Dynamic Creator price and free allowance | Live first-party pricing UI | **resolved** — Creator $29/mo / 600 credits; yearly starting tier $14.50/mo billed $174/year; Free $0 / 60 credits |
 | Submagic | Paid Starter state and free-entry scope | Official pricing + free-scheduler page | **resolved** — Starter $19/mo; limited one-post/video free access, no card, trial watermark |
 | Hypernatural | Free-plan/trial status | Plan-specific official Support article | **resolved** — paid-only; no free plan or free trial. Generic `Start for free` CTA is not treated as a plan entitlement. |
+| Kling AI | Current paid plan price and credits | Public first-party membership UI | **resolved** — Gold Member (黄金会员), ¥58/mo renewal, ¥46 first month after ¥5.99/7-day new-customer trial, 660 Inspiration Credits/month; CNY web scope preserved |
 | Hailuo AI | Conflicting first-party Standard prices | service@hailuoai.com | **open** — draft prepared; awaiting manual send from `partners@aivideosignal.com` |
-| Kling AI | Current Standard plan price and credits | support@kling.ai | **open** — draft prepared; awaiting manual send from `partners@aivideosignal.com` |
 
-## Remaining questions
+## Remaining provider question
 
 ### Hailuo AI
 - What is the current canonical monthly Standard price?
@@ -22,12 +22,21 @@ Purpose: close material provider ambiguities before the first DOI-backed release
 - Is `1,000 credits/month` still the current Standard allowance?
 - Which public pricing/terms URL should be cited as the current source of truth?
 
-### Kling AI
-- What is the current Standard monthly web price?
-- Do intro and renewal prices still differ?
-- What is the current Standard monthly credit allowance?
-- What is the canonical official pricing URL for citation?
-- Do web, mobile-store or regional prices differ materially?
+## Kling resolution scope
+
+The public first-party membership UI at `https://klingai.com/app/membership/membership-plan` was verified on 2026-09-17 without login.
+
+Current public web state:
+
+- Plan: **Gold Member (黄金会员)**
+- New-customer trial: **¥5.99 / 7 days**
+- First month after trial: **¥46**
+- Subsequent monthly renewal: **¥58/month**
+- Allowance: **660 Inspiration Credits/month**
+- Currency: **CNY**
+- Free non-member access exists with daily free Inspiration Credits; exact daily amount is not normalized in the release candidate.
+
+This CNY web price is not silently converted to USD and is not treated as globally universal pricing.
 
 ## Resolved-source rule used for Hypernatural
 
@@ -46,4 +55,4 @@ The CTA does not state a plan, trial, credits or generation entitlement, so it i
 - Prefer canonical Tier A public sources where the provider identifies one.
 - Provider replies never silently rewrite the 2026-08-29 historical baseline.
 - Material changes become new dated events.
-- If a reply conflicts with public documentation, preserve both and document the conflict.
+- If a provider reply conflicts with public documentation, preserve both and document the conflict.
