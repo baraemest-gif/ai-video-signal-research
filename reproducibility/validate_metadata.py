@@ -51,7 +51,7 @@ else:
         z = {}
 
     if z:
-        if z.get("_status") != "TEMPLATE_ONLY_DO_NOT_RENAME_UNTIL_LICENSE_IS_RESOLVED":
+        if z.get("_status") != "TEMPLATE_ONLY_DO_NOT_RENAME_WHILE_HOLD":
             errors.append("Zenodo template control status is missing or changed")
         if z.get("title") != "AI Video Signal Research Dataset 2026":
             errors.append("Zenodo template title mismatch")
@@ -60,7 +60,16 @@ else:
         creators = z.get("creators") or []
         if not creators or creators[0].get("name") != "Mestetef Ennaji, Youssef":
             errors.append("Zenodo template creator metadata mismatch")
-        forbidden_template_keys = {"doi", "orcid", "publication_date", "version"}
+        rights = z.get("_custom_rights_statement", "")
+        for phrase in [
+            "© 2026 AI Video Signal",
+            "Citation and limited excerpts",
+            "prior written permission",
+            "partners@aivideosignal.com",
+        ]:
+            if phrase not in rights:
+                errors.append(f"Zenodo custom rights template missing required phrase: {phrase}")
+        forbidden_template_keys = {"doi", "orcid", "publication_date", "version", "license"}
         for key in forbidden_template_keys:
             if key in z:
                 errors.append(f"Zenodo template contains pre-release metadata key: {key}")
@@ -74,4 +83,4 @@ if errors:
         print(f"- {error}")
     raise SystemExit(1)
 
-print("PASS: pre-DOI citation metadata and inert Zenodo template are valid.")
+print("PASS: pre-DOI citation metadata, custom-rights template and inert Zenodo state are valid.")
