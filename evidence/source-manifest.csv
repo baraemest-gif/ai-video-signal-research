@@ -1,0 +1,19 @@
+source_id,provider_or_scope,source_url,evidence_tier,checked_at,purpose,state
+SRC-RUNWAY-PRICING,Runway,https://runway.com/pricing,A,2026-09-17,pricing_and_plan_allowances,verified
+SRC-RUNWAY-GEN45,Runway,https://help.runwayml.com/hc/en-us/articles/46974685288467-Creating-with-Gen-4-5,A,2026-09-17,model_credit_burn,verified
+SRC-HEYGEN-PRICING,HeyGen,https://www.heygen.com/pricing,A,2026-09-17,pricing,verified
+SRC-HEYGEN-CREDITS,HeyGen,https://help.heygen.com/en/articles/15126059-how-to-use-credits-on-heygen,A,2026-09-17,credit_allowances,verified
+SRC-INVIDEO-PRICING,InVideo AI,https://invideo.io/pricing/,A,2026-09-17,pricing_and_credits,verified_material_change
+SRC-FLIKI-PRICING,Fliki,https://fliki.ai/pricing,A,2026-09-17,pricing_and_plan_state,verified
+SRC-PIKA-PRICING,Pika,https://pika.art/pricing,A,2026-09-17,pricing_credits_and_free_plan,verified_material_change
+SRC-HAILUO-TERMS,Hailuo AI,https://hailuoai.video/doc/payment-policy.html,A,2026-09-17,subscription_terms_and_credits,verified_conflicting_first_party_context
+SRC-SYNTHESIA-PRICING,Synthesia,https://www.synthesia.io/pricing,A,2026-09-17,pricing_and_allowances,verified
+SRC-ELEVENLABS-PRICING,ElevenLabs,https://elevenlabs.io/pricing,A,2026-09-17,pricing_credits_and_commercial_license,verified
+SRC-OPUSCLIP-PRICING,OpusClip,https://www.opus.pro/pricing,A,2026-09-17,pricing_and_credits,verified
+SRC-VIZARD-PRICING,Vizard,https://vizard.ai/pricing,A,2026-09-17,free_plan_and_paid_plan_context,partial_verified
+SRC-SUBMAGIC-PRICING,Submagic,https://www.submagic.co/pricing,A,2026-09-17,pricing_credits_and_video_limits,partial_verified
+SRC-HYPERNATURAL-PRICING,Hypernatural,https://hypernatural.ai/pricing,A,2026-09-17,marketing_pricing_surface,conflicting_first_party_context
+SRC-HYPERNATURAL-FREE,Hypernatural,https://app.hypernatural.ai/help/plans-billing-credits/16809715-can-i-use-hypernatural-for-free,A,2026-09-17,free_plan_and_trial_state,verified_conflict
+SRC-GOOGLE-VEO-PRICING,Google Veo,https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing,A,2026-09-17,endpoint_generation_pricing,verified_evidence_expansion
+SRC-PICTORY-EMAIL,Pictory,provider_email_fact_check,A/B,2026-09-17,pricing_source_protocol,provider_confirmed
+SRC-GSC,AI Video Signal,Google_Search_Console_property_https://aivideosignal.com/,first_party_analytics,2026-09-17,search_discovery_and_impressions,verified
