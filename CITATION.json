@@ -1,0 +1,18 @@
+{
+  "id": "https://doi.org/10.5281/zenodo.22816605",
+  "type": "dataset",
+  "title": "AI Video Signal Research Dataset 2026",
+  "author": [
+    {
+      "family": "Mestetef Ennaji",
+      "given": "Youssef"
+    }
+  ],
+  "issued": {
+    "date-parts": [[2026, 9, 17]]
+  },
+  "publisher": "Zenodo",
+  "version": "v2026.09.17",
+  "DOI": "10.5281/zenodo.22816605",
+  "URL": "https://doi.org/10.5281/zenodo.22816605"
+}
