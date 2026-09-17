@@ -1,0 +1,54 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "AI Video Signal Research Dataset 2026",
+  "description": "Versioned AI-video market-intelligence dataset covering provider pricing, credits and allowances, plan entitlements, model-level production economics, free-access states, commercial-use evidence, relationship disclosures, source provenance and documented market changes across 14 AI-video providers.",
+  "identifier": "https://doi.org/10.5281/zenodo.22816605",
+  "url": "https://zenodo.org/records/22816605",
+  "sameAs": [
+    "https://doi.org/10.5281/zenodo.22816605",
+    "https://github.com/baraemest-gif/ai-video-signal-research"
+  ],
+  "version": "v2026.09.17",
+  "datePublished": "2026-09-17",
+  "dateModified": "2026-09-17",
+  "isAccessibleForFree": true,
+  "creator": {
+    "@type": "Person",
+    "name": "Youssef Mestetef Ennaji"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "AI Video Signal",
+    "url": "https://aivideosignal.com/"
+  },
+  "license": "https://aivideosignal.com/dataset-license/",
+  "keywords": [
+    "AI video",
+    "generative video",
+    "AI video pricing",
+    "market intelligence",
+    "reproducible research",
+    "AI video dataset",
+    "production economics"
+  ],
+  "temporalCoverage": "2026",
+  "variableMeasured": [
+    "Provider pricing and billing scope",
+    "Credits and allowances",
+    "Plan entitlements",
+    "Free-access state",
+    "Commercial-use evidence status",
+    "Source provenance and verification date",
+    "Documented material provider changes"
+  ],
+  "distribution": [
+    {
+      "@type": "DataDownload",
+      "encodingFormat": "application/zip",
+      "contentUrl": "https://zenodo.org/records/22816605/files/AI-Video-Signal-v2026.09.17-PREPUBLISH.zip?download=1",
+      "name": "AI Video Signal v2026.09.17 archived research package"
+    }
+  ],
+  "citation": "Mestetef Ennaji, Y. (2026). AI Video Signal Research Dataset 2026 (Version v2026.09.17) [Dataset]. Zenodo. https://doi.org/10.5281/zenodo.22816605"
+}
