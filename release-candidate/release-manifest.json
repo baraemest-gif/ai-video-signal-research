@@ -10,6 +10,20 @@
   "prepublication_freeze_commit": "820b41e06bfdd8f861e1177eef10c6c6160ebecd",
   "prepublication_freeze_ci_run_id": 35227905797,
   "prepublication_freeze_ci_conclusion": "success",
+  "frozen_artifact": {
+    "version": "v2026.09.17",
+    "name": "AI-Video-Signal-v2026.09.17-PREPUBLISH-90143cb0adb873e5f53297e4b56f8a657519ba2f",
+    "artifact_id": 10500072269,
+    "workflow_run_id": 35228175419,
+    "source_commit_sha": "90143cb0adb873e5f53297e4b56f8a657519ba2f",
+    "size_bytes": 55537,
+    "archive_digest": "sha256:7ce0edf8628b52b624a42bd8548ccffed9bbb982d1af6256519478d8c6aed261",
+    "retention_days": 90,
+    "expires_at": "2026-12-16T13:36:53Z",
+    "file_count_inside_zip": 31,
+    "publication_authorized": false,
+    "doi": null
+  },
   "baseline_snapshot_date": "2026-08-29",
   "reconciliation_date": "2026-09-17",
   "provider_count": 14,
@@ -48,6 +62,8 @@
     "reproducibility/derive_release_candidate_metrics.py",
     "reproducibility/build_candidate_package.py",
     "reproducibility/validate_candidate_package.py",
+    "reproducibility/build_frozen_prepublish_package.py",
+    "reproducibility/validate_frozen_prepublish_package.py",
     "release-candidate/FREEZE_READINESS.md",
     "release-candidate/PREPUBLICATION_FREEZE.md",
     "release-candidate/RELEASE_PLAYBOOK.md",
@@ -69,6 +85,8 @@
     "candidate_metric_derivation": true,
     "candidate_package_reconstruction": true,
     "candidate_package_sha256_validation": true,
+    "frozen_package_reconstruction": true,
+    "frozen_package_sha256_validation": true,
     "exact_freeze_commit_ci_success": true
   },
   "resolved_since_initial_manifest": [
@@ -88,6 +106,7 @@
     "candidate_ready_for_freeze_engineering",
     "candidate_package_reconstruction_and_sha256_validation_enabled",
     "prepublication_freeze_commit_validated",
+    "frozen_v2026_09_17_artifact_built_and_sha256_verified",
     "public_dataset_reuse_terms_verified",
     "zenodo_custom_rights_path_identified",
     "zenodo_prefill_worksheet_prepared",
@@ -97,14 +116,12 @@
     "hold_publication_guard_enabled"
   ],
   "blocking_states": [
-    "final_release_named_csv_json_distributions",
-    "final_release_package_manifest_and_checksums",
-    "final_citation_metadata_version_and_publication_date",
     "final_zenodo_custom_rights_entry_and_preview",
-    "public_release_file_consistency",
+    "final_public_release_file_consistency",
     "prior_release_retrievability_after_versioning_begins",
     "public_download_independent_from_live_buyer_facing_site",
-    "public_research_file_regeneration_only_after_separate_production_authorization"
+    "publication_authorization_after_all_final_gates",
+    "zenodo_assigned_doi"
   ],
   "required_final_release_files": [
     "provider-dataset.csv",
