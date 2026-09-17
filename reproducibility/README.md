@@ -22,6 +22,23 @@ Every derived metric must record:
 
 CSV and JSON distributions belonging to the same release must represent the same provider records and material states. A release fails the reproducibility gate if the formats disagree.
 
+The dated provider-reconciliation support package has an automated standard-library validator:
+
+```bash
+python3 reproducibility/validate_reconciliation.py
+```
+
+The validator checks:
+
+- exactly 14 provider records in both files
+- identical provider sets
+- no duplicate or blank provider IDs
+- matching baseline and current-check dates
+- exact parity for provider, status, baseline reference, current evidence summary and release action
+- `HOLD` release status while pre-DOI gates remain open
+
+This validator covers the reconciliation support files only. A separate final-release validator must also cover the eventual citation-grade dataset, benchmark distributions, release manifest and checksums.
+
 ## Scenario versus observation
 
 Scenario-based calculations must be labeled as scenarios. Assumptions must never be presented as measured behavior. Documentation-derived evidence must not be described as hands-on testing.
