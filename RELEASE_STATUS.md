@@ -36,6 +36,12 @@ The public Zenodo record exposes an independent download of the frozen package a
 - CI run: `35228530529`
 - Result: **SUCCESS**
 
+### Stable published freeze pointer
+
+- Branch: `published-v2026.09.17-freeze`
+- Points exactly to: `129273d47bde297de7ae4024ba8d07eaf3a00265`
+- Purpose: stable GitHub pointer to the exact source state used for the Zenodo package; it is **not** a substitute for the future Git tag.
+
 ### Published package provenance
 
 The Zenodo upload used the versioned package generated from the validated package-freeze workflow:
@@ -46,6 +52,8 @@ The Zenodo upload used the versioned package generated from the validated packag
 - GitHub artifact archive SHA-256: `5e14ea9f7a7845206bae936b5426413eeb77d623f6c9b1b3776ca40eb52e381f`
 
 The package itself contains its release manifest and file-level SHA-256 checksums.
+
+Release notes: `releases/v2026.09.17.md`.
 
 ## Research gates completed
 
@@ -67,6 +75,8 @@ The package itself contains its release manifest and file-level SHA-256 checksum
 - [x] Real DOI assigned and publicly resolving.
 - [x] Independent Zenodo download route available.
 - [x] Post-DOI GitHub Actions validation green.
+- [x] Stable GitHub branch pointer created for the exact published freeze commit.
+- [x] DOI-backed release notes published in the repository.
 - [x] Production **V70.7.5 remains untouched**.
 
 ## Current quantitative snapshot
