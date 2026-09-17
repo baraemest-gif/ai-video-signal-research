@@ -22,6 +22,15 @@ This repository is not a generic “best AI video tools” ranking. It is design
 
 The Zenodo record provides an independently retrievable immutable research package with machine-readable data, methodology, evidence manifests, reproducibility material, release manifests and cryptographic checksums.
 
+## Start here
+
+- **Research brief:** `reports/ai-video-pricing-market-snapshot-v2026.09.17.md`
+- **External citation kit:** `outreach/CITATION_KIT.md`
+- **Outreach tracker:** `outreach/OUTREACH_TRACKER.md`
+- **Dataset JSON-LD:** `metadata/dataset.schema.jsonld`
+- **Release status:** `RELEASE_STATUS.md`
+- **Citation metadata:** `CITATION.cff`
+
 ## Current scope
 
 The release covers **14 AI-video providers**. Provider count is not treated as a quality metric. New providers are added only when they pass the same evidence and normalization standards.
@@ -65,6 +74,8 @@ States: `documented_clear`, `documented_conditional`, `unclear`, `restricted`, `
 - `reproducibility/` — validation, derivation and package reconstruction controls.
 - `release-candidate/` — historical freeze, release-manifest and DOI/Zenodo governance records.
 - `reports/` — research briefs and release notes.
+- `outreach/` — external citation kit and outreach tracking.
+- `metadata/` — machine-discovery metadata prepared for future deployment.
 - `CITATION.cff` — current citation metadata including the real DOI.
 - `.zenodo.json.template` — inactive historical/custom-rights metadata template; it is not the mechanism used for the published manual Zenodo deposit.
 - `LICENSE_STATUS.md` — reuse/license governance.
