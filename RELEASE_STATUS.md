@@ -13,6 +13,7 @@ The first DOI-backed release must not be published until every mandatory gate be
 - [x] **14-provider release candidate created in CSV and JSON.** `datasets/release-candidate-2026-09-17.csv` and `.json` carry the same 14-provider candidate identity and remain explicitly `HOLD` / `RC-2026-09-17-HOLD`.
 - [x] **Confirmed InVideo AI and Pika changes propagated into the release candidate without rewriting historical snapshots.** Historical Aug 29 / Sep 7 states remain historical evidence; the candidate carries the current checked state.
 - [x] **Unresolved current facts are explicit rather than guessed.** Kling current pricing is unavailable pending recheck; Hailuo and Hypernatural retain first-party conflict/caution states; Vizard and Submagic retain partial verification states.
+- [x] **Relationship disclosures populated for the current release candidate from connected-mail evidence.** Confirmed affiliate/partner relationships are explicitly disclosed for Synthesia, ElevenLabs, OpusClip, Vizard, Submagic and Hypernatural. Runway, Kling AI, HeyGen, InVideo AI, Fliki and Hailuo are recorded only as application/inquiry states where approval is not evidenced. Pika and Google Veo are explicitly described only as having no relationship evidenced in the connected mailbox as of 2026-09-17; absence of email evidence is not treated as proof that no relationship exists.
 - [x] **Automated parity validator added.** `reproducibility/validate_release_candidate.py` enforces 14 unique providers, exact CSV/JSON parity, allowed normalization/CRES states, explicit unresolved notes and mandatory HOLD state.
 - [x] **Repository validation workflow added.** `.github/workflows/validate-research-data.yml` runs the reconciliation and release-candidate validators on relevant pushes/PRs. Workflow execution status must be checked separately; adding the workflow is not treated as a passing CI result.
 
@@ -26,7 +27,6 @@ The first DOI-backed release must not be published until every mandatory gate be
 
 ## Other open release issues
 
-- Relationship-disclosure fields are not yet populated across the release candidate.
 - Final reuse/license terms are not yet resolved; no standard open license is asserted.
 - Active `.zenodo.json` metadata remains intentionally disabled until license/metadata gates pass.
 - Final release manifest/checksums must be generated from the frozen final candidate, not from this mutable HOLD candidate.
@@ -44,7 +44,7 @@ The first DOI-backed release must not be published until every mandatory gate be
 - [x] Commercial-rights uncertainty is preserved rather than simplified in the current candidate.
 - [x] Source hierarchy is defined and the current candidate uses Tier A where current first-party evidence was successfully obtained; unresolved rows remain explicit.
 - [ ] Derived metrics are reproducible from final released inputs.
-- [ ] Relationship disclosures are current.
+- [x] Relationship disclosures are populated and evidence-scoped for the current release candidate.
 - [x] Methodology is included.
 - [ ] Citation metadata is final-release valid. (`CITATION.cff` is pre-release safe; DOI/version are intentionally absent.)
 - [ ] License or usage terms are explicitly resolved.
