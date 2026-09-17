@@ -45,6 +45,8 @@ This tracker records external outreach related to independent citation, factual 
 | 2026-09-17 19:32 | Hailuo AI | service@hailuoai.com | Current Standard pricing and credits | Sent — awaiting response |
 | 2026-09-17 19:32 | Kling AI | support@kling.ai | Current Standard-plan pricing and credits | Sent — awaiting response |
 | 2026-09-17 19:32 | Hypernatural | help@hypernatural.ai | Free-access / pricing wording | Sent after internal issue had already been marked resolved; no release change required unless a factual reply adds new evidence |
+| — | HeyGen | support@heygen.com | Creator $29/month and credit entitlement | Draft — not sent |
+| — | ElevenLabs | team@elevenlabs.io | Free/Starter pricing, credits and commercial-license interpretation | Draft — not sent |
 
 ## Existing provider correspondence
 
@@ -65,7 +67,11 @@ This tracker records external outreach related to independent citation, factual 
 - Academic research outreach drafts prepared, not sent: **3**
 - External factual-correction messages sent: **4**
 - Provider fact-check messages sent: **3**
+- Provider fact-check drafts prepared, not sent: **2**
+- Established provider fact-check correspondence: **1** (Pictory)
 - Independent citations confirmed from these outreach waves: **0**
 - Replies confirmed from these outreach waves at last check: **0**
 
-Last checked: **2026-09-17 20:03 Europe/Madrid**.
+If the HeyGen and ElevenLabs fact-check drafts are sent, the direct provider-contact objective reaches **6 provider contacts** when Pictory is included.
+
+Last checked: **2026-09-17 Europe/Madrid**.
