@@ -5,12 +5,14 @@ on:
     branches: [main]
     paths:
       - 'datasets/**'
+      - 'evidence/**'
       - 'reconciliation/**'
       - 'reproducibility/**'
       - '.github/workflows/validate-research-data.yml'
   pull_request:
     paths:
       - 'datasets/**'
+      - 'evidence/**'
       - 'reconciliation/**'
       - 'reproducibility/**'
       - '.github/workflows/validate-research-data.yml'
@@ -35,3 +37,9 @@ jobs:
 
       - name: Validate release candidate
         run: python reproducibility/validate_release_candidate.py
+
+      - name: Validate evidence coverage and relationship disclosures
+        run: python reproducibility/validate_evidence_and_disclosures.py
+
+      - name: Derive HOLD candidate metrics
+        run: python reproducibility/derive_release_candidate_metrics.py
