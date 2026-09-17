@@ -1,8 +1,8 @@
 # Release Status
 
-## STATUS: PUBLISHED — ZENODO DOI ACTIVE; POST-DOI SYNC IN PROGRESS
+## STATUS: PUBLISHED — ZENODO DOI ACTIVE; POST-DOI CI GREEN
 
-AI Video Signal Research Dataset 2026 **v2026.09.17** has been published on Zenodo with a real DOI. The published record was verified publicly after publication.
+AI Video Signal Research Dataset 2026 **v2026.09.17** has been published on Zenodo with a real DOI. The published record was verified publicly after publication, and the post-DOI GitHub Actions validation is green.
 
 ## DOI-backed release
 
@@ -15,6 +15,8 @@ AI Video Signal Research Dataset 2026 **v2026.09.17** has been published on Zeno
 - Visibility: Open/Public
 - Rights: **AI Video Signal Dataset Rights & Reuse Terms**
 - Copyright: **© 2026 AI Video Signal**
+- Post-DOI CI run: `35249372044`
+- Post-DOI CI result: **SUCCESS**
 
 The public Zenodo record exposes an independent download of the frozen package and therefore no longer depends on the live buyer-facing application for retrieval.
 
@@ -64,6 +66,7 @@ The package itself contains its release manifest and file-level SHA-256 checksum
 - [x] Zenodo record published publicly.
 - [x] Real DOI assigned and publicly resolving.
 - [x] Independent Zenodo download route available.
+- [x] Post-DOI GitHub Actions validation green.
 - [x] Production **V70.7.5 remains untouched**.
 
 ## Current quantitative snapshot
@@ -84,13 +87,12 @@ Effective date: **2026-08-31**.
 
 Zenodo was published with the custom **AI Video Signal Dataset Rights & Reuse Terms**, not the default CC BY 4.0 license.
 
-## Remaining post-DOI repository work
+## Remaining post-DOI distribution work
 
-- [ ] Keep post-DOI CI green after citation/manifest synchronization.
 - [ ] Create the GitHub tag/release `v2026.09.17` when a write-capable GitHub Release action is available, pointing to the immutable package-freeze state rather than a later mutable `main` commit.
 - [ ] Add the DOI to the canonical AI Video Signal research page and structured Dataset metadata only through a separately authorized production change.
 
-The DOI-backed Zenodo release itself is already public. These remaining items are synchronization/distribution work, not provider-data blockers.
+The DOI-backed Zenodo release itself is already public. These remaining items are distribution/synchronization work, not research-release blockers.
 
 ## Production firewall
 
