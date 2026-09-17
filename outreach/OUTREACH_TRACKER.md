@@ -21,6 +21,14 @@ This tracker records external outreach related to independent citation, factual 
 | 2026-09-17 20:01 | THE DECODER | hello@the-decoder.com | DOI-backed AI research dataset with reproducible methodology | Sent — awaiting response |
 | 2026-09-17 20:01 | TechRadar AI — Graham Barlow | graham.barlow@futurenet.com | Source for future AI-video comparisons and pricing coverage | Sent — awaiting response |
 
+## Academic outreach — prepared, not sent
+
+| Target | Address | Research relevance | Status |
+|---|---|---|---|
+| Chenggang Yan — EVBench | cgyan@hdu.edu.cn | EVBench explicitly includes estimated video-model cost; AI Video Signal can provide dated pricing/economics context | Draft — not sent |
+| Kaveh Safavigerdini — CVPR 2026 Generative AI Video Evaluation survey | ksgh2@umsystem.edu | Evaluation/benchmark survey; dataset provides complementary operational and market-economics evidence | Draft — not sent |
+| Jianhui Wei — VideoWeaver | jianhui1.24@intl.zju.edu.cn | VideoWeaver discusses the cost of long-video generation/evaluation; dataset provides dated provider economics | Draft — not sent |
+
 ## External factual-correction outreach
 
 | Sent (Madrid) | Target | Address | Topic | Status |
@@ -47,12 +55,14 @@ This tracker records external outreach related to independent citation, factual 
 - A sent email is **not** an independent citation.
 - A reply from a provider is Tier B evidence, not independent media authority.
 - A correction by an external site may count as independent external reuse only if the site independently publishes or cites AI Video Signal evidence.
+- Academic outreach is not counted as a citation unless the dataset is independently cited or reused in a scholarly output.
 - Syndicated or copied versions of the same article are not counted as separate independent citations.
 - Self-owned domains do not count toward independent-domain authority targets.
 
 ## Current outreach totals
 
 - Media/editorial citation pitches sent: **10**
+- Academic research outreach drafts prepared, not sent: **3**
 - External factual-correction messages sent: **4**
 - Provider fact-check messages sent: **3**
 - Independent citations confirmed from these outreach waves: **0**
