@@ -63,3 +63,9 @@ jobs:
 
       - name: Derive HOLD candidate metrics
         run: python reproducibility/derive_release_candidate_metrics.py
+
+      - name: Build reproducible HOLD candidate package
+        run: python reproducibility/build_candidate_package.py
+
+      - name: Validate HOLD candidate package checksums
+        run: python reproducibility/validate_candidate_package.py
