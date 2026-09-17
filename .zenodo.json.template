@@ -1,0 +1,32 @@
+{
+  "_status": "TEMPLATE_ONLY_DO_NOT_RENAME_UNTIL_LICENSE_IS_RESOLVED",
+  "title": "AI Video Signal Research Dataset 2026",
+  "upload_type": "dataset",
+  "creators": [
+    {
+      "name": "Mestetef Ennaji, Youssef"
+    }
+  ],
+  "description": "Versioned AI-video market-intelligence research covering pricing, credits, plan entitlements, model-level production economics, free-access states, commercial-use evidence, and documented market changes.",
+  "keywords": [
+    "ai video",
+    "generative video",
+    "pricing benchmark",
+    "market intelligence",
+    "reproducible research"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/baraemest-gif/ai-video-signal-research",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ],
+  "_required_before_activation": [
+    "Choose and record the actual file license/usage-rights policy.",
+    "Set access_right consistently with that policy.",
+    "Add a valid Zenodo license identifier if access_right is open or embargoed.",
+    "Remove all underscore-prefixed template-control fields before renaming to .zenodo.json.",
+    "Do not add DOI, ORCID, version or publication date until confirmed for the immutable release."
+  ]
+}
