@@ -5,7 +5,7 @@ Status: **HOLD support document — not a DOI release**
 Baseline compared: **2026-08-29** 14-provider research snapshot.
 Current check date: **2026-09-17**.
 
-This report separates baseline facts from current verification. A baseline value is never overwritten merely because a current page changed. Material changes are recorded as new evidence events. Where first-party evidence could not be rechecked cleanly, the provider remains pending or partial rather than being guessed.
+This report separates baseline facts from current verification. A baseline value is never overwritten merely because a current page changed. Material changes are recorded as new evidence events. Where first-party evidence cannot support one unambiguous current state, the provider remains pending, partial or conflicting rather than being guessed.
 
 ## Scope
 
@@ -36,7 +36,7 @@ The baseline provider set is fixed at 14 for this reconciliation:
 | InVideo AI | Baseline $17 annual-equivalent Plus; later 2026-09-07 event recorded 750 credits/mo | verified_material_change | Official current pricing now shows Starter $20/seat/mo billed annually with 400 credits/seat/mo and Plus $50/seat/mo billed annually with 2,000 credits/seat/mo. | Append a new dated change event; do not overwrite Aug 29 or Sep 7 history. |
 | Fliki | Standard $28/mo; Premium $88/mo; free entry | verified_no_material_change | Official current pricing/feature pages still show free access and Standard $28/mo / Premium $88/mo with commercial rights on paid production plans. | Keep baseline; refresh checked date where fields match. |
 | Pika | Standard $10/mo; 700 credits/mo | verified_material_change | Official current pricing now uses Free / Starter / Creator / Fancy. Starter is $10/mo with 900 credits/mo; Creator $35/mo with 3,150 credits/mo. Free is 0 monthly credits with packs only and no commercial license. | Append a new dated change event; current plan naming/allowance differs materially from baseline. |
-| Hailuo AI | Standard $14.99/mo; 1,000 credits/mo; Hailuo 2.3 unit economics | pending_first_party_access | No sufficiently reliable current first-party pricing snapshot was obtained in this reconciliation pass. | HOLD field-level current verification. |
+| Hailuo AI | Standard $14.99/mo; 1,000 credits/mo; Hailuo 2.3 unit economics | first_party_pricing_conflict | Official Subscription Service Terms list Standard at $14.99/mo with 1,000 credits and explicitly describe free and paid service models. Separate official Hailuo marketing/blog pages currently advertise materially lower Standard prices ($6.99 or $9.99), creating a first-party conflict. | Preserve the baseline terms-backed value as historical evidence; do not publish one current normalized Standard price until the conflict is resolved or clearly scoped. |
 | Synthesia | Basic $0; Starter $29/mo; 1,200 credits/mo | verified_no_material_change | Official current pricing shows Basic $0, Starter $29/mo and 1,200 credits/mo; Basic up to 10 video minutes/month. | Keep baseline; record current verification date. |
 | ElevenLabs | Free $0; Starter $6/mo; Free 10,000 credits | verified_no_material_change | Official current pricing shows Free 10k credits/mo and Starter $6/mo with 30k credits/mo; commercial license is included from Starter, not Free. | Keep baseline; current detail may enrich paid allowance fields. |
 | OpusClip | Free; Starter $15/mo; Free 60 credits/mo | verified_no_material_change | Official current pricing still lists Free $0, Starter $15/mo, Pro $29/mo; Free remains 60 credits/mo. | Keep baseline; record current verification date. |
@@ -53,6 +53,10 @@ The baseline provider set is fixed at 14 for this reconciliation:
 - **Pika**: plan naming and monthly credit allocations changed materially; the old `Standard $10 / 700 credits` state is historical, not current.
 - **Hypernatural**: current official support says no free plan/trial, which conflicts with the earlier free-entry interpretation and with current “Start for free” marketing language. This must be resolved rather than normalized away.
 
+### First-party conflicts
+
+- **Hailuo AI**: the Subscription Service Terms list Standard at `$14.99/mo` with `1,000 credits`, while separate official marketing/blog pages show lower Standard prices. The terms-backed baseline remains valid as dated evidence, but a single current normalized price is not release-safe until the conflict is resolved or the billing context is explicitly distinguished.
+
 ### Evidence expansion
 
 - **Google Veo** now has explicit current endpoint pricing visible for Veo 3.1 variants on a Google Cloud pricing surface. This supports model/endpoint economics but not a comparable monthly provider-plan price.
@@ -64,7 +68,7 @@ Runway, HeyGen, Fliki, Synthesia, ElevenLabs and OpusClip are materially consist
 ### Still blocking a citation-grade release
 
 - Kling AI current first-party recheck.
-- Hailuo AI current first-party recheck.
+- Hailuo AI first-party pricing conflict resolution or explicit scope separation.
 - Vizard normalized paid-price decision.
 - Submagic free-tier state recheck.
 - Hypernatural free-entry contradiction resolution.
@@ -79,6 +83,8 @@ Runway, HeyGen, Fliki, Synthesia, ElevenLabs and OpusClip are materially consist
 - InVideo pricing: https://invideo.io/pricing/
 - Fliki pricing: https://fliki.ai/pricing
 - Pika pricing: https://pika.art/pricing
+- Hailuo Subscription Service Terms: https://hailuoai.video/doc/payment-policy.html
+- Hailuo official marketing/blog pricing evidence: https://blog.hailuoai.video/blog/create-stunning-visuals-ai-image-generator and https://blog.hailuoai.video/blog/paid-vs-free-ai-video-generators
 - Synthesia pricing: https://www.synthesia.io/pricing
 - ElevenLabs pricing: https://elevenlabs.io/pricing
 - OpusClip pricing: https://www.opus.pro/pricing
@@ -90,4 +96,4 @@ Runway, HeyGen, Fliki, Synthesia, ElevenLabs and OpusClip are materially consist
 
 ## Release decision
 
-**HOLD remains correct.** The provider set is now explicitly reconciled at the status level, but the first DOI release must not be generated until the unresolved provider fields are closed or explicitly represented as uncertainty and the release-candidate CSV/JSON are regenerated from the reconciled state.
+**HOLD remains correct.** The provider identity set is now explicitly reconciled at 14 providers, but the first DOI release must not be generated until unresolved provider fields are closed or explicitly represented as uncertainty and the release-candidate CSV/JSON are regenerated from the reconciled state.
