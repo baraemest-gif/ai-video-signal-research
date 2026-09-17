@@ -9,7 +9,12 @@ The first DOI-backed release must not be published until every mandatory gate be
 - [x] **Pictory pricing-source protocol confirmed.** Pictory's Affiliate Manager instructed AI Video Signal to use the current live Pictory Pricing page as the source of truth for monthly/annual pricing, allowances, AI credits and plan inclusions; published comparisons should record the verification date and link back to the live pricing page. Email-supplied figures must not be treated as permanent entitlements.
 - [x] **Google Search Console discoverability verified.** For the finalized period 2026-08-18 through 2026-09-14, `https://aivideosignal.com/` recorded 9,142 impressions and 14 clicks. The research dataset page also recorded impressions. This demonstrates Google discovery/index presence for the property and research pages; it does not imply that every URL is indexed or ranking well.
 - [x] **Provider identity set fixed and reconciled at 14 providers.** The 2026-09-17 reconciliation explicitly covers Runway, Kling AI, HeyGen, InVideo AI, Fliki, Pika, Hailuo AI, Synthesia, ElevenLabs, OpusClip, Vizard, Submagic, Hypernatural and Google Veo.
-- [x] **Reconciliation support CSV/JSON parity established.** The provider-status reconciliation is represented in matching CSV and JSON support files. This does not yet satisfy the final release-dataset parity gate.
+- [x] **Reconciliation support CSV/JSON parity established.** The provider-status reconciliation is represented in matching CSV and JSON support files.
+- [x] **14-provider release candidate created in CSV and JSON.** `datasets/release-candidate-2026-09-17.csv` and `.json` carry the same 14-provider candidate identity and remain explicitly `HOLD` / `RC-2026-09-17-HOLD`.
+- [x] **Confirmed InVideo AI and Pika changes propagated into the release candidate without rewriting historical snapshots.** Historical Aug 29 / Sep 7 states remain historical evidence; the candidate carries the current checked state.
+- [x] **Unresolved current facts are explicit rather than guessed.** Kling current pricing is unavailable pending recheck; Hailuo and Hypernatural retain first-party conflict/caution states; Vizard and Submagic retain partial verification states.
+- [x] **Automated parity validator added.** `reproducibility/validate_release_candidate.py` enforces 14 unique providers, exact CSV/JSON parity, allowed normalization/CRES states, explicit unresolved notes and mandatory HOLD state.
+- [x] **Repository validation workflow added.** `.github/workflows/validate-research-data.yml` runs the reconciliation and release-candidate validators on relevant pushes/PRs. Workflow execution status must be checked separately; adding the workflow is not treated as a passing CI result.
 
 ## Open provider reconciliation issues
 
@@ -18,25 +23,32 @@ The first DOI-backed release must not be published until every mandatory gate be
 - **Vizard:** free-plan evidence is current, but a stable current normalized paid Creator price was not obtained from the dynamic pricing representation.
 - **Submagic:** current Starter paid reference is supported; current free-tier state needs recheck before release.
 - **Hypernatural:** official Help Center says no free plan/trial while the public pricing page uses a “Start for free” CTA; free-entry state remains unresolved.
-- **InVideo AI and Pika:** material current changes are confirmed and must be propagated into the release-candidate dataset and any derived benchmark metrics without rewriting historical snapshots.
+
+## Other open release issues
+
+- Relationship-disclosure fields are not yet populated across the release candidate.
+- Final reuse/license terms are not yet resolved; no standard open license is asserted.
+- Active `.zenodo.json` metadata remains intentionally disabled until license/metadata gates pass.
+- Final release manifest/checksums must be generated from the frozen final candidate, not from this mutable HOLD candidate.
+- Public buyer-facing research files have not yet been regenerated from the new release-candidate state; Production V70.7.5 remains untouched by design.
 
 ## Mandatory release gates
 
 - [ ] Provider count reconciled across all final release files.
 - [ ] Provider-change reconciliation completed at field level.
-- [ ] Unresolved pricing facts resolved or represented explicitly as uncertainty in the release candidate.
-- [ ] Final release CSV and JSON distributions represent the same provider states.
+- [x] Unresolved pricing facts are represented explicitly as uncertainty in the current release candidate rather than being guessed.
+- [ ] Final release CSV and JSON distributions represent the same provider states. (Current HOLD candidate parity exists; final release files do not yet exist.)
 - [ ] Public files agree on all material states.
 - [ ] Every material quantitative field is sourced or clearly derived.
-- [ ] Verification dates are present for material claims.
-- [ ] Commercial-rights uncertainty is preserved rather than simplified.
-- [ ] Source hierarchy is respected.
-- [ ] Derived metrics are reproducible from released inputs.
+- [x] Verification/check dates are present on every current release-candidate record; this does not mean every field is verified.
+- [x] Commercial-rights uncertainty is preserved rather than simplified in the current candidate.
+- [x] Source hierarchy is defined and the current candidate uses Tier A where current first-party evidence was successfully obtained; unresolved rows remain explicit.
+- [ ] Derived metrics are reproducible from final released inputs.
 - [ ] Relationship disclosures are current.
-- [ ] Methodology is included.
-- [ ] Citation metadata is valid.
+- [x] Methodology is included.
+- [ ] Citation metadata is final-release valid. (`CITATION.cff` is pre-release safe; DOI/version are intentionally absent.)
 - [ ] License or usage terms are explicitly resolved.
-- [ ] Immutable package can be regenerated from a known source state.
+- [ ] Immutable package can be regenerated from a known final source state.
 - [ ] Prior releases remain retrievable.
 - [ ] Public download is independent from the live buyer-facing site.
 
