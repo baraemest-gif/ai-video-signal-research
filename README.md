@@ -45,9 +45,10 @@ States: `documented_clear`, `documented_conditional`, `unclear`, `restricted`, `
 - `datasets/` — release-ready CSV/JSON distributions and data dictionary.
 - `reconciliation/` — dated provider reconciliation, machine-readable status files and provider fact-check queue.
 - `reproducibility/` — validation and reproduction instructions, including CSV/JSON reconciliation validation.
+- `release-candidate/` — pre-DOI staging manifest and Zenodo/DOI readiness controls; not a published release.
 - `reports/` — research briefs and release notes.
-- `CITATION.cff` — citation metadata.
-- `.zenodo.json` — archival metadata template for Zenodo integration.
+- `CITATION.cff` — citation metadata used by GitHub and retained for citation support.
+- `.zenodo.json.template` — inactive Zenodo metadata template. It must not be activated until license/usage terms are resolved and metadata is validated.
 - `LICENSE_STATUS.md` — current reuse/license decision state; no standard license is invented.
 - `CHANGELOG.md` — research change history.
 - `RELEASE_STATUS.md` — current publication gate and blockers.
@@ -65,6 +66,8 @@ A DOI must identify an immutable research release, not a silently changing live 
 **HOLD — PRE-DOI RESEARCH HARDENING**
 
 The 14-provider identity set is reconciled and a dated provider-status package now exists in matching CSV/JSON form. Confirmed current changes include InVideo AI and Pika; Hailuo AI and Hypernatural currently contain conflicting first-party evidence that must remain explicit. Kling AI, Vizard and Submagic also retain field-level verification work before the first citation-grade release.
+
+The active `.zenodo.json` has intentionally been removed during hardening because the archival license/usage-rights mapping is not yet finalized. An inactive template is retained instead, preventing accidental publication with an invented or unintended license.
 
 The first DOI-backed release remains blocked until provider-change reconciliation is complete at field level, unresolved facts are closed or explicitly represented as uncertainty in the release candidate, final release CSV/JSON and public files reconcile, reuse/license terms are unambiguous, and the package can be regenerated from a known source state.
 
