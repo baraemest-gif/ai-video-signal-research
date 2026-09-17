@@ -69,3 +69,11 @@ jobs:
 
       - name: Validate HOLD candidate package checksums
         run: python reproducibility/validate_candidate_package.py
+
+      - name: Upload verified HOLD candidate package
+        uses: actions/upload-artifact@v4
+        with:
+          name: AI-Video-Signal-RC-2026-09-17-HOLD
+          path: build/RC-2026-09-17-HOLD/
+          if-no-files-found: error
+          retention-days: 30
