@@ -99,7 +99,9 @@
     "exact_data_freeze_ci_success": true,
     "exact_package_freeze_ci_success": true,
     "zenodo_public_record_verified": true,
-    "post_doi_ci_pending": true
+    "post_doi_ci_pending": false,
+    "post_doi_ci_run_id": 35249372044,
+    "post_doi_ci_conclusion": "success"
   },
   "resolved_since_initial_manifest": [
     "provider_identity_set_fixed_at_14",
@@ -124,10 +126,10 @@
     "zenodo_custom_rights_published",
     "zenodo_dataset_published",
     "doi_assigned_and_publicly_resolving",
+    "post_doi_ci_green",
     "automated_research_data_ci_enabled"
   ],
   "blocking_states": [
-    "post_doi_ci_green",
     "github_release_tag_and_release_creation",
     "canonical_research_page_doi_sync"
   ],
