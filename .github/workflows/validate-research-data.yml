@@ -77,3 +77,17 @@ jobs:
           path: build/RC-2026-09-17-HOLD/
           if-no-files-found: error
           retention-days: 30
+
+      - name: Build frozen v2026.09.17 prepublication package
+        run: python reproducibility/build_frozen_prepublish_package.py
+
+      - name: Validate frozen v2026.09.17 prepublication package
+        run: python reproducibility/validate_frozen_prepublish_package.py
+
+      - name: Upload frozen v2026.09.17 prepublication artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AI-Video-Signal-v2026.09.17-PREPUBLISH-${{ github.sha }}
+          path: build/v2026.09.17/
+          if-no-files-found: error
+          retention-days: 90
