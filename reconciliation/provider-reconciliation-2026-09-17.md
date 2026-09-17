@@ -2,14 +2,12 @@
 
 Status: **HOLD support document — not a DOI release**
 
-Baseline compared: **2026-08-29** 14-provider research snapshot.
+Baseline compared: **2026-08-29** 14-provider research snapshot.  
 Current check date: **2026-09-17**.
 
-This report separates baseline facts from current verification. A baseline value is never overwritten merely because a current page changed. Material changes are recorded as new evidence events. Where first-party evidence cannot support one unambiguous current state, the provider remains pending, partial or conflicting rather than being guessed.
+This report separates baseline facts from current verification. Historical values are not overwritten by later changes. Material changes are recorded as new evidence events. Where current first-party evidence remains conflicting or inaccessible, the provider stays unresolved rather than being guessed.
 
 ## Scope
-
-The baseline provider set is fixed at 14 for this reconciliation:
 
 1. Runway
 2. Kling AI
@@ -28,53 +26,48 @@ The baseline provider set is fixed at 14 for this reconciliation:
 
 ## Reconciliation status
 
-| Provider | Baseline reference | Current status | Current evidence summary | Release action |
-|---|---|---|---|---|
-| Runway | Standard $15/mo; 625 credits/mo; Gen-4.5 12 credits/s | verified_no_material_change | Official current pricing still shows Standard $15 monthly / $12 annualized, 625 credits/mo; Gen-4.5 remains 12 credits/s. | Keep baseline; record current verification date. |
-| Kling AI | Standard $6.99 intro; $8.80 renewal; 660 credits/mo | pending_first_party_access | Current first-party page could not be independently re-read through the available research channel. Historical baseline must not be promoted to a current claim without a fresh provider check. | HOLD field-level current verification. |
-| HeyGen | Creator $29/mo or $24 annualized; 600 credits/mo | verified_no_material_change | Official current pricing and Help Center show Creator $29/mo and 600 credits/mo. | Keep baseline; record current verification date. |
-| InVideo AI | Baseline $17 annual-equivalent Plus; later 2026-09-07 event recorded 750 credits/mo | verified_material_change | Official current pricing now shows Starter $20/seat/mo billed annually with 400 credits/seat/mo and Plus $50/seat/mo billed annually with 2,000 credits/seat/mo. | Append a new dated change event; do not overwrite Aug 29 or Sep 7 history. |
-| Fliki | Standard $28/mo; Premium $88/mo; free entry | verified_no_material_change | Official current pricing/feature pages still show free access and Standard $28/mo / Premium $88/mo with commercial rights on paid production plans. | Keep baseline; refresh checked date where fields match. |
-| Pika | Standard $10/mo; 700 credits/mo | verified_material_change | Official current pricing now uses Free / Starter / Creator / Fancy. Starter is $10/mo with 900 credits/mo; Creator $35/mo with 3,150 credits/mo. Free is 0 monthly credits with packs only and no commercial license. | Append a new dated change event; current plan naming/allowance differs materially from baseline. |
-| Hailuo AI | Standard $14.99/mo; 1,000 credits/mo; Hailuo 2.3 unit economics | first_party_pricing_conflict | Official Subscription Service Terms list Standard at $14.99/mo with 1,000 credits and explicitly describe free and paid service models. Separate official Hailuo marketing/blog pages currently advertise materially lower Standard prices ($6.99 or $9.99), creating a first-party conflict. | Preserve the baseline terms-backed value as historical evidence; do not publish one current normalized Standard price until the conflict is resolved or clearly scoped. |
-| Synthesia | Basic $0; Starter $29/mo; 1,200 credits/mo | verified_no_material_change | Official current pricing shows Basic $0, Starter $29/mo and 1,200 credits/mo; Basic up to 10 video minutes/month. | Keep baseline; record current verification date. |
-| ElevenLabs | Free $0; Starter $6/mo; Free 10,000 credits | verified_no_material_change | Official current pricing shows Free 10k credits/mo and Starter $6/mo with 30k credits/mo; commercial license is included from Starter, not Free. | Keep baseline; current detail may enrich paid allowance fields. |
-| OpusClip | Free; Starter $15/mo; Free 60 credits/mo | verified_no_material_change | Official current pricing still lists Free $0, Starter $15/mo, Pro $29/mo; Free remains 60 credits/mo. | Keep baseline; record current verification date. |
-| Vizard | Free $0; 60 credits/mo; paid Creator available | partial_verified | Official pricing confirms Free $0 and 60 credits/mo; the dynamic Creator price was not stable enough in the retrieved representation for a clean normalized current paid reference. | Preserve unnormalized paid price; keep current free-access evidence. |
-| Submagic | Starter $19/mo; free entry; plan/video limits | partial_verified | Official current pricing confirms Starter $19/mo, 45 credits and 15 videos on Starter. Current free-tier details were not sufficiently clear in the retrieved pricing representation to reassert the baseline free allowance. | Keep $19 paid reference; recheck free-tier state before release. |
-| Hypernatural | Paid plans/credits unstable; baseline carried free-entry/caution context | needs_correction_or_change_event | Official Help Center currently states there is **no free plan and no free trial**, while the public pricing page uses a “Start for free” CTA. This is a material contradiction requiring a provider-level clarification or a clearly scoped interpretation. | HOLD free-entry field; do not count Hypernatural as free-entry until resolved. |
-| Google Veo | Paid monthly reference not normalized; endpoint-dependent access/metering | evidence_expanded_still_not_monthly_normalized | Current Google Cloud Agent Platform pricing exposes explicit Veo 3.1 / Fast / Lite endpoint prices by output class and resolution. This improves model-level economics evidence but does not create a comparable monthly subscription price. | Add endpoint pricing evidence; retain monthly paid reference as not_normalized. |
+| Provider | Current status | Current evidence summary | Release action |
+|---|---|---|---|
+| Runway | `verified_no_material_change` | Standard $15/mo, 625 credits/mo; Gen-4.5 12 credits/s remains supported. | Keep current checked state. |
+| Kling AI | `pending_first_party_access` | Public homepage is reachable but current plan pricing was not exposed in the retrieved representation. | Keep current price/allowance blank pending direct first-party check/provider response. |
+| HeyGen | `verified_no_material_change` | Creator $29/mo and 600 credits/mo supported by current first-party pricing/help. | Keep current checked state. |
+| InVideo AI | `verified_material_change` | Current official pricing shows Starter $20/seat/mo billed annually with 400 credits/seat/mo and Plus $50/seat/mo billed annually with 2,000 credits/seat/mo. | Preserve Aug 29 / Sep 7 history; append current state. |
+| Fliki | `verified_no_material_change` | Current Standard $28/mo / Premium $88/mo and paid commercial-rights context materially consistent. | Keep current checked state. |
+| Pika | `verified_material_change` | Starter remains $10/mo but now shows 900 credits/mo; Creator $35/mo with 3,150 credits/mo; Free has 0 recurring monthly credits. | Preserve old 700-credit state as historical; use current dated state. |
+| Hailuo AI | `first_party_pricing_conflict` | Subscription Service Terms list Standard $14.99/mo with 1,000 credits, while separate official Hailuo pages list Standard at $6.99 or $9.99. | Do not publish one current normalized Standard price until scoped/clarified. |
+| Synthesia | `verified_no_material_change` | Basic $0; Starter $29/mo and 1,200 credits/mo. | Keep current checked state. |
+| ElevenLabs | `verified_no_material_change` | Free 10k credits/mo; Starter $6/mo with 30k; commercial license begins on Starter. | Keep current checked state. |
+| OpusClip | `verified_no_material_change` | Free $0, Starter $15/mo, Free 60 credits/mo remain supported. | Keep current checked state. |
+| Vizard | `verified_no_material_change` | Live dynamic pricing UI verified Creator $29/mo with 600 credits/mo; yearly starting tier $14.50/mo billed $174/year with 7,200 credits/year; Free $0 with 60 credits/mo. | Normalize current Creator monthly price at $29 and preserve annual context. |
+| Submagic | `verified_no_material_change` | Starter $19/mo, 45 credits and 15 videos. Official free-scheduler page confirms one free video/post, no card, with trial watermarking. | Scope free entry as limited one-post/trial access; keep $19 paid reference. |
+| Hypernatural | `verified_material_change` | Plan-specific official support states paid-only, no free plan and no free trial. Generic “Start for free” CTA does not state a plan entitlement. | Record current no-free-plan/no-trial state; preserve earlier free-entry interpretation as historical/corrected context. |
+| Google Veo | `evidence_expanded_still_not_monthly_normalized` | Explicit current endpoint pricing exists for Veo 3.1 variants, but no comparable monthly provider subscription price is asserted. | Keep monthly paid reference `not_normalized`; retain endpoint economics. |
 
-## Material findings
+## Current material changes
 
-### Confirmed material changes
+- **InVideo AI:** plan structure/credits differ materially from earlier dated states.
+- **Pika:** current monthly credit allocation differs from the Aug 29 baseline.
+- **Hypernatural:** explicit current support establishes no free plan/trial; prior free-entry interpretation is not promoted as current.
 
-- **InVideo AI**: current official plan structure and included credits differ materially from both the Aug 29 baseline and the Sep 7 event already recorded in AI Video Signal's ledger.
-- **Pika**: plan naming and monthly credit allocations changed materially; the old `Standard $10 / 700 credits` state is historical, not current.
-- **Hypernatural**: current official support says no free plan/trial, which conflicts with the earlier free-entry interpretation and with current “Start for free” marketing language. This must be resolved rather than normalized away.
+## Current first-party conflict
 
-### First-party conflicts
+- **Hailuo AI:** explicit official sources publish incompatible Standard-plan prices. The conflict remains visible; no current normalized paid price is selected.
 
-- **Hailuo AI**: the Subscription Service Terms list Standard at `$14.99/mo` with `1,000 credits`, while separate official marketing/blog pages show lower Standard prices. The terms-backed baseline remains valid as dated evidence, but a single current normalized price is not release-safe until the conflict is resolved or the billing context is explicitly distinguished.
+## Resolved during this reconciliation pass
 
-### Evidence expansion
+- **Vizard:** dynamic pricing was verified through the live pricing UI; Creator can now be normalized at $29/mo for the current candidate.
+- **Submagic:** current paid plan and limited free-entry state are now both first-party evidenced.
+- **Hypernatural:** plan-specific support is treated as the scoped source for free-plan/trial status; generic CTA language is not treated as plan evidence.
+- **InVideo AI / Pika:** confirmed current changes are already propagated into the release-candidate CSV/JSON.
 
-- **Google Veo** now has explicit current endpoint pricing visible for Veo 3.1 variants on a Google Cloud pricing surface. This supports model/endpoint economics but not a comparable monthly provider-plan price.
+## Still blocking field-level completion
 
-### Stable or substantially consistent
+- **Kling AI:** current direct plan-price/credit verification.
+- **Hailuo AI:** conflicting first-party Standard prices need provider clarification or a defensible scope distinction.
 
-Runway, HeyGen, Fliki, Synthesia, ElevenLabs and OpusClip are materially consistent with the baseline fields checked in this pass.
+Google Veo remains intentionally non-monthly-normalized by design rather than as a missing-data error.
 
-### Still blocking a citation-grade release
-
-- Kling AI current first-party recheck.
-- Hailuo AI first-party pricing conflict resolution or explicit scope separation.
-- Vizard normalized paid-price decision.
-- Submagic free-tier state recheck.
-- Hypernatural free-entry contradiction resolution.
-- Propagation of the confirmed InVideo and Pika changes into release-candidate CSV/JSON and any derived benchmark metrics.
-
-## First-party sources used in this pass
+## First-party sources
 
 - Runway pricing: https://runway.com/pricing
 - Runway Gen-4.5: https://help.runwayml.com/hc/en-us/articles/46974685288467-Creating-with-Gen-4-5
@@ -84,16 +77,18 @@ Runway, HeyGen, Fliki, Synthesia, ElevenLabs and OpusClip are materially consist
 - Fliki pricing: https://fliki.ai/pricing
 - Pika pricing: https://pika.art/pricing
 - Hailuo Subscription Service Terms: https://hailuoai.video/doc/payment-policy.html
-- Hailuo official marketing/blog pricing evidence: https://blog.hailuoai.video/blog/create-stunning-visuals-ai-image-generator and https://blog.hailuoai.video/blog/paid-vs-free-ai-video-generators
+- Hailuo official $6.99 marketing evidence: https://blog.hailuoai.video/blog/create-stunning-visuals-ai-image-generator
+- Hailuo official $9.99 marketing evidence: https://blog.hailuoai.video/blog/paid-vs-free-ai-video-generators
+- Hailuo 2.3 unit economics: https://blog.hailuoai.video/blog/introducing-hailuo-2-3-ai-video-generator
 - Synthesia pricing: https://www.synthesia.io/pricing
 - ElevenLabs pricing: https://elevenlabs.io/pricing
 - OpusClip pricing: https://www.opus.pro/pricing
 - Vizard pricing: https://vizard.ai/pricing
 - Submagic pricing: https://www.submagic.co/pricing
-- Hypernatural pricing: https://hypernatural.ai/pricing
-- Hypernatural free-plan support note: https://app.hypernatural.ai/help/plans-billing-credits/16809715-can-i-use-hypernatural-for-free
+- Submagic limited free entry: https://www.submagic.co/free-social-media-scheduler
+- Hypernatural plan/free-access support: https://app.hypernatural.ai/help/plans-billing-credits/16809715-can-i-use-hypernatural-for-free
 - Google Cloud Veo pricing: https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
 
 ## Release decision
 
-**HOLD remains correct.** The provider identity set is now explicitly reconciled at 14 providers, but the first DOI release must not be generated until unresolved provider fields are closed or explicitly represented as uncertainty and the release-candidate CSV/JSON are regenerated from the reconciled state.
+**HOLD remains correct.** The current provider blockers have been reduced to Kling AI current pricing verification and the Hailuo first-party pricing conflict. Other release gates — final metadata, custom Zenodo rights preview, final freeze/checksums, public-file consistency and immutable package reconstruction — also remain before DOI publication.
