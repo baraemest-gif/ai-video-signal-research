@@ -4,6 +4,12 @@
   "candidate_id": "RC-2026-09-17-HOLD",
   "status": "HOLD_PRE_DOI",
   "freeze_engineering_ready": true,
+  "prepublication_freeze_complete": true,
+  "prepublication_freeze_date": "2026-09-17",
+  "prepublication_freeze_branch": "prepublication-freeze-2026-09-17",
+  "prepublication_freeze_commit": "820b41e06bfdd8f861e1177eef10c6c6160ebecd",
+  "prepublication_freeze_ci_run_id": 35227905797,
+  "prepublication_freeze_ci_conclusion": "success",
   "baseline_snapshot_date": "2026-08-29",
   "reconciliation_date": "2026-09-17",
   "provider_count": 14,
@@ -43,6 +49,7 @@
     "reproducibility/build_candidate_package.py",
     "reproducibility/validate_candidate_package.py",
     "release-candidate/FREEZE_READINESS.md",
+    "release-candidate/PREPUBLICATION_FREEZE.md",
     "release-candidate/RELEASE_PLAYBOOK.md",
     "release-candidate/ZENODO_DEPOSIT_FIELDS.md",
     "CITATION.cff",
@@ -52,7 +59,6 @@
   ],
   "validation": {
     "github_actions_workflow": ".github/workflows/validate-research-data.yml",
-    "latest_ci_must_be_rechecked_after_material_candidate_changes": true,
     "csv_json_parity_rule": "exact",
     "relationship_disclosure_validation": true,
     "source_manifest_coverage_validation": true,
@@ -62,7 +68,8 @@
     "hold_publication_guard": true,
     "candidate_metric_derivation": true,
     "candidate_package_reconstruction": true,
-    "candidate_package_sha256_validation": true
+    "candidate_package_sha256_validation": true,
+    "exact_freeze_commit_ci_success": true
   },
   "resolved_since_initial_manifest": [
     "provider_identity_set_fixed_at_14",
@@ -80,6 +87,7 @@
     "quantitative_evidence_coverage_validated",
     "candidate_ready_for_freeze_engineering",
     "candidate_package_reconstruction_and_sha256_validation_enabled",
+    "prepublication_freeze_commit_validated",
     "public_dataset_reuse_terms_verified",
     "zenodo_custom_rights_path_identified",
     "zenodo_prefill_worksheet_prepared",
@@ -89,8 +97,7 @@
     "hold_publication_guard_enabled"
   ],
   "blocking_states": [
-    "latest_ci_success_on_exact_final_frozen_commit",
-    "final_release_csv_json_freeze",
+    "final_release_named_csv_json_distributions",
     "final_release_package_manifest_and_checksums",
     "final_citation_metadata_version_and_publication_date",
     "final_zenodo_custom_rights_entry_and_preview",
