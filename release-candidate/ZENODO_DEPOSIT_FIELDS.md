@@ -2,11 +2,33 @@
 
 Status: **HOLD — do not publish yet**
 
-Use this worksheet only after Kling AI and Hailuo AI are closed or explicitly represented in the final release state and every release gate is green.
+Use this worksheet only with the authoritative package-freeze artifact recorded in `PREPUBLICATION_FREEZE.md`. Provider reconciliation is complete; the remaining mandatory manual gate is authenticated Zenodo review.
+
+## Authoritative package to review in Zenodo
+
+Package-freeze branch:
+`package-freeze-v2026.09.17-prepublish`
+
+Package-freeze commit:
+`129273d47bde297de7ae4024ba8d07eaf3a00265`
+
+GitHub Actions run:
+`35228530529`
+
+Artifact ID:
+`10500370413`
+
+Artifact name:
+`AI-Video-Signal-v2026.09.17-PREPUBLISH-129273d47bde297de7ae4024ba8d07eaf3a00265`
+
+Artifact SHA-256 digest:
+`sha256:5e14ea9f7a7845206bae936b5426413eeb77d623f6c9b1b3776ca40eb52e381f`
+
+Do not substitute a later `main` artifact unless a new explicit package freeze is declared and validated.
 
 ## Record type
 
-- Upload type: **Dataset**
+- Resource/upload type: **Dataset**
 
 ## Title
 
@@ -46,77 +68,93 @@ Relationship:
 
 ## Version
 
-**DO NOT FILL WHILE HOLD**
+Prepublication package version:
+`v2026.09.17`
 
-Final format:
-`vYYYY.MM.DD`
-
-Use only the version attached to the frozen immutable GitHub release.
+Do not create a public GitHub Release or Zenodo publication while status remains HOLD.
 
 ## Publication date
 
-**DO NOT FILL WHILE HOLD**
+**DO NOT FINALIZE WHILE HOLD.**
 
-Use the actual publication date of the immutable release.
+Use the actual publication date only when publication is explicitly authorized.
 
 ## DOI
 
 **DO NOT INVENT OR PRE-FILL.**
 
-Record only the DOI actually assigned by Zenodo after publication.
+Record only a DOI actually reserved/assigned by Zenodo through the authenticated deposit workflow.
 
-## Access and rights
+## License — mandatory high-risk check
+
+Zenodo's current public documentation states that the **License field is required** and that Zenodo **defaults to Creative Commons Attribution 4.0 International (CC BY 4.0)**.
+
+Therefore:
+
+1. Do **not** leave the default CC BY 4.0 selected.
+2. Click/edit the License field in the authenticated draft.
+3. Select/create the custom-license/custom-rights option supported by the current Zenodo interface.
+4. Enter the AI Video Signal rights text below without broadening the rights.
+5. Preview the saved draft and verify that **CC BY 4.0 is no longer asserted**.
+6. If Zenodo cannot represent these rights accurately, STOP and keep the release on HOLD.
 
 Canonical terms:
 `https://aivideosignal.com/dataset-license/`
 
-Effective date of current public terms: **2026-08-31**.
+Effective date: **2026-08-31**.
 
 ### Custom rights statement
 
 > © 2026 AI Video Signal. Citation and limited excerpts are permitted for journalism, research, analysis, reviews and editorial work with attribution to AI Video Signal, the relevant checked date when applicable, and a link to the dataset or benchmark page where practical. Republishing complete files, mirroring them, selling them, incorporating substantial portions into a competing commercial dataset, or removing source attribution requires prior written permission. Underlying third-party facts remain subject to the relevant providers' rights and terms. Datasets are dated research snapshots provided for informational purposes; provider pricing, credits, features and legal terms can change. Permission requests: partners@aivideosignal.com.
 
-### Rule
+Do **not** silently substitute CC BY 4.0, CC0, MIT or another broader standard license.
 
-Do **not** silently accept CC BY 4.0, CC0, MIT or another broader standard license if it contradicts the canonical AI Video Signal terms.
+## Access
 
-If Zenodo's current deposit interface cannot represent the custom rights position accurately, stop before publication and keep the release on HOLD.
+The package may be publicly accessible only if the selected Zenodo access configuration can coexist accurately with the custom reuse restrictions above. Public accessibility is not itself permission for unrestricted redistribution.
 
 ## Files to deposit
 
-Minimum frozen package:
+Use the authoritative package-freeze artifact. It contains the versioned prepublication dataset and supporting research package, including:
 
-- final provider dataset CSV
-- final provider dataset JSON
+- `provider-dataset.csv`
+- `provider-dataset.json`
 - methodology snapshot
 - evidence/source manifest
 - relationship-disclosure manifest
-- CHANGELOG
-- CITATION.cff
-- rights/usage statement
+- changelog
+- `CITATION.cff`
+- `RIGHTS.md`
 - reproducibility instructions and validators
-- release manifest
-- checksums
+- `RELEASE_MANIFEST.json`
+- `SHA256SUMS.txt`
 
-## Required final checks before Publish
+## Required checks before any Publish action
 
-- final provider count reconciled
-- CSV/JSON exact parity
-- Kling state closed or explicitly represented
-- Hailuo state closed or explicitly represented
+- authenticated Zenodo draft opened
+- authoritative package-freeze artifact used
+- dataset resource type selected
+- title and creator exact
+- version `v2026.09.17` exact
+- publication date intentionally chosen
+- repository related identifier correct
+- default CC BY 4.0 explicitly removed/replaced
+- custom AI Video Signal rights text visible in preview
+- no unintended standard license displayed
+- provider count 14
+- CSV/JSON parity exact
 - all quantitative fields sourced or clearly derived
-- source manifest complete
-- relationship disclosures current
-- final derived metrics reproducible
-- final version and date consistent everywhere
-- custom rights statement previewed correctly
-- no invented DOI or ORCID
-- GitHub Actions green on the frozen commit
+- source manifest present
+- relationship disclosures present
+- SHA-256 files present
+- DOI/ORCID not invented
+- GitHub Actions green on the authoritative package-freeze commit
+- `publication_authorized=false` until final explicit authorization
 - Production V70.7.5 untouched
 
 ## Post-publication
 
-After Zenodo assigns the DOI:
+Only after Zenodo actually publishes/assigns the DOI:
 
 1. record the real DOI in citation metadata and the release manifest;
 2. add the DOI to the canonical research page and structured Dataset metadata;
