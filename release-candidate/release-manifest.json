@@ -1,0 +1,41 @@
+{
+  "project": "AI Video Signal",
+  "object": "AI Video Signal Research Dataset 2026",
+  "status": "HOLD_PRE_DOI",
+  "baseline_snapshot_date": "2026-08-29",
+  "reconciliation_date": "2026-09-17",
+  "provider_count": 14,
+  "production_baseline": "V70.7.5",
+  "publication_authorized": false,
+  "doi": null,
+  "orcid": null,
+  "license": null,
+  "required_release_files": [
+    "provider-dataset.csv",
+    "provider-dataset.json",
+    "methodology snapshot",
+    "evidence/source manifest",
+    "CHANGELOG.md",
+    "CITATION.cff",
+    "license/usage terms",
+    "reproducibility instructions",
+    "checksums"
+  ],
+  "current_validation_artifacts": [
+    "reconciliation/provider-reconciliation-2026-09-17.csv",
+    "reconciliation/provider-reconciliation-2026-09-17.json",
+    "reconciliation/provider-reconciliation-2026-09-17.md",
+    "reproducibility/validate_reconciliation.py"
+  ],
+  "blocking_states": [
+    "kling_current_first_party_verification",
+    "hailuo_first_party_pricing_conflict",
+    "hypernatural_free_access_contradiction",
+    "vizard_paid_price_normalization_decision",
+    "submagic_free_tier_recheck",
+    "invideo_and_pika_change_propagation",
+    "license_usage_terms_resolution",
+    "final_csv_json_parity",
+    "immutable_package_reconstruction"
+  ]
+}
