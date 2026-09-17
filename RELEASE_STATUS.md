@@ -14,8 +14,9 @@ The first DOI-backed release must not be published until every mandatory gate be
 - [x] **Confirmed InVideo AI and Pika changes propagated into the release candidate without rewriting historical snapshots.** Historical Aug 29 / Sep 7 states remain historical evidence; the candidate carries the current checked state.
 - [x] **Unresolved current facts are explicit rather than guessed.** Kling current pricing is unavailable pending recheck; Hailuo and Hypernatural retain first-party conflict/caution states; Vizard and Submagic retain partial verification states.
 - [x] **Relationship disclosures populated for the current release candidate from connected-mail evidence.** Confirmed affiliate/partner relationships are explicitly disclosed for Synthesia, ElevenLabs, OpusClip, Vizard, Submagic and Hypernatural. Runway, Kling AI, HeyGen, InVideo AI, Fliki and Hailuo are recorded only as application/inquiry states where approval is not evidenced. Pika and Google Veo are explicitly described only as having no relationship evidenced in the connected mailbox as of 2026-09-17; absence of email evidence is not treated as proof that no relationship exists.
-- [x] **Automated parity validator added.** `reproducibility/validate_release_candidate.py` enforces 14 unique providers, exact CSV/JSON parity, allowed normalization/CRES states, explicit unresolved notes and mandatory HOLD state.
-- [x] **Repository validation workflow added.** `.github/workflows/validate-research-data.yml` runs the reconciliation and release-candidate validators on relevant pushes/PRs. Workflow execution status must be checked separately; adding the workflow is not treated as a passing CI result.
+- [x] **Automated parity validator added and CI passing.** GitHub Actions `Validate research data` completed successfully on the current research-data state. The workflow runs reconciliation and release-candidate validators and preserves mandatory HOLD semantics.
+- [x] **Candidate metric derivation is reproducible.** `reproducibility/derive_release_candidate_metrics.py` derives descriptive paid-price and status metrics directly from the candidate CSV. `reports/release-candidate-summary-2026-09-17.md` records the HOLD-only interpretation and explicitly prevents those candidate statistics from replacing the dated public baseline.
+- [x] **Public reuse terms verified and Zenodo rights path mapped.** The canonical `https://aivideosignal.com/dataset-license/` terms were re-read on 2026-09-17. Their effective date is 2026-08-31. They permit citation and limited editorial/research excerpts with attribution but reserve full-file redistribution, mirroring, sale and substantial competing-dataset reuse without permission. Zenodo supports custom licenses/right statements, so the planned DOI deposit will use a custom AI Video Signal rights statement rather than silently accepting Zenodo's default CC BY 4.0.
 
 ## Open provider reconciliation issues
 
@@ -27,8 +28,8 @@ The first DOI-backed release must not be published until every mandatory gate be
 
 ## Other open release issues
 
-- Final reuse/license terms are not yet resolved; no standard open license is asserted.
-- Active `.zenodo.json` metadata remains intentionally disabled until license/metadata gates pass.
+- The verified custom reuse terms still need to be entered and previewed in the actual Zenodo draft before the final license gate is marked complete.
+- Active `.zenodo.json` metadata remains intentionally disabled until final metadata and rights are verified in the draft.
 - Final release manifest/checksums must be generated from the frozen final candidate, not from this mutable HOLD candidate.
 - Public buyer-facing research files have not yet been regenerated from the new release-candidate state; Production V70.7.5 remains untouched by design.
 
@@ -43,11 +44,11 @@ The first DOI-backed release must not be published until every mandatory gate be
 - [x] Verification/check dates are present on every current release-candidate record; this does not mean every field is verified.
 - [x] Commercial-rights uncertainty is preserved rather than simplified in the current candidate.
 - [x] Source hierarchy is defined and the current candidate uses Tier A where current first-party evidence was successfully obtained; unresolved rows remain explicit.
-- [ ] Derived metrics are reproducible from final released inputs.
+- [ ] Derived metrics are reproducible from final released inputs. (Current HOLD-candidate metric derivation is reproducible.)
 - [x] Relationship disclosures are populated and evidence-scoped for the current release candidate.
 - [x] Methodology is included.
 - [ ] Citation metadata is final-release valid. (`CITATION.cff` is pre-release safe; DOI/version are intentionally absent.)
-- [ ] License or usage terms are explicitly resolved.
+- [ ] License or usage terms are final-deposit resolved. (Public terms and custom-Zenodo mapping are verified; actual Zenodo draft preview remains pending.)
 - [ ] Immutable package can be regenerated from a known final source state.
 - [ ] Prior releases remain retrievable.
 - [ ] Public download is independent from the live buyer-facing site.
