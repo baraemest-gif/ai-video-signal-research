@@ -1,0 +1,37 @@
+name: Validate research data
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'datasets/**'
+      - 'reconciliation/**'
+      - 'reproducibility/**'
+      - '.github/workflows/validate-research-data.yml'
+  pull_request:
+    paths:
+      - 'datasets/**'
+      - 'reconciliation/**'
+      - 'reproducibility/**'
+      - '.github/workflows/validate-research-data.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Validate provider reconciliation
+        run: python reproducibility/validate_reconciliation.py
+
+      - name: Validate release candidate
+        run: python reproducibility/validate_release_candidate.py
