@@ -22,6 +22,40 @@ CI conclusion:
 
 The authoritative frozen state is the exact Git commit and tree above, not a manually duplicated copy of the dataset.
 
+## Authoritative prepublication artifact
+
+GitHub Actions artifact ID:
+`10499757161`
+
+Artifact name:
+`AI-Video-Signal-v2026.09.17-PREPUBLISH-820b41e06bfdd8f861e1177eef10c6c6160ebecd`
+
+Artifact size:
+`53,226 bytes`
+
+GitHub artifact digest:
+`sha256:ca7851c4c7eaed9605918ba7c756b58ea0123d0799d10abf07ae13d570c10a8b`
+
+Artifact expiry:
+`2026-12-16T13:34:19Z`
+
+This artifact was produced by CI from the exact freeze SHA and passed the frozen-package validator before upload.
+
+A later artifact produced from `main` is a development/pre-publication preview only and must **not** replace this authoritative freeze artifact when preparing the first DOI deposit unless a new freeze is explicitly declared and validated.
+
+## Supporting HOLD candidate artifact from the same freeze run
+
+Artifact ID:
+`10500016830`
+
+Name:
+`AI-Video-Signal-RC-2026-09-17-HOLD`
+
+Digest:
+`sha256:b76c011dd4b07db7a77a74ea1814e5fc18609495c62f1c69b5e1a243c014a48c`
+
+This supporting artifact is retained for reproducibility and comparison. The versioned `v2026.09.17-PREPUBLISH` artifact above is the authoritative deposit candidate.
+
 ## What the frozen state contains
 
 - reconciled 14-provider CSV and JSON candidate;
@@ -51,8 +85,12 @@ On the exact freeze SHA, CI passed:
 - pre-freeze readiness;
 - HOLD publication guard;
 - candidate metric derivation;
-- deterministic package reconstruction;
-- SHA-256 package verification.
+- deterministic candidate package reconstruction;
+- candidate SHA-256 package verification;
+- frozen `v2026.09.17` prepublication package build;
+- frozen package CSV/JSON parity validation;
+- frozen package SHA-256 validation;
+- upload of the frozen prepublication artifact.
 
 ## Publication controls
 
@@ -66,6 +104,8 @@ While status remains HOLD:
 - no Zenodo publication is authorized;
 - Production baseline **V70.7.5 remains untouched**.
 
-## Next gate
+## Remaining external gate
 
-The research state is now reproducibly frozen for prepublication review. Remaining work is release metadata and deposit governance: construct the final release-named distributions from this exact frozen state, assign the final immutable version/date consistently, preview the custom rights inside an actual Zenodo draft, and keep publication authorization false until every final gate passes.
+The Zenodo new-deposit interface requires authentication. In the unauthenticated browser check, Zenodo presented sign-in options and did not expose the deposit form. Therefore no draft, upload, DOI reservation or publication was created.
+
+Before publication, the verified custom AI Video Signal rights statement must be entered and previewed in an authenticated Zenodo draft. Publication authorization must remain false until that preview and the remaining final release checks pass.
