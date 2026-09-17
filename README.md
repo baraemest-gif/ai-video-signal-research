@@ -8,9 +8,23 @@ AI Video Signal is building a citation-grade evidence layer for AI-video market 
 
 This repository is not a generic “best AI video tools” ranking. It is designed so material claims can be traced to evidence, derived calculations can be reproduced, and historical releases remain citable.
 
+## DOI-backed release
+
+**AI Video Signal Research Dataset 2026 — v2026.09.17**
+
+- DOI: **10.5281/zenodo.22816605**
+- DOI URL: https://doi.org/10.5281/zenodo.22816605
+- Zenodo record: https://zenodo.org/records/22816605
+- Publication date: **2026-09-17**
+- Resource type: **Dataset**
+- Creator: **Youssef Mestetef Ennaji**
+- Rights: **AI Video Signal Dataset Rights & Reuse Terms**
+
+The Zenodo record provides an independently retrievable immutable research package with machine-readable data, methodology, evidence manifests, reproducibility material, release manifests and cryptographic checksums.
+
 ## Current scope
 
-The current research baseline covers **14 AI-video providers**. Provider count is not treated as a quality metric. New providers are added only when they pass the same evidence and normalization standards.
+The release covers **14 AI-video providers**. Provider count is not treated as a quality metric. New providers are added only when they pass the same evidence and normalization standards.
 
 ## Research principles
 
@@ -22,19 +36,22 @@ The current research baseline covers **14 AI-video providers**. Provider count i
 - Historical releases are immutable; corrections ship in a new release.
 - Affiliate or commercial relationships do not alter factual research states.
 - Documentation review is never presented as hands-on testing.
-- Conflicting first-party evidence remains visible as a conflict until resolved or explicitly scoped.
+- Conflicting first-party evidence remains visible until resolved or explicitly scoped.
 
 ## Core metrics
 
 ### Approved Output Cost (AOC)
+
 `AOC = nominal generation cost × expected attempts per approved output`
 
 If attempts are not measured, the value must be labeled as a scenario or assumption rather than an observation.
 
 ### Pricing Volatility Index (PVI)
+
 A future longitudinal metric for documented material pricing, credit, allowance, or entitlement changes. No PVI score will be published until enough date-stamped historical observations exist to support a defensible methodology.
 
 ### Commercial Rights Evidence Status (CRES)
+
 Evidence classification only, not legal advice and not a provider quality score.
 
 States: `documented_clear`, `documented_conditional`, `unclear`, `restricted`, `not_checked`.
@@ -42,40 +59,44 @@ States: `documented_clear`, `documented_conditional`, `unclear`, `restricted`, `
 ## Repository structure
 
 - `methodology/` — benchmark rules, evidence hierarchy, normalization and calculation methods.
-- `datasets/` — release-ready CSV/JSON distributions and data dictionary.
-- `reconciliation/` — dated provider reconciliation, machine-readable status files and provider fact-check queue.
-- `reproducibility/` — validation and reproduction instructions, including CSV/JSON reconciliation validation.
-- `release-candidate/` — pre-DOI staging manifest and Zenodo/DOI readiness controls; not a published release.
+- `datasets/` — release/candidate CSV/JSON distributions and data dictionary.
+- `reconciliation/` — dated provider reconciliation, machine-readable status files and provider fact-check records.
+- `evidence/` — source and relationship-disclosure manifests.
+- `reproducibility/` — validation, derivation and package reconstruction controls.
+- `release-candidate/` — historical freeze, release-manifest and DOI/Zenodo governance records.
 - `reports/` — research briefs and release notes.
-- `CITATION.cff` — citation metadata used by GitHub and retained for citation support.
-- `.zenodo.json.template` — inactive Zenodo metadata template. It must not be activated until license/usage terms are resolved and metadata is validated.
-- `LICENSE_STATUS.md` — current reuse/license decision state; no standard license is invented.
+- `CITATION.cff` — current citation metadata including the real DOI.
+- `.zenodo.json.template` — inactive historical/custom-rights metadata template; it is not the mechanism used for the published manual Zenodo deposit.
+- `LICENSE_STATUS.md` — reuse/license governance.
 - `CHANGELOG.md` — research change history.
-- `RELEASE_STATUS.md` — current publication gate and blockers.
+- `RELEASE_STATUS.md` — current publication and synchronization state.
 
-## Release policy
+## Reproducibility
 
-Citation-grade releases use immutable version identifiers and retain prior states.
+The release process validates provider reconciliation, CSV/JSON parity, evidence coverage, relationship disclosures, quantitative fields, citation metadata, release state, derived metrics and package checksums through GitHub Actions.
 
-**GitHub release → Zenodo archival deposit → DOI → persistent metadata → external citation and reuse**
+The source candidate remains preserved as a historical HOLD snapshot. The DOI-backed release records the exact publication metadata without rewriting that historical candidate state.
 
-A DOI must identify an immutable research release, not a silently changing live page.
+## Rights and reuse
+
+Canonical terms:
+https://aivideosignal.com/dataset-license/
+
+Zenodo was published with the custom **AI Video Signal Dataset Rights & Reuse Terms**, not a silently substituted CC BY 4.0 license.
 
 ## Current status
 
-**HOLD — PRE-DOI RESEARCH HARDENING**
+**PUBLISHED — DOI ACTIVE**
 
-The 14-provider identity set is reconciled and a dated provider-status package now exists in matching CSV/JSON form. Confirmed current changes include InVideo AI and Pika; Hailuo AI and Hypernatural currently contain conflicting first-party evidence that must remain explicit. Kling AI, Vizard and Submagic also retain field-level verification work before the first citation-grade release.
+DOI: **10.5281/zenodo.22816605**
 
-The active `.zenodo.json` has intentionally been removed during hardening because the archival license/usage-rights mapping is not yet finalized. An inactive template is retained instead, preventing accidental publication with an invented or unintended license.
-
-The first DOI-backed release remains blocked until provider-change reconciliation is complete at field level, unresolved facts are closed or explicitly represented as uncertainty in the release candidate, final release CSV/JSON and public files reconcile, reuse/license terms are unambiguous, and the package can be regenerated from a known source state.
+Post-DOI repository synchronization is tracked in `RELEASE_STATUS.md`. A GitHub Release/tag is still a distribution-sync item and must point to the immutable freeze state rather than a later mutable `main` commit.
 
 ## Production firewall
 
-This repository is intentionally separate from the live product deployment path. The frozen production baseline **V70.7.5** is not modified by research-governance work in this repository.
+This repository is intentionally separate from the live product deployment path. The frozen production baseline **V70.7.5** is not modified by research-governance or DOI publication work in this repository.
 
-## Publisher
+## Publisher / project
 
 **AI Video Signal**  
 Creator: **Youssef Mestetef Ennaji**
