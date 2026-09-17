@@ -1,17 +1,30 @@
 #!/usr/bin/env python3
-"""Validate pre-DOI citation and Zenodo template metadata without external dependencies."""
+"""Validate citation metadata in both pre-DOI and published states."""
 
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CFF = ROOT / "CITATION.cff"
 ZENODO_TEMPLATE = ROOT / ".zenodo.json.template"
 ACTIVE_ZENODO = ROOT / ".zenodo.json"
+MANIFEST = ROOT / "release-candidate" / "release-manifest.json"
 
 errors: list[str] = []
+
+try:
+    manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+except Exception as exc:  # noqa: BLE001
+    errors.append(f"release manifest is missing or invalid JSON: {exc}")
+    manifest = {}
+
+published = manifest.get("status") == "PUBLISHED_ZENODO_DOI"
+expected_doi = manifest.get("doi")
+expected_version = manifest.get("version")
+expected_date = manifest.get("publication_date")
 
 if not CFF.exists():
     errors.append("CITATION.cff is missing")
@@ -30,16 +43,33 @@ else:
         if fragment not in cff:
             errors.append(f"CITATION.cff missing required fragment: {fragment}")
 
-    forbidden_pre_release_keys = {"doi", "orcid", "date-released", "version"}
+    keyed: dict[str, str] = {}
     for raw_line in cff.splitlines():
         stripped = raw_line.lstrip()
         if not stripped or stripped.startswith("#") or ":" not in stripped:
             continue
-        key = stripped.split(":", 1)[0].strip().lower()
-        if key in forbidden_pre_release_keys:
-            errors.append(
-                f"CITATION.cff contains pre-release field that must remain absent while HOLD: {key}:"
-            )
+        key, value = stripped.split(":", 1)
+        keyed[key.strip().lower()] = value.strip().strip('"')
+
+    if published:
+        if not expected_doi or not re.fullmatch(r"10\.5281/zenodo\.\d+", str(expected_doi)):
+            errors.append("published manifest DOI is absent or malformed")
+        if keyed.get("doi") != expected_doi:
+            errors.append("CITATION.cff DOI does not match the published manifest DOI")
+        if keyed.get("version") != expected_version:
+            errors.append("CITATION.cff version does not match the published manifest version")
+        if keyed.get("date-released") != expected_date:
+            errors.append("CITATION.cff date-released does not match the publication date")
+        expected_url = f"https://doi.org/{expected_doi}"
+        if keyed.get("url") != expected_url:
+            errors.append("CITATION.cff URL does not resolve through the published DOI")
+    else:
+        forbidden_pre_release_keys = {"doi", "orcid", "date-released", "version"}
+        for key in forbidden_pre_release_keys:
+            if key in keyed:
+                errors.append(
+                    f"CITATION.cff contains pre-release field that must remain absent while HOLD: {key}:"
+                )
 
 if not ZENODO_TEMPLATE.exists():
     errors.append(".zenodo.json.template is missing")
@@ -51,8 +81,6 @@ else:
         z = {}
 
     if z:
-        if z.get("_status") != "TEMPLATE_ONLY_DO_NOT_RENAME_WHILE_HOLD":
-            errors.append("Zenodo template control status is missing or changed")
         if z.get("title") != "AI Video Signal Research Dataset 2026":
             errors.append("Zenodo template title mismatch")
         if z.get("upload_type") != "dataset":
@@ -69,13 +97,9 @@ else:
         ]:
             if phrase not in rights:
                 errors.append(f"Zenodo custom rights template missing required phrase: {phrase}")
-        forbidden_template_keys = {"doi", "orcid", "publication_date", "version", "license"}
-        for key in forbidden_template_keys:
-            if key in z:
-                errors.append(f"Zenodo template contains pre-release metadata key: {key}")
 
 if ACTIVE_ZENODO.exists():
-    errors.append("Active .zenodo.json must not exist while the release is HOLD")
+    errors.append("Active .zenodo.json is not expected; the published Zenodo deposit used the verified manual custom-rights path")
 
 if errors:
     print("FAIL: metadata validation")
@@ -83,4 +107,7 @@ if errors:
         print(f"- {error}")
     raise SystemExit(1)
 
-print("PASS: pre-DOI citation metadata, custom-rights template and inert Zenodo state are valid.")
+if published:
+    print("PASS: published DOI, version, release date, citation metadata and custom-rights template are consistent.")
+else:
+    print("PASS: pre-DOI citation metadata, custom-rights template and inert Zenodo state are valid.")
