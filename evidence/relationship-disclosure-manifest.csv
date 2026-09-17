@@ -1,0 +1,15 @@
+provider,disclosure_state,evidence_date,evidence_class,public_summary,source_visibility
+Runway,application_submitted_not_confirmed,2026-08-29,connected_mail,"Affiliate application submitted; approval not evidenced in connected mailbox as of 2026-09-17.",private_evidence_not_published
+Kling AI,application_sent_not_confirmed,2026-09-07,connected_mail,"Affiliate application sent; approval not evidenced in connected mailbox as of 2026-09-17.",private_evidence_not_published
+HeyGen,inquiry_followup_not_confirmed,2026-09-17,connected_mail,"Affiliate-program inquiry/follow-up sent; approval not evidenced in connected mailbox.",private_evidence_not_published
+InVideo AI,application_received_not_confirmed,2026-08-28,connected_mail,"Impact affiliate application receipt evidenced; approval not evidenced in connected mailbox.",private_evidence_not_published
+Fliki,inquiry_not_confirmed,2026-09-07,connected_mail,"Affiliate setup/publisher eligibility inquiry sent; provider confirmation not evidenced in connected mailbox.",private_evidence_not_published
+Pika,no_relationship_evidenced,2026-09-17,connected_mail_search,"No affiliate relationship was evidenced in the connected mailbox search as of the checked date. This is not proof of absence.",private_evidence_not_published
+Hailuo AI,application_sent_not_confirmed,2026-09-07,connected_mail,"Affiliate application sent; approval not evidenced in connected mailbox.",private_evidence_not_published
+Synthesia,confirmed_affiliate_relationship,2026-08-28,provider_welcome_email,"Affiliate-program welcome received.",private_evidence_not_published
+ElevenLabs,confirmed_affiliate_relationship,2026-08-31,provider_welcome_email,"Affiliate-program welcome received.",private_evidence_not_published
+OpusClip,confirmed_partner_relationship,2026-08-29,provider_welcome_email,"Official partner-program welcome received.",private_evidence_not_published
+Vizard,confirmed_affiliate_relationship,2026-08-29,provider_welcome_email,"Affiliate-program welcome received; provider later confirmed standard enrollment path.",private_evidence_not_published
+Submagic,confirmed_affiliate_relationship,2026-08-29,provider_welcome_email,"Affiliate-program welcome received.",private_evidence_not_published
+Hypernatural,confirmed_ambassador_affiliate_relationship,2026-08-29,provider_welcome_email,"Hypernatural Ambassadors welcome received.",private_evidence_not_published
+Google Veo,no_relationship_evidenced,2026-09-17,connected_mail_search,"No affiliate relationship was evidenced in the connected mailbox search as of the checked date. This is not proof of absence.",private_evidence_not_published
