@@ -5,6 +5,10 @@ type: dataset
 authors:
   - family-names: "Mestetef Ennaji"
     given-names: "Youssef"
+version: "v2026.09.17"
+date-released: 2026-09-17
+doi: "10.5281/zenodo.22816605"
+url: "https://doi.org/10.5281/zenodo.22816605"
 repository-code: "https://github.com/baraemest-gif/ai-video-signal-research"
 abstract: >-
   Versioned research dataset and methodology for AI-video market intelligence,
