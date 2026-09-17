@@ -49,8 +49,14 @@ jobs:
       - name: Validate evidence coverage and relationship disclosures
         run: python reproducibility/validate_evidence_and_disclosures.py
 
+      - name: Validate quantitative evidence coverage
+        run: python reproducibility/validate_quantitative_coverage.py
+
       - name: Validate citation and Zenodo metadata
         run: python reproducibility/validate_metadata.py
+
+      - name: Validate pre-freeze readiness
+        run: python reproducibility/validate_freeze_readiness.py
 
       - name: Enforce HOLD release safety guard
         run: python reproducibility/validate_release_guard.py
