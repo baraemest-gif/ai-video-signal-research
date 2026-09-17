@@ -44,6 +44,7 @@ COPY_FILES = [
     "reproducibility/build_candidate_package.py",
     "reproducibility/validate_candidate_package.py",
     "reproducibility/build_frozen_prepublish_package.py",
+    "reproducibility/validate_frozen_prepublish_package.py",
     "release-candidate/FREEZE_READINESS.md",
     "release-candidate/RELEASE_PLAYBOOK.md",
     "release-candidate/ZENODO_DEPOSIT_FIELDS.md",
