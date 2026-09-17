@@ -1,6 +1,7 @@
 source_id,provider_or_scope,source_url,evidence_tier,checked_at,purpose,state
 SRC-RUNWAY-PRICING,Runway,https://runway.com/pricing,A,2026-09-17,pricing_and_plan_allowances,verified
 SRC-RUNWAY-GEN45,Runway,https://help.runwayml.com/hc/en-us/articles/46974685288467-Creating-with-Gen-4-5,A,2026-09-17,model_credit_burn,verified
+SRC-KLING-MEMBERSHIP,Kling AI,https://klingai.com/app/membership/membership-plan,A,2026-09-17,current_public_cny_membership_pricing_and_credits,verified_region_scoped
 SRC-HEYGEN-PRICING,HeyGen,https://www.heygen.com/pricing,A,2026-09-17,pricing,verified
 SRC-HEYGEN-CREDITS,HeyGen,https://help.heygen.com/en/articles/15126059-how-to-use-credits-on-heygen,A,2026-09-17,credit_allowances,verified
 SRC-INVIDEO-PRICING,InVideo AI,https://invideo.io/pricing/,A,2026-09-17,pricing_and_credits,verified_material_change
