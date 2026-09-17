@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this research, please cite the specific immutable release."
+title: "AI Video Signal Research Dataset 2026"
+type: dataset
+authors:
+  - family-names: "Mestetef Ennaji"
+    given-names: "Youssef"
+repository-code: "https://github.com/baraemest-gif/ai-video-signal-research"
+abstract: >-
+  Versioned research dataset and methodology for AI-video market intelligence,
+  including pricing, credits, plan entitlements, model-level production economics,
+  free-access states, commercial-use evidence, and documented market changes.
+keywords:
+  - ai video
+  - generative video
+  - pricing benchmark
+  - market intelligence
+  - reproducible research
+  - dataset
