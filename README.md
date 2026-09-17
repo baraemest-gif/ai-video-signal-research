@@ -22,6 +22,7 @@ The current research baseline covers **14 AI-video providers**. Provider count i
 - Historical releases are immutable; corrections ship in a new release.
 - Affiliate or commercial relationships do not alter factual research states.
 - Documentation review is never presented as hands-on testing.
+- Conflicting first-party evidence remains visible as a conflict until resolved or explicitly scoped.
 
 ## Core metrics
 
@@ -42,10 +43,12 @@ States: `documented_clear`, `documented_conditional`, `unclear`, `restricted`, `
 
 - `methodology/` — benchmark rules, evidence hierarchy, normalization and calculation methods.
 - `datasets/` — release-ready CSV/JSON distributions and data dictionary.
-- `reproducibility/` — validation and reproduction instructions.
+- `reconciliation/` — dated provider reconciliation, machine-readable status files and provider fact-check queue.
+- `reproducibility/` — validation and reproduction instructions, including CSV/JSON reconciliation validation.
 - `reports/` — research briefs and release notes.
 - `CITATION.cff` — citation metadata.
-- `.zenodo.json` — archival metadata for Zenodo integration.
+- `.zenodo.json` — archival metadata template for Zenodo integration.
+- `LICENSE_STATUS.md` — current reuse/license decision state; no standard license is invented.
 - `CHANGELOG.md` — research change history.
 - `RELEASE_STATUS.md` — current publication gate and blockers.
 
@@ -61,7 +64,9 @@ A DOI must identify an immutable research release, not a silently changing live 
 
 **HOLD — PRE-DOI RESEARCH HARDENING**
 
-The first DOI-backed release remains blocked until provider-change reconciliation is complete, unresolved pricing facts are closed or explicitly represented as uncertainty, CSV/JSON and public files reconcile, and the package can be regenerated from a known source state.
+The 14-provider identity set is reconciled and a dated provider-status package now exists in matching CSV/JSON form. Confirmed current changes include InVideo AI and Pika; Hailuo AI and Hypernatural currently contain conflicting first-party evidence that must remain explicit. Kling AI, Vizard and Submagic also retain field-level verification work before the first citation-grade release.
+
+The first DOI-backed release remains blocked until provider-change reconciliation is complete at field level, unresolved facts are closed or explicitly represented as uncertainty in the release candidate, final release CSV/JSON and public files reconcile, reuse/license terms are unambiguous, and the package can be regenerated from a known source state.
 
 ## Production firewall
 
