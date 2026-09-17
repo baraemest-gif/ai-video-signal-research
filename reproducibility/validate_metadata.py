@@ -30,11 +30,16 @@ else:
         if fragment not in cff:
             errors.append(f"CITATION.cff missing required fragment: {fragment}")
 
-    forbidden_pre_release_keys = ["doi:", "orcid:", "date-released:", "version:"]
-    lowered = cff.lower()
-    for key in forbidden_pre_release_keys:
-        if key in lowered:
-            errors.append(f"CITATION.cff contains pre-release field that must remain absent while HOLD: {key}")
+    forbidden_pre_release_keys = {"doi", "orcid", "date-released", "version"}
+    for raw_line in cff.splitlines():
+        stripped = raw_line.lstrip()
+        if not stripped or stripped.startswith("#") or ":" not in stripped:
+            continue
+        key = stripped.split(":", 1)[0].strip().lower()
+        if key in forbidden_pre_release_keys:
+            errors.append(
+                f"CITATION.cff contains pre-release field that must remain absent while HOLD: {key}:"
+            )
 
 if not ZENODO_TEMPLATE.exists():
     errors.append(".zenodo.json.template is missing")
@@ -55,10 +60,10 @@ else:
         creators = z.get("creators") or []
         if not creators or creators[0].get("name") != "Mestetef Ennaji, Youssef":
             errors.append("Zenodo template creator metadata mismatch")
-        serialized = json.dumps(z, ensure_ascii=False).lower()
-        for forbidden in ['"doi"', '"orcid"', '"publication_date"', '"version"']:
-            if forbidden in serialized:
-                errors.append(f"Zenodo template contains pre-release metadata key: {forbidden}")
+        forbidden_template_keys = {"doi", "orcid", "publication_date", "version"}
+        for key in forbidden_template_keys:
+            if key in z:
+                errors.append(f"Zenodo template contains pre-release metadata key: {key}")
 
 if ACTIVE_ZENODO.exists():
     errors.append("Active .zenodo.json must not exist while the release is HOLD")
