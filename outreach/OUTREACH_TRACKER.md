@@ -16,6 +16,16 @@ This tracker records external outreach related to independent citation, factual 
 | 2026-09-17 19:29 | Creative Bloq | newscreativebloq@futurenet.com | AI-video tools / pricing / production-workflow dataset | Sent — awaiting response |
 | 2026-09-17 19:29 | Tom's Guide — Amanda Caswell | amanda.caswell@futurenet.com | Source for future AI-video comparisons | Sent — awaiting response |
 
+## Media / editorial citation outreach — wave 2 prepared
+
+| Target | Address | Purpose | Status |
+|---|---|---|---|
+| The Verge | tips@theverge.com | DOI-backed AI-video pricing dataset / generative-video economics | Draft — not sent |
+| WIRED AI Lab | ailab@wired.com | Source for AI Lab coverage of generative-video economics and provider changes | Draft — not sent |
+| SiliconANGLE — Duncan Riley | duncan@nichenet.com.au | Research source for generative-AI pricing and AI-video market economics | Draft — not sent |
+| THE DECODER | hello@the-decoder.com | DOI-backed AI research dataset with reproducible methodology | Draft — not sent |
+| TechRadar AI — Graham Barlow | graham.barlow@futurenet.com | Source for future AI-video comparisons and pricing coverage | Draft — not sent |
+
 ## External factual-correction outreach
 
 | Sent (Madrid) | Target | Address | Topic | Status |
@@ -48,6 +58,7 @@ This tracker records external outreach related to independent citation, factual 
 ## Current outreach totals
 
 - Media/editorial citation pitches sent: **5**
+- Media/editorial citation drafts prepared, not sent: **5**
 - External factual-correction messages sent: **4**
 - Provider fact-check messages sent: **3**
 - Independent citations confirmed from this outreach wave: **0**
