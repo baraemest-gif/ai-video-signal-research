@@ -1,0 +1,25 @@
+name: BELORIE D1 Apply
+
+on:
+  push:
+    branches:
+      - belorie-cloudflare-ops
+    paths:
+      - "ops/belorie/pending.sql"
+      - "ops/belorie/apply_d1.py"
+      - ".github/workflows/belorie-d1.yml"
+  workflow_dispatch:
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply SQL to BELORIE D1
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: f3892e287e6f5db4c20bb84ebffeabfa
+          CLOUDFLARE_D1_DATABASE_ID: 1cff906f-4590-4fee-afee-92ecc0d90a18
+        run: python3 ops/belorie/apply_d1.py
