@@ -5,17 +5,17 @@ INSERT INTO offers (
   source_type, source_ref, last_verified_at, updated_at
 )
 VALUES (
-  13,7,
-  'https://www.stylevana.com/en_EU/the-ordinary-niacinamide-10-zinc-1-30ml.html',
+  59,10,
+  'https://www.notino.es/calvin-klein/ck-one-eau-de-toilette-unisex/p-60116/',
   (
-    SELECT SUBSTR(affiliate_url,1,INSTR(affiliate_url,'ued=')+3)
-    FROM offers
-    WHERE retailer_id=7 AND affiliate_url IS NOT NULL
+    SELECT SUBSTR(affiliate_url,1,INSTR(affiliate_url,'url=')+3)
+    FROM variant_offers
+    WHERE retailer_id=10 AND affiliate_url IS NOT NULL
     ORDER BY id DESC LIMIT 1
-  ) || 'https%3A%2F%2Fwww.stylevana.com%2Fen_EU%2Fthe-ordinary-niacinamide-10-zinc-1-30ml.html',
-  1,'verified',NULL,9.70,'EUR','in_stock',
-  'Exact product and format: The Ordinary Niacinamide 10% + Zinc 1% 30 ml',
-  'manual','stylevana:exact:the-ordinary-niacinamide-30ml:2026-09-25',
+  ) || 'https%3A%2F%2Fwww.notino.es%2Fcalvin-klein%2Fck-one-eau-de-toilette-unisex%2Fp-60116%2F',
+  1,'verified','CAK0286',21.90,'EUR','in_stock',
+  'Exact product and format: Calvin Klein CK One Eau de Toilette 100 ml',
+  'manual','notino:exact:CAK0286:2026-09-25',
   CURRENT_TIMESTAMP,CURRENT_TIMESTAMP
 )
 ON CONFLICT(product_id,retailer_id) DO UPDATE SET
@@ -40,17 +40,52 @@ INSERT INTO offers (
   source_type, source_ref, last_verified_at, updated_at
 )
 VALUES (
-  16,7,
-  'https://www.stylevana.com/es_ES/marcas/la-roche-posay.html',
+  60,10,
+  'https://www.notino.es/rochas/eau-de-rochas-eau-de-toilette-para-mujer/',
   (
-    SELECT SUBSTR(affiliate_url,1,INSTR(affiliate_url,'ued=')+3)
-    FROM offers
-    WHERE retailer_id=7 AND affiliate_url IS NOT NULL
+    SELECT SUBSTR(affiliate_url,1,INSTR(affiliate_url,'url=')+3)
+    FROM variant_offers
+    WHERE retailer_id=10 AND affiliate_url IS NOT NULL
     ORDER BY id DESC LIMIT 1
-  ) || 'https%3A%2F%2Fwww.stylevana.com%2Fes_ES%2Fmarcas%2Fla-roche-posay.html',
-  1,'verified',NULL,17.39,'EUR','in_stock',
-  'Exact product and format: La Roche-Posay Cicaplast Baume B5+ 40 ml',
-  'manual','stylevana:exact:cicaplast-baume-b5-40ml:2026-09-25',
+  ) || 'https%3A%2F%2Fwww.notino.es%2Frochas%2Feau-de-rochas-eau-de-toilette-para-mujer%2F',
+  1,'verified','ROS0020',37.00,'EUR','in_stock',
+  'Exact product and format: Rochas Eau de Rochas Eau de Toilette 100 ml',
+  'manual','notino:exact:ROS0020:2026-09-25',
+  CURRENT_TIMESTAMP,CURRENT_TIMESTAMP
+)
+ON CONFLICT(product_id,retailer_id) DO UPDATE SET
+  merchant_product_url=excluded.merchant_product_url,
+  affiliate_url=excluded.affiliate_url,
+  affiliate_verified=1,
+  exact_match_status='verified',
+  retailer_sku=excluded.retailer_sku,
+  price=excluded.price,
+  currency=excluded.currency,
+  stock_status=excluded.stock_status,
+  shipping_text=excluded.shipping_text,
+  source_type=excluded.source_type,
+  source_ref=excluded.source_ref,
+  last_verified_at=CURRENT_TIMESTAMP,
+  updated_at=CURRENT_TIMESTAMP;
+
+INSERT INTO offers (
+  product_id, retailer_id, merchant_product_url, affiliate_url,
+  affiliate_verified, exact_match_status, retailer_sku,
+  price, currency, stock_status, shipping_text,
+  source_type, source_ref, last_verified_at, updated_at
+)
+VALUES (
+  61,10,
+  'https://www.notino.es/loewe/001-woman-eau-de-parfum-para-mujer/',
+  (
+    SELECT SUBSTR(affiliate_url,1,INSTR(affiliate_url,'url=')+3)
+    FROM variant_offers
+    WHERE retailer_id=10 AND affiliate_url IS NOT NULL
+    ORDER BY id DESC LIMIT 1
+  ) || 'https%3A%2F%2Fwww.notino.es%2Floewe%2F001-woman-eau-de-parfum-para-mujer%2F',
+  1,'verified','LOW0261',126.00,'EUR','in_stock',
+  'Exact product and format: LOEWE 001 Woman Eau de Parfum 100 ml',
+  'manual','notino:exact:LOW0261:2026-09-25',
   CURRENT_TIMESTAMP,CURRENT_TIMESTAMP
 )
 ON CONFLICT(product_id,retailer_id) DO UPDATE SET
