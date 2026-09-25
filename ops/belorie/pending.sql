@@ -16,14 +16,30 @@ dos AS (
   HAVING COUNT(DISTINCT retailer_id)=2
 )
 SELECT
-  p.id,
-  p.name,
-  p.size_label,
-  p.ean_gtin,
-  GROUP_CONCAT(DISTINCT r.name) AS plataformas
+  target.id AS target_id,
+  target.name AS target_name,
+  target.size_label AS target_size,
+  target.ean_gtin AS gtin,
+  lad.id AS lad_id,
+  lad.name AS lad_name,
+  lad.size_label AS lad_size,
+  o.price AS lad_price,
+  o.currency AS lad_currency,
+  o.merchant_product_url,
+  o.affiliate_url,
+  o.stock_status,
+  o.shipping_text,
+  o.source_type,
+  o.source_ref
 FROM dos d
-JOIN products p ON p.id=d.product_id
-JOIN exactas e ON e.product_id=p.id
-JOIN retailers r ON r.id=e.retailer_id
-GROUP BY p.id,p.name,p.size_label,p.ean_gtin
-ORDER BY p.name;
+JOIN products target ON target.id=d.product_id
+JOIN products lad
+  ON lad.id<>target.id
+ AND lad.slug LIKE 'lad-%'
+ AND lad.ean_gtin=target.ean_gtin
+JOIN offers o
+  ON o.product_id=lad.id
+ AND o.retailer_id=4
+ AND o.exact_match_status='verified'
+WHERE target.ean_gtin IS NOT NULL
+ORDER BY target.name;
