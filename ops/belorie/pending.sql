@@ -5,17 +5,17 @@ INSERT INTO offers (
   source_type, source_ref, last_verified_at, updated_at
 )
 VALUES (
-  5,10,
-  'https://www.notino.es/carolina-herrera/good-girl-eau-de-parfum-para-mujer/',
+  29,10,
+  'https://www.notino.es/carolina-herrera/good-girl-eau-de-parfum-para-mujer/p-573739/',
   (
     SELECT SUBSTR(affiliate_url,1,INSTR(affiliate_url,'url=')+3)
     FROM variant_offers
     WHERE retailer_id=10 AND affiliate_url IS NOT NULL
     ORDER BY id DESC LIMIT 1
-  ) || 'https%3A%2F%2Fwww.notino.es%2Fcarolina-herrera%2Fgood-girl-eau-de-parfum-para-mujer%2F',
-  1,'verified','CHR0865',148.00,'EUR','in_stock',
-  'Producto y formato exactos: Carolina Herrera Good Girl Eau de Parfum 80 ml verificado en NOTINO',
-  'manual','notino:exact:CHR0865:2026-09-25',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP
+  ) || 'https%3A%2F%2Fwww.notino.es%2Fcarolina-herrera%2Fgood-girl-eau-de-parfum-para-mujer%2Fp-573739%2F',
+  1,'verified','CHR0867',79.00,'EUR','in_stock',
+  'Producto y formato exactos: Carolina Herrera Good Girl Eau de Parfum 30 ml verificado en NOTINO',
+  'manual','notino:exact:CHR0867:2026-09-25',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP
 )
 ON CONFLICT(product_id,retailer_id) DO UPDATE SET
   merchant_product_url=excluded.merchant_product_url,
@@ -39,17 +39,17 @@ INSERT INTO offers (
   source_type, source_ref, last_verified_at, updated_at
 )
 VALUES (
-  26,10,
-  'https://www.notino.es/lancome/la-vie-est-belle-eau-de-parfum-para-mujer/p-83691/',
+  21,10,
+  'https://www.notino.es/color-wow/color-wow-dream-coat-supernatural-spray-spray-para-cabello-humedo-para-alisar-el-cabello/p-15960471/',
   (
     SELECT SUBSTR(affiliate_url,1,INSTR(affiliate_url,'url=')+3)
     FROM variant_offers
     WHERE retailer_id=10 AND affiliate_url IS NOT NULL
     ORDER BY id DESC LIMIT 1
-  ) || 'https%3A%2F%2Fwww.notino.es%2Flancome%2Fla-vie-est-belle-eau-de-parfum-para-mujer%2Fp-83691%2F',
-  1,'verified','LAM7066',80.50,'EUR','in_stock',
-  'Producto y formato exactos: Lancôme La Vie Est Belle Eau de Parfum 50 ml verificado en NOTINO',
-  'manual','notino:exact:LAM7066:2026-09-25',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP
+  ) || 'https%3A%2F%2Fwww.notino.es%2Fcolor-wow%2Fcolor-wow-dream-coat-supernatural-spray-spray-para-cabello-humedo-para-alisar-el-cabello%2Fp-15960471%2F',
+  1,'verified','CLW02351',27.50,'EUR','in_stock',
+  'Producto y formato exactos: Color WOW Dream Coat Supernatural Spray 200 ml verificado en NOTINO',
+  'manual','notino:exact:CLW02351:2026-09-25',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP
 )
 ON CONFLICT(product_id,retailer_id) DO UPDATE SET
   merchant_product_url=excluded.merchant_product_url,
@@ -73,17 +73,17 @@ INSERT INTO offers (
   source_type, source_ref, last_verified_at, updated_at
 )
 VALUES (
-  16,10,
-  'https://www.notino.es/la-roche-posay/cicaplast-baume-b5-balsamo-calmante-para-pieles-sensibles-e-irritadas/',
+  30,10,
+  'https://www.notino.es/lancome/la-vie-est-belle-eau-de-parfum-para-mujer/',
   (
     SELECT SUBSTR(affiliate_url,1,INSTR(affiliate_url,'url=')+3)
     FROM variant_offers
     WHERE retailer_id=10 AND affiliate_url IS NOT NULL
     ORDER BY id DESC LIMIT 1
-  ) || 'https%3A%2F%2Fwww.notino.es%2Fla-roche-posay%2Fcicaplast-baume-b5-balsamo-calmante-para-pieles-sensibles-e-irritadas%2F',
-  1,'verified','LRP06718',9.80,'EUR','in_stock',
-  'Producto y formato exactos: La Roche-Posay Cicaplast Baume B5+ 40 ml verificado en NOTINO',
-  'manual','notino:exact:LRP06718:2026-09-25',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP
+  ) || 'https%3A%2F%2Fwww.notino.es%2Flancome%2Fla-vie-est-belle-eau-de-parfum-para-mujer%2F',
+  1,'verified',NULL,59.90,'EUR','in_stock',
+  'Producto y formato exactos: Lancôme La Vie Est Belle Eau de Parfum 30 ml verificado en NOTINO',
+  'manual','notino:exact:la-vie-est-belle-30ml:2026-09-25',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP
 )
 ON CONFLICT(product_id,retailer_id) DO UPDATE SET
   merchant_product_url=excluded.merchant_product_url,
