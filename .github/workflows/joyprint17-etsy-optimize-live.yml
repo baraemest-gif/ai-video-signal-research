@@ -1,0 +1,42 @@
+name: JoyPrint17 Existing Listings SEO Patch
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "joyprint17/publish-requests/optimize-live.txt"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: joyprint17-existing-listings-seo
+  cancel-in-progress: false
+
+jobs:
+  optimize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependency
+        run: python -m pip install --disable-pip-version-check requests
+
+      - name: Validate script syntax
+        run: python -m py_compile joyprint17/etsy-publisher/optimize_live_listings.py
+
+      - name: Optimize existing JoyPrint17 listings
+        env:
+          ETSY_KEYSTRING: ${{ secrets.ETSY_KEYSTRING }}
+          ETSY_SHARED_SECRET: ${{ secrets.ETSY_SHARED_SECRET }}
+          ETSY_REFRESH_TOKEN: ${{ secrets.ETSY_REFRESH_TOKEN }}
+        run: python joyprint17/etsy-publisher/optimize_live_listings.py
