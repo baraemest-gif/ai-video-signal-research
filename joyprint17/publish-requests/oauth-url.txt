@@ -1,0 +1,2 @@
+Generate fresh JoyPrint17 Etsy OAuth authorization URL.
+Date: 2026-09-26
