@@ -1,16 +1,19 @@
 name: JoyPrint17 Etsy HVAC Publisher
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
     paths:
-      - "joyprint17/etsy-publisher/**"
-      - ".github/workflows/joyprint17-etsy-publish.yml"
-  workflow_dispatch:
+      - "joyprint17/publish-requests/hvac.txt"
 
 permissions:
   contents: read
+
+concurrency:
+  group: joyprint17-etsy-hvac-publish
+  cancel-in-progress: false
 
 jobs:
   publish:
