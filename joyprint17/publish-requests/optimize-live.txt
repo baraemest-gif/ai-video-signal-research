@@ -1,0 +1,8 @@
+JoyPrint17 live SEO patch
+Date: 2026-09-26
+Scope: existing active listings only
+Fields: title + tags only
+Do not create listings
+Do not change price
+Do not change description
+Do not change images/files/state/quantity
