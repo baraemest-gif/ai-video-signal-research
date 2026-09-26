@@ -1,0 +1,44 @@
+JOYPRINT17 — 25 MINI KITS — SEO/PUBLICATION QA
+Date: 2026-09-26
+
+SOURCE
+JoyPrint17_25_New_Products_Master.zip
+
+PACKAGE QA
+Products: 25
+Buyer ZIPs found: 25/25
+Buyer ZIP integrity: PASS 25/25
+Per buyer ZIP:
+- 15 PNG
+- 15 SVG
+- 2 TXT
+Corrupt ZIPs: 0
+Hero images: 25/25
+Top-level preview assets per product: 15 PNG + 15 SVG
+Canva Pro dependency: NONE
+
+SEO MANIFEST QA
+Titles: 25/25 <= 140 characters
+Tags: exactly 13 per listing
+Tag length: all <= 20 characters
+Product descriptions: 25
+Launch price recommendation: EUR 9.99
+Regular price recommendation: EUR 14.99
+Publication state: READY_NOT_PUBLISHED
+
+POSITIONING
+These are 15-template niche MARKETING mini kits, not the same product as the 30-form operations bundles already live.
+The HVAC/roofing/plumbing/painting/house-cleaning/landscaping niches also have separate Canva operations-kit work in the pipeline. Keep the offers clearly differentiated to reduce cannibalization:
+- Mini kit: SVG + PNG, marketing-only, no Canva Pro.
+- Operations kit: broader workflow/forms/marketing package, Canva-based where applicable.
+
+LIVE JOYPRINT17 LISTINGS VERIFIED DIRECTLY THROUGH ETSY
+- 4581934116 Window Cleaning Business Forms Bundle
+- 4581923768 Junk Removal Business Forms Bundle
+- 4581841815 Handyman Business Forms Bundle
+- 4581829241 Lawn Care Business Forms Bundle
+- 4572422453 Pressure Washing Ultimate Business Bundle
+
+IMPORTANT
+No Etsy listing was created or charged by this manifest operation.
+Do not edit joyprint17/etsy-publisher/** casually: the existing workflow is configured to run on pushes to that path.
