@@ -20,27 +20,41 @@ Search Console range: 2026-08-27 to 2026-09-23.
 
 Execution gap found for compliance page:
 - Current page focuses on Synthesia, Fliki and Elai.
-- Current competing results cover HeyGen, Colossyan, Vyond, SCORM/LMS tracking and audit/versioning workflows.
-- Next content update should add those missing buyer-intent dimensions rather than simply add more words.
+- Current competing results emphasize HeyGen, Colossyan, SCORM/LMS tracking, completion tracking, audit trails and version/update workflows.
+- A minimal striking-distance patch has been prepared at reports/aivs-compliance-seo-patch-2026-09-26.md.
+- Do not create a second page targeting the same compliance-video intent before evaluating the patch.
 
 ## Yontorix
 Search Console range: 2026-08-27 to 2026-09-23.
 - 5,346 impressions / 76 clicks.
 - Several product pages already rank around positions 6–11.
-- Open-ear Bluetooth product query is around position 8 and is a strong test candidate.
+
+High-intent opportunities:
+- "bolso de mano varsity pop" — ~position 8.7.
+- "bolso de mano varsity pop negro" — ~position 1.1.
+- "auriculares open ear ... 80h, enc, ipx7" — ~position 8.2.
+- "citizen fra59-2432" — ~position 10.
+- Avoid using opaque supplier-code queries as the main social acquisition strategy even if they rank.
 
 Social correction:
 - Yontorix Instagram/TikTok had been used to promote AI Video Signal.
 - Keep brand channels separate going forward.
 
-Organic traffic test:
-- Facebook post scheduled for 2026-09-30 12:00 Europe/Madrid.
-- Product: Paekole Open Ear Clip / LED / 80H / ENC / IPX7.
-- Link contains UTM:
-  utm_source=facebook
-  utm_medium=organic
-  utm_campaign=yontorix_product_test_202609
-  utm_content=open_ear_80h
+Organic traffic tests scheduled:
+1. 2026-09-28 10:00 Europe/Madrid
+   - Product: Varsity Pop handbag.
+   - UTM content: varsity_pop_handbag.
+2. 2026-09-30 12:00 Europe/Madrid
+   - Product: Paekole Open Ear Clip / LED / 80H / ENC / IPX7.
+   - UTM content: open_ear_80h.
+3. 2026-10-02 10:00 Europe/Madrid
+   - Product: Citizen FRA59-2432.
+   - UTM content: citizen_fra59_2432.
+
+All three tests:
+- Facebook organic.
+- Auto-publish enabled.
+- Affiliate disclosure included.
 - No paid boost.
 
 ## NAWRA
