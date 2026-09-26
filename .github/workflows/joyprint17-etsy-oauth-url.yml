@@ -1,0 +1,27 @@
+name: JoyPrint17 Etsy OAuth URL
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "joyprint17/publish-requests/oauth-url.txt"
+
+permissions:
+  contents: read
+
+jobs:
+  oauth-url:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Generate Etsy authorization URL
+        env:
+          ETSY_KEYSTRING: ${{ secrets.ETSY_KEYSTRING }}
+          ETSY_SHARED_SECRET: ${{ secrets.ETSY_SHARED_SECRET }}
+        run: python joyprint17/etsy-publisher/generate_oauth_url.py
