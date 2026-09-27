@@ -21,7 +21,7 @@ if not WORKER_FILE.exists():
 AID = AID_FILE.read_text().strip()
 WORKER = WORKER_FILE.read_text(encoding="utf-8")
 
-boundary = "----AIVSv33v3" + uuid.uuid4().hex
+boundary = "----AIVSv33v4" + uuid.uuid4().hex
 parts = []
 
 def field(name, value):
@@ -43,7 +43,7 @@ def filepart(name, filename, content, ctype):
 
 field("branch", BRANCH)
 field("commit_dirty", "true")
-field("commit_message", "AIVS v33 sales CTR safe preview overlay v3")
+field("commit_message", "AIVS v33 sales CTR safe preview overlay v4")
 field("manifest", "{}")
 filepart("_worker.js", "_worker.js", WORKER, "application/javascript")
 parts.append(f"--{boundary}--\r\n".encode())
@@ -88,4 +88,4 @@ print("ID=" + str(d.get("id")))
 print("URL=" + str(d.get("url")))
 print("BRANCH=" + str(((d.get("deployment_trigger") or {}).get("metadata") or {}).get("branch")))
 print("PRODUCTION_UNTOUCHED=YES")
-print("OVERLAY_VERSION=V33_V3")
+print("OVERLAY_VERSION=V33_V4")
