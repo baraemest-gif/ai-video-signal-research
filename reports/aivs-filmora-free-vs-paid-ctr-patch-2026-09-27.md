@@ -104,3 +104,16 @@ Verified from the live page:
 - redirect generated an Awin `awc` attribution parameter and continued to filmora.wondershare.com
 
 Conclusion: no evidence of a broken affiliate route in this QA. Current monetization bottleneck is upstream traffic/CTR, not an obviously dead Filmora affiliate link.
+
+## Deployment correction — title test deferred
+The live page was materially reviewed on 2026-09-24 and currently exposes:
+- title: Filmora Free vs Paid 2026: Watermark, Limits & Price
+- H1: Filmora Free vs Paid 2026: Is Paid Worth It?
+
+The 28-day GSC window through 2026-09-24 is not a clean post-change sample. Therefore:
+- DO NOT deploy the recommended title change yet.
+- Keep the current title and H1 stable.
+- First deploy only contextual internal-link reinforcement.
+- Re-evaluate title/meta only after at least one full settled GSC week reflects the current 2026-09-24 version.
+
+This prevents title thrashing and preserves attribution between changes and outcomes.
