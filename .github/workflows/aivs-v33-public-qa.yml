@@ -14,19 +14,43 @@ jobs:
   qa:
     runs-on: ubuntu-latest
     steps:
-      - name: Probe V33 V5 preview
+      - name: Full public QA
         shell: bash
         run: |
-          set -e
-          base="https://b001b6aa.ai-video-signal.pages.dev"
-          for p in             "/ai-video-pricing-benchmarks/"             "/ai-video-annual-vs-monthly-pricing-comparison/"             "/ai-video-credits-usage-comparison/"             "/elevenlabs-cancellation-refund-policy/"
+          set -euo pipefail
+          preview="https://b001b6aa.ai-video-signal.pages.dev"
+          prod="https://57ec6ea9.ai-video-signal.pages.dev"
+
+          check_target () {
+            p="$1"
+            marker="$2"
+            curl -sS -D /tmp/h "$preview$p" -o /tmp/b
+            grep -qi '^HTTP/2 200' /tmp/h
+            grep -qi '^x-aivs-v33-status: patched-v5' /tmp/h
+            grep -qi '^x-robots-tag: noindex, nofollow' /tmp/h
+            grep -q 'rel="canonical" href="https://aivideosignal.com' /tmp/b
+            if [ -n "$marker" ]; then grep -q "$marker" /tmp/b; fi
+            echo "PASS $p"
+          }
+
+          check_target "/elevenlabs-cancellation-refund-policy/" "ElevenLabs Refund Policy 2026: 14-Day Rule, Cancellation"
+          check_target "/filmora-free-vs-paid/" "Filmora Free vs Paid 2026: Watermark, Price"
+          check_target "/best-ai-video-tools-for-compliance-training/" "Compare AI compliance video tools for policy/SOP training"
+          check_target "/filmora-free-trial/" "Filmora free trial guide for 2026"
+          check_target "/ai-video-pricing-benchmarks/" "compare AI video generators by workflow and pricing"
+          check_target "/ai-video-annual-vs-monthly-pricing-comparison/" "compare the leading AI video generators before choosing a billing term"
+          check_target "/ai-video-credits-usage-comparison/" "compare AI video generators by pricing model and workflow"
+
+          for p in "/" "/best-ai-video-generators/" "/assets/site.js" "/assets/styles.css"
           do
-            echo "=== $p ==="
-            curl -sS -D /tmp/h "$base$p" -o /tmp/b
-            grep -iE '^(HTTP/|x-aivs-v33-status:|x-aivs-v33-reason:|x-robots-tag:|content-type:)' /tmp/h || true
-            echo "MARKER_COUNT=$(grep -o 'v33-sales-ctr' /tmp/b | wc -l)"
-            echo "H1_CLOSE_COUNT=$(grep -oi '</h1[[:space:]]*>' /tmp/b | wc -l)"
-            grep -o 'compare AI video generators by workflow and pricing' /tmp/b | head -1 || true
-            grep -o 'compare the leading AI video generators before choosing a billing term' /tmp/b | head -1 || true
-            grep -o 'compare AI video generators by pricing model and workflow' /tmp/b | head -1 || true
+            curl -sS "$preview$p" -o /tmp/preview
+            curl -sS "$prod$p" -o /tmp/prod
+            hp="$(sha256sum /tmp/preview | cut -d' ' -f1)"
+            hu="$(sha256sum /tmp/prod | cut -d' ' -f1)"
+            test "$hp" = "$hu"
+            echo "IDENTICAL $p $hp"
           done
+
+          echo "QA_7_OF_7=PASS"
+          echo "NON_TARGET_CONTROL=PASS"
+          echo "PRODUCTION_UNTOUCHED=YES"
