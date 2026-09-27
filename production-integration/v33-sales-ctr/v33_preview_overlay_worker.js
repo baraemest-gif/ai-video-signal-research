@@ -77,10 +77,10 @@ export default {
 
     if (cfg.linkHtml) {
       let inserted = false;
-      rw = rw.on("h2", {
+      rw = rw.on("h1", {
         element(el) {
           if (!inserted) {
-            el.before(cfg.linkHtml, { html: true });
+            el.after(cfg.linkHtml, { html: true });
             inserted = true;
           }
         }
@@ -93,7 +93,7 @@ export default {
     headers.delete("etag");
     headers.set("cache-control", "no-store");
     headers.set("x-robots-tag", "noindex, nofollow");
-    headers.set("x-aivs-v33-status", "patched-v3");
+    headers.set("x-aivs-v33-status", "patched-v4");
 
     return new Response(transformed.body, {
       status: transformed.status,
