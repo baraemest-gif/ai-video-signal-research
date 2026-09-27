@@ -76,3 +76,12 @@ Moves users from credit economics to the broader free-vs-paid purchase decision 
 - average position
 - affiliate outbound clicks
 - internal click-through to Filmora Free vs Paid
+
+## Affiliate-link QA — 2026-09-27
+Verified from the live page:
+- Awin affiliate ID: 3005653
+- advertiser / awinmid: 88453
+- clickref is page/placement-specific
+- redirect generated an Awin `awc` attribution parameter and continued to filmora.wondershare.com
+
+Conclusion: no evidence of a broken affiliate route in this QA. Current monetization bottleneck is upstream traffic/CTR, not an obviously dead Filmora affiliate link.
