@@ -1,0 +1,64 @@
+name: AIVS V33 Preview
+
+on:
+  push:
+    branches:
+      - aivs-v33-sales-ctr-preview-tools
+    paths:
+      - ".github/workflows/aivs-v33-preview.yml"
+      - "production-integration/v33-sales-ctr/**"
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-preview:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN || secrets.CF_API_TOKEN || secrets.CLOUDFLARE_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID || secrets.CF_ACCOUNT_ID }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify Cloudflare secrets
+        shell: bash
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "CLOUDFLARE_TOKEN_MISSING"
+            exit 11
+          fi
+          if [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "CLOUDFLARE_ACCOUNT_ID_MISSING"
+            exit 12
+          fi
+          echo "CLOUDFLARE_SECRETS=AVAILABLE"
+
+      - name: Prepare V33 deployer
+        shell: bash
+        run: |
+          mkdir -p "$HOME/aivs-v33-tools"
+          cp production-integration/v33-sales-ctr/v33_preview_overlay_worker.js "$HOME/aivs-v33-tools/"
+          cp production-integration/v33-sales-ctr/deploy_v33_preview_overlay.py "$HOME/aivs-v33-tools/"
+          printf '%s' "$CLOUDFLARE_ACCOUNT_ID" > "$HOME/.aivs-v33-account-id"
+
+      - name: Deploy V33 preview only
+        shell: bash
+        run: |
+          python "$HOME/aivs-v33-tools/deploy_v33_preview_overlay.py" | tee "$RUNNER_TEMP/aivs-v33-deploy.txt"
+          grep -q '^ENV=preview$' "$RUNNER_TEMP/aivs-v33-deploy.txt"
+          grep -q '^BRANCH=v33-sales-ctr-preview$' "$RUNNER_TEMP/aivs-v33-deploy.txt"
+          grep -q '^PRODUCTION_UNTOUCHED=YES$' "$RUNNER_TEMP/aivs-v33-deploy.txt"
+          grep -q '^OVERLAY_VERSION=V33_V5$' "$RUNNER_TEMP/aivs-v33-deploy.txt"
+
+      - name: Summary
+        if: always()
+        shell: bash
+        run: |
+          echo "AI Video Signal V33 Preview" >> "$GITHUB_STEP_SUMMARY"
+          if [ -f "$RUNNER_TEMP/aivs-v33-deploy.txt" ]; then
+            cat "$RUNNER_TEMP/aivs-v33-deploy.txt" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Deployment did not start." >> "$GITHUB_STEP_SUMMARY"
+          fi
