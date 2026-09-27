@@ -1,0 +1,32 @@
+name: AIVS V33 Public QA
+
+on:
+  push:
+    branches:
+      - aivs-v33-sales-ctr-preview-tools
+    paths:
+      - ".github/workflows/aivs-v33-public-qa.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe V33 V5 preview
+        shell: bash
+        run: |
+          set -e
+          base="https://b001b6aa.ai-video-signal.pages.dev"
+          for p in             "/ai-video-pricing-benchmarks/"             "/ai-video-annual-vs-monthly-pricing-comparison/"             "/ai-video-credits-usage-comparison/"             "/elevenlabs-cancellation-refund-policy/"
+          do
+            echo "=== $p ==="
+            curl -sS -D /tmp/h "$base$p" -o /tmp/b
+            grep -iE '^(HTTP/|x-aivs-v33-status:|x-aivs-v33-reason:|x-robots-tag:|content-type:)' /tmp/h || true
+            echo "MARKER_COUNT=$(grep -o 'v33-sales-ctr' /tmp/b | wc -l)"
+            echo "H1_CLOSE_COUNT=$(grep -oi '</h1[[:space:]]*>' /tmp/b | wc -l)"
+            grep -o 'compare AI video generators by workflow and pricing' /tmp/b | head -1 || true
+            grep -o 'compare the leading AI video generators before choosing a billing term' /tmp/b | head -1 || true
+            grep -o 'compare AI video generators by pricing model and workflow' /tmp/b | head -1 || true
+          done
