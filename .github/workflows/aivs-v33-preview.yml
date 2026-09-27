@@ -22,18 +22,64 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Verify Cloudflare secrets
+      - name: Resolve Cloudflare account
         shell: bash
         run: |
           if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
             echo "CLOUDFLARE_TOKEN_MISSING"
             exit 11
           fi
-          if [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
-            echo "CLOUDFLARE_ACCOUNT_ID_MISSING"
-            exit 12
-          fi
-          echo "CLOUDFLARE_SECRETS=AVAILABLE"
+
+          python - <<'PY'
+          import json, os, sys, urllib.request, urllib.error
+          from pathlib import Path
+
+          token = os.environ["CLOUDFLARE_API_TOKEN"].strip()
+          preset = os.environ.get("CLOUDFLARE_ACCOUNT_ID", "").strip()
+          out = Path(os.environ["RUNNER_TEMP"]) / "aivs-account-id"
+
+          def api(url):
+              req = urllib.request.Request(
+                  url,
+                  headers={
+                      "Authorization": f"Bearer {token}",
+                      "Accept": "application/json",
+                      "User-Agent": "AIVS-v33-GitHub"
+                  }
+              )
+              with urllib.request.urlopen(req, timeout=25) as r:
+                  return json.loads(r.read().decode())
+
+          candidates = []
+          if preset:
+              candidates.append(preset)
+          else:
+              try:
+                  data = api("https://api.cloudflare.com/client/v4/accounts?per_page=50")
+                  candidates = [x.get("id") for x in data.get("result", []) if x.get("id")]
+              except Exception as e:
+                  print("ACCOUNT_DISCOVERY_FAILED=" + type(e).__name__)
+                  sys.exit(12)
+
+          for aid in candidates:
+              try:
+                  data = api(f"https://api.cloudflare.com/client/v4/accounts/{aid}/pages/projects")
+              except Exception:
+                  continue
+              for p in data.get("result", []):
+                  if p.get("name") == "ai-video-signal":
+                      out.write_text(aid)
+                      print("ACCOUNT_RESOLVED=YES")
+                      print("PROJECT_FOUND=ai-video-signal")
+                      sys.exit(0)
+
+          print("PROJECT_FOUND=NO")
+          sys.exit(13)
+          PY
+
+          ACCOUNT_ID="$(cat "$RUNNER_TEMP/aivs-account-id")"
+          echo "::add-mask::$ACCOUNT_ID"
+          echo "CLOUDFLARE_ACCOUNT_ID=$ACCOUNT_ID" >> "$GITHUB_ENV"
 
       - name: Prepare V33 deployer
         shell: bash
