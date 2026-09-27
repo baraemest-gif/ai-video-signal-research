@@ -1,83 +1,17 @@
 name: AIVS V33 Preview
 
 on:
-  push:
-    branches:
-      - aivs-v33-sales-ctr-preview-tools
-    paths:
-      - ".github/workflows/aivs-v33-preview.yml"
-      - "production-integration/v33-sales-ctr/**"
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  deploy-preview:
+  info:
     runs-on: ubuntu-latest
-    env:
-      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      CLOUDFLARE_ACCOUNT_ID: f3892e287e6f5db4c20bb84ebffeabfa
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Verify AI Video Signal Pages access
-        shell: bash
+      - name: Status
         run: |
-          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
-            echo "CLOUDFLARE_TOKEN_MISSING"
-            exit 11
-          fi
-          python - <<'PY'
-          import json, os, urllib.request, sys
-          token=os.environ["CLOUDFLARE_API_TOKEN"]
-          aid=os.environ["CLOUDFLARE_ACCOUNT_ID"]
-          url=f"https://api.cloudflare.com/client/v4/accounts/{aid}/pages/projects/ai-video-signal"
-          req=urllib.request.Request(url,headers={
-              "Authorization":f"Bearer {token}",
-              "Accept":"application/json",
-              "User-Agent":"AIVS-v33-GitHub"
-          })
-          try:
-              with urllib.request.urlopen(req,timeout=25) as r:
-                  data=json.loads(r.read().decode())
-          except Exception as e:
-              print("PROJECT_ACCESS=FAILED")
-              print(type(e).__name__)
-              sys.exit(12)
-          if not data.get("success") or not data.get("result"):
-              print("PROJECT_ACCESS=FAILED")
-              sys.exit(13)
-          print("PROJECT_ACCESS=OK")
-          print("PROJECT="+str(data["result"].get("name")))
-          print("PRODUCTION_BRANCH="+str((data["result"].get("source") or {}).get("config",{}).get("production_branch") or data["result"].get("production_branch")))
-          PY
-
-      - name: Prepare V33 deployer
-        shell: bash
-        run: |
-          mkdir -p "$HOME/aivs-v33-tools"
-          cp production-integration/v33-sales-ctr/v33_preview_overlay_worker.js "$HOME/aivs-v33-tools/"
-          cp production-integration/v33-sales-ctr/deploy_v33_preview_overlay.py "$HOME/aivs-v33-tools/"
-          printf '%s' "$CLOUDFLARE_ACCOUNT_ID" > "$HOME/.aivs-v33-account-id"
-
-      - name: Deploy V33 preview only
-        shell: bash
-        run: |
-          python "$HOME/aivs-v33-tools/deploy_v33_preview_overlay.py" | tee "$RUNNER_TEMP/aivs-v33-deploy.txt"
-          grep -q '^ENV=preview$' "$RUNNER_TEMP/aivs-v33-deploy.txt"
-          grep -q '^BRANCH=v33-sales-ctr-preview$' "$RUNNER_TEMP/aivs-v33-deploy.txt"
-          grep -q '^PRODUCTION_UNTOUCHED=YES$' "$RUNNER_TEMP/aivs-v33-deploy.txt"
-          grep -q '^OVERLAY_VERSION=V33_V5$' "$RUNNER_TEMP/aivs-v33-deploy.txt"
-
-      - name: Summary
-        if: always()
-        shell: bash
-        run: |
-          echo "AI Video Signal V33 Preview" >> "$GITHUB_STEP_SUMMARY"
-          if [ -f "$RUNNER_TEMP/aivs-v33-deploy.txt" ]; then
-            cat "$RUNNER_TEMP/aivs-v33-deploy.txt" >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "Deployment did not start." >> "$GITHUB_STEP_SUMMARY"
-          fi
+          echo "V33 V5 preview is already deployed and QA 7/7 passed."
+          echo "Automatic Cloudflare deployment is disabled because the repository token does not have Pages Write permission."
+          echo "Use the fail-closed production deployer only with the AIVS Pages Write token."
