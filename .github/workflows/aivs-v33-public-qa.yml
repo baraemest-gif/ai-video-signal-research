@@ -28,8 +28,8 @@ jobs:
             grep -qi '^HTTP/2 200' /tmp/h
             grep -qi '^x-aivs-v33-status: patched-v5' /tmp/h
             grep -qi '^x-robots-tag: noindex, nofollow' /tmp/h
-            grep -q 'rel="canonical" href="https://aivideosignal.com' /tmp/b
-            if [ -n "$marker" ]; then grep -q "$marker" /tmp/b; fi
+            grep -Fq "https://aivideosignal.com$p" /tmp/b
+            grep -Fq "$marker" /tmp/b
             echo "PASS $p"
           }
 
@@ -48,7 +48,7 @@ jobs:
             hp="$(sha256sum /tmp/preview | cut -d' ' -f1)"
             hu="$(sha256sum /tmp/prod | cut -d' ' -f1)"
             test "$hp" = "$hu"
-            echo "IDENTICAL $p $hp"
+            echo "IDENTICAL $p"
           done
 
           echo "QA_7_OF_7=PASS"
