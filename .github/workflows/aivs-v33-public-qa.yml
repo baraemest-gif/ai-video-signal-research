@@ -14,7 +14,21 @@ jobs:
   qa:
     runs-on: ubuntu-latest
     steps:
-      - name: Full public QA
+      - uses: actions/checkout@v4
+
+      - name: Static-check production package
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile production-integration/v33-sales-ctr/deploy_v33_production_safe.py
+          python -m py_compile production-integration/v33-sales-ctr/rollback_v33.py
+          node --check production-integration/v33-sales-ctr/v33_production_overlay_worker.js
+          ! grep -qi 'noindex' production-integration/v33-sales-ctr/v33_production_overlay_worker.js
+          grep -q 'STOP=PRODUCTION_CHANGED_SINCE_QA' production-integration/v33-sales-ctr/deploy_v33_production_safe.py
+          grep -q 'AUTO_ROLLBACK=' production-integration/v33-sales-ctr/deploy_v33_production_safe.py
+          echo "STATIC_PRODUCTION_PACKAGE=PASS"
+
+      - name: Full public preview QA
         shell: bash
         run: |
           set -euo pipefail
@@ -45,9 +59,7 @@ jobs:
           do
             curl -sS "$preview$p" -o /tmp/preview
             curl -sS "$prod$p" -o /tmp/prod
-            hp="$(sha256sum /tmp/preview | cut -d' ' -f1)"
-            hu="$(sha256sum /tmp/prod | cut -d' ' -f1)"
-            test "$hp" = "$hu"
+            test "$(sha256sum /tmp/preview | cut -d' ' -f1)" = "$(sha256sum /tmp/prod | cut -d' ' -f1)"
             echo "IDENTICAL $p"
           done
 
