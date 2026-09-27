@@ -28,12 +28,22 @@ const CFG = {
 
 async function proxy(request) {
   const u = new URL(request.url);
-  const upstreamUrl = UPSTREAM + u.pathname + u.search;
   const headers = new Headers(request.headers);
   headers.set("host", new URL(UPSTREAM).host);
   const init = { method: request.method, headers, redirect: "manual" };
   if (!["GET", "HEAD"].includes(request.method)) init.body = request.body;
-  return fetch(upstreamUrl, init);
+  return fetch(UPSTREAM + u.pathname + u.search, init);
+}
+
+function previewHeaders(sourceHeaders, version) {
+  const h = new Headers(sourceHeaders);
+  h.delete("content-length");
+  h.delete("content-encoding");
+  h.delete("etag");
+  h.set("cache-control", "no-store");
+  h.set("x-robots-tag", "noindex, nofollow");
+  h.set("x-aivs-v33-status", version);
+  return h;
 }
 
 export default {
@@ -43,62 +53,49 @@ export default {
     const upstream = await proxy(request);
 
     if (!cfg || request.method !== "GET") return upstream;
-
-    const contentType = upstream.headers.get("content-type") || "";
-    if (!contentType.includes("text/html")) return upstream;
-
-    let rw = new HTMLRewriter();
-
-    if (cfg.title) {
-      rw = rw
-        .on("title", {
-          element(el) { el.setInnerContent(cfg.title); }
-        })
-        .on('meta[property="og:title"]', {
-          element(el) { el.setAttribute("content", cfg.title); }
-        })
-        .on('meta[name="twitter:title"]', {
-          element(el) { el.setAttribute("content", cfg.title); }
-        });
-    }
-
-    if (cfg.description) {
-      rw = rw
-        .on('meta[name="description"]', {
-          element(el) { el.setAttribute("content", cfg.description); }
-        })
-        .on('meta[property="og:description"]', {
-          element(el) { el.setAttribute("content", cfg.description); }
-        })
-        .on('meta[name="twitter:description"]', {
-          element(el) { el.setAttribute("content", cfg.description); }
-        });
-    }
+    const ct = upstream.headers.get("content-type") || "";
+    if (!ct.includes("text/html")) return upstream;
 
     if (cfg.linkHtml) {
-      let inserted = false;
-      rw = rw.on("h1", {
-        element(el) {
-          if (!inserted) {
-            el.after(cfg.linkHtml, { html: true });
-            inserted = true;
-          }
-        }
+      const original = await upstream.text();
+      if (original.includes("v33-sales-ctr")) {
+        return new Response(original, {
+          status: upstream.status,
+          headers: previewHeaders(upstream.headers, "patched-v5-existing")
+        });
+      }
+      const re = /<\/h1\s*>/i;
+      if (!re.test(original)) {
+        const h = previewHeaders(upstream.headers, "guard-failed-v5");
+        h.set("x-aivs-v33-reason", "missing-h1-close");
+        return new Response(original, { status: upstream.status, headers: h });
+      }
+      const patched = original.replace(re, m => m + cfg.linkHtml);
+      return new Response(patched, {
+        status: upstream.status,
+        headers: previewHeaders(upstream.headers, "patched-v5")
       });
     }
 
-    const transformed = rw.transform(upstream);
-    const headers = new Headers(transformed.headers);
-    headers.delete("content-length");
-    headers.delete("etag");
-    headers.set("cache-control", "no-store");
-    headers.set("x-robots-tag", "noindex, nofollow");
-    headers.set("x-aivs-v33-status", "patched-v4");
+    let rw = new HTMLRewriter();
+    if (cfg.title) {
+      rw = rw
+        .on("title", { element(el) { el.setInnerContent(cfg.title); } })
+        .on('meta[property="og:title"]', { element(el) { el.setAttribute("content", cfg.title); } })
+        .on('meta[name="twitter:title"]', { element(el) { el.setAttribute("content", cfg.title); } });
+    }
+    if (cfg.description) {
+      rw = rw
+        .on('meta[name="description"]', { element(el) { el.setAttribute("content", cfg.description); } })
+        .on('meta[property="og:description"]', { element(el) { el.setAttribute("content", cfg.description); } })
+        .on('meta[name="twitter:description"]', { element(el) { el.setAttribute("content", cfg.description); } });
+    }
 
+    const transformed = rw.transform(upstream);
     return new Response(transformed.body, {
       status: transformed.status,
       statusText: transformed.statusText,
-      headers
+      headers: previewHeaders(transformed.headers, "patched-v5")
     });
   }
 };
