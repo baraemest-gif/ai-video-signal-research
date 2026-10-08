@@ -1,0 +1,50 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg"
+    android:fillViewport="true">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="18dp">
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="أذان Premium" android:textColor="@color/gold" android:textSize="30sp" android:textStyle="bold" android:gravity="center"/>
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="مواقيت الصلاة · الموقع · الأذان" android:textColor="@color/magenta" android:textSize="15sp" android:gravity="center" android:layout_marginBottom="18dp"/>
+
+        <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" app:cardBackgroundColor="@color/surface" app:strokeColor="@color/gold" app:strokeWidth="1dp" app:cardCornerRadius="18dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="📍 الموقع" android:textColor="@color/gold" android:textStyle="bold"/>
+                <TextView android:id="@+id/locationValue" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Madrid" android:textColor="@color/text" android:textSize="16sp" android:layout_marginTop="6dp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnLocation" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="تحديث موقعي تلقائياً" android:layout_marginTop="10dp"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" app:cardBackgroundColor="@color/surface2" app:strokeColor="@color/magenta" app:strokeWidth="1dp" app:cardCornerRadius="18dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="الصلاة القادمة" android:textColor="@color/magenta" android:textStyle="bold"/>
+                <TextView android:id="@+id/nextPrayer" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="..." android:textColor="@color/text" android:textSize="22sp" android:textStyle="bold" android:layout_marginTop="6dp"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginTop="14dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="52dp" android:gravity="center_vertical"><TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="الفجر · Fajr" android:textColor="@color/text" android:textSize="18sp"/><TextView android:id="@+id/timeFajr" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--:--" android:textColor="@color/gold" android:textSize="22sp" android:textStyle="bold"/></LinearLayout>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="52dp" android:gravity="center_vertical"><TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="الشروق · Sunrise" android:textColor="@color/muted" android:textSize="18sp"/><TextView android:id="@+id/timeSunrise" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--:--" android:textColor="@color/muted" android:textSize="22sp"/></LinearLayout>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="52dp" android:gravity="center_vertical"><TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="الظهر · Dhuhr" android:textColor="@color/text" android:textSize="18sp"/><TextView android:id="@+id/timeDhuhr" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--:--" android:textColor="@color/gold" android:textSize="22sp" android:textStyle="bold"/></LinearLayout>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="52dp" android:gravity="center_vertical"><TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="العصر · Asr" android:textColor="@color/text" android:textSize="18sp"/><TextView android:id="@+id/timeAsr" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--:--" android:textColor="@color/gold" android:textSize="22sp" android:textStyle="bold"/></LinearLayout>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="52dp" android:gravity="center_vertical"><TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="المغرب · Maghrib" android:textColor="@color/text" android:textSize="18sp"/><TextView android:id="@+id/timeMaghrib" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--:--" android:textColor="@color/gold" android:textSize="22sp" android:textStyle="bold"/></LinearLayout>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="52dp" android:gravity="center_vertical"><TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="العشاء · Isha" android:textColor="@color/text" android:textSize="18sp"/><TextView android:id="@+id/timeIsha" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--:--" android:textColor="@color/gold" android:textSize="22sp" android:textStyle="bold"/></LinearLayout>
+        </LinearLayout>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="طريقة الحساب" android:textColor="@color/muted" android:layout_marginTop="12dp"/>
+        <TextView android:id="@+id/methodValue" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Muslim World League" android:textColor="@color/text" android:textSize="16sp"/>
+        <com.google.android.material.button.MaterialButton android:id="@+id/btnMethod" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="تغيير طريقة الحساب / المذهب"/>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="المؤذن" android:textColor="@color/muted" android:layout_marginTop="12dp"/>
+        <TextView android:id="@+id/muezzinValue" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="الأذان الأساسي" android:textColor="@color/text" android:textSize="17sp"/>
+        <com.google.android.material.button.MaterialButton android:id="@+id/btnMuezzin" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="اختيار المؤذن"/>
+        <com.google.android.material.button.MaterialButton android:id="@+id/btnCustom" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="➕ إضافة مؤذن من اختياري"/>
+
+        <com.google.android.material.button.MaterialButton android:id="@+id/btnExactAlarm" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:text="⏰ تفعيل الأذان في الوقت الدقيق"/>
+        <com.google.android.material.button.MaterialButton android:id="@+id/btnTest" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="▶ تجربة الأذان الآن"/>
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="تنبيه: يجب السماح بالإشعارات والمنبهات الدقيقة حتى يعمل الأذان في موعده مع إغلاق الشاشة." android:textColor="@color/muted" android:textSize="13sp" android:layout_marginTop="16dp" android:layout_marginBottom="28dp"/>
+    </LinearLayout>
+</ScrollView>
