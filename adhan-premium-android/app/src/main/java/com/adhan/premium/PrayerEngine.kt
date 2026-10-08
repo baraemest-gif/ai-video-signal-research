@@ -3,7 +3,7 @@ package com.adhan.premium
 import com.batoulapps.adhan.CalculationMethod
 import com.batoulapps.adhan.CalculationParameters
 import com.batoulapps.adhan.Coordinates
-import com.batoulapps.adhan.DateComponents
+import com.batoulapps.adhan.data.DateComponents
 import com.batoulapps.adhan.Madhab
 import com.batoulapps.adhan.PrayerTimes
 import java.time.Instant
@@ -60,7 +60,6 @@ object PrayerEngine {
         "Egyptian" -> CalculationMethod.EGYPTIAN.parameters
         "Karachi" -> CalculationMethod.KARACHI.parameters
         "North America" -> CalculationMethod.NORTH_AMERICA.parameters
-        "Turkey" -> CalculationMethod.TURKEY.parameters
         "Dubai" -> CalculationMethod.DUBAI.parameters
         "Qatar" -> CalculationMethod.QATAR.parameters
         "Kuwait" -> CalculationMethod.KUWAIT.parameters
@@ -71,6 +70,6 @@ object PrayerEngine {
 
     val methods = arrayOf(
         "Muslim World League","Umm al-Qura","Egyptian","Karachi","North America",
-        "Turkey","Dubai","Qatar","Kuwait","Singapore","Moon Sighting Committee"
+"Dubai","Qatar","Kuwait","Singapore","Moon Sighting Committee"
     )
 }
