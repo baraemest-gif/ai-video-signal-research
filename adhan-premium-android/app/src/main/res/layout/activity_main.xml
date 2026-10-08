@@ -42,9 +42,13 @@
         <com.google.android.material.button.MaterialButton android:id="@+id/btnMuezzin" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="اختيار المؤذن"/>
         <com.google.android.material.button.MaterialButton android:id="@+id/btnCustom" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="➕ إضافة مؤذن من اختياري"/>
 
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🎧 إخراج صوت الأذان" android:textColor="@color/muted" android:layout_marginTop="12dp"/>
+        <TextView android:id="@+id/audioRouteValue" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="🎧 تلقائي · السماعات عند الاتصال" android:textColor="@color/text" android:textSize="17sp"/>
+        <com.google.android.material.button.MaterialButton android:id="@+id/btnAudioRoute" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="تغيير مخرج الصوت"/>
+
         <com.google.android.material.button.MaterialButton android:id="@+id/btnExactAlarm" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:text="⏰ تفعيل الأذان في الوقت الدقيق"/>
         <com.google.android.material.button.MaterialButton android:id="@+id/btnTest" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="▶ تجربة الأذان الآن"/>
 
-        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="تنبيه: يجب السماح بالإشعارات والمنبهات الدقيقة حتى يعمل الأذان في موعده مع إغلاق الشاشة." android:textColor="@color/muted" android:textSize="13sp" android:layout_marginTop="16dp" android:layout_marginBottom="28dp"/>
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="تنبيه: يجب السماح بالإشعارات والمنبهات الدقيقة حتى يعمل الأذان في موعده مع إغلاق الشاشة. في الوضع التلقائي سيستخدم السماعات عند اتصالها، وإلا مكبر الهاتف." android:textColor="@color/muted" android:textSize="13sp" android:layout_marginTop="16dp" android:layout_marginBottom="28dp"/>
     </LinearLayout>
 </ScrollView>
