@@ -28,8 +28,8 @@ if old not in s:
     raise SystemExit("repeat button listener target not found")
 s = s.replace(old, new, 1)
 
-old = "                    controller = future.get().also { it.addListener(playerListener) }\n                    syncFromPlayer()\n"
-new = "                    controller = future.get().also { it.addListener(playerListener) }\n                    applyRepeatMode()\n                    syncFromPlayer()\n"
+old = "controller = future.get().also { it.addListener(playerListener) }"
+new = "controller = future.get().also { it.addListener(playerListener) }\\n                    applyRepeatMode()"
 if old not in s:
     raise SystemExit("repeat controller target not found")
 s = s.replace(old, new, 1)
