@@ -29,7 +29,8 @@ if old not in s:
 s = s.replace(old, new, 1)
 
 old = "controller = future.get().also { it.addListener(playerListener) }"
-new = "controller = future.get().also { it.addListener(playerListener) }\\n                    applyRepeatMode()"
+new = """controller = future.get().also { it.addListener(playerListener) }
+                    applyRepeatMode()"""
 if old not in s:
     raise SystemExit("repeat controller target not found")
 s = s.replace(old, new, 1)
