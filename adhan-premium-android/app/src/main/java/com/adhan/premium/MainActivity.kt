@@ -39,7 +39,10 @@ class MainActivity : AppCompatActivity() {
     private val audioPicker = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri != null) {
             try { contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION) } catch (_: Throwable) {}
-            prefs.edit().putString("selected_audio_uri", uri.toString()).putString("muezzin", pendingName).apply()
+            prefs.edit()
+                .putString("selected_audio_uri", uri.toString())
+                .putString("muezzin", pendingName)
+                .apply()
             b.muezzinValue.text = pendingName
             Toast.makeText(this, "تم حفظ صوت المؤذن", Toast.LENGTH_SHORT).show()
         }
@@ -105,7 +108,10 @@ class MainActivity : AppCompatActivity() {
                     if (loc != null) {
                         latitude = loc.latitude
                         longitude = loc.longitude
-                        prefs.edit().putString("lat", latitude.toString()).putString("lon", longitude.toString()).apply()
+                        prefs.edit()
+                            .putString("lat", latitude.toString())
+                            .putString("lon", longitude.toString())
+                            .apply()
                         b.locationValue.text = "GPS: %.4f, %.4f".format(Locale.US, latitude, longitude)
                         refreshTimes()
                     }
@@ -138,21 +144,33 @@ class MainActivity : AppCompatActivity() {
         val current = prefs.getString("muezzin", MuezzinCatalog.DEFAULT_ID) ?: MuezzinCatalog.DEFAULT_ID
         val checked = MuezzinCatalog.names.indexOf(current).coerceAtLeast(0)
         AlertDialog.Builder(this)
-            .setTitle("اختر المؤذن")
+            .setTitle("اختر المؤذن / صوت الأذان")
             .setSingleChoiceItems(MuezzinCatalog.names, checked) { d, which ->
                 val name = MuezzinCatalog.names[which]
                 d.dismiss()
-                if (name == MuezzinCatalog.DEFAULT_ID) {
-                    prefs.edit().remove("selected_audio_uri").putString("muezzin", name).apply()
-                    b.muezzinValue.text = name
-                } else if (name == "مؤذن من اختياري") {
-                    addCustomMuezzin()
-                } else {
-                    pendingName = name
-                    Toast.makeText(this, "اختر تسجيل الأذان لـ $name", Toast.LENGTH_LONG).show()
-                    audioPicker.launch(arrayOf("audio/*"))
+                val ready = MuezzinCatalog.readyAudioByName[name]
+                when {
+                    ready != null -> {
+                        prefs.edit()
+                            .putString("selected_audio_uri", ready)
+                            .putString("muezzin", name)
+                            .apply()
+                        b.muezzinValue.text = name
+                        Toast.makeText(this, "تم اختيار $name", Toast.LENGTH_SHORT).show()
+                    }
+                    name == "مؤذن من اختياري" -> addCustomMuezzin()
+                    else -> {
+                        pendingName = name
+                        Toast.makeText(
+                            this,
+                            "اختر تسجيل الأذان لـ $name من هاتفك",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        audioPicker.launch(arrayOf("audio/*"))
+                    }
                 }
-            }.show()
+            }
+            .show()
     }
 
     private fun addCustomMuezzin() {
@@ -197,7 +215,9 @@ class MainActivity : AppCompatActivity() {
         b.timeMaghrib.text = f(day.maghrib)
         b.timeIsha.text = f(day.isha)
         b.methodValue.text = "$method · " + if (hanafi) "Hanafi" else "Shafi"
-        if (b.locationValue.text.isNullOrBlank()) b.locationValue.text = "Madrid · %.4f, %.4f".format(Locale.US, latitude, longitude)
+        if (b.locationValue.text.isNullOrBlank()) {
+            b.locationValue.text = "Madrid · %.4f, %.4f".format(Locale.US, latitude, longitude)
+        }
         updateNextPrayer()
         schedule()
     }
