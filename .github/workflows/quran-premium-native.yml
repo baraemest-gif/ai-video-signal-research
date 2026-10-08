@@ -17,6 +17,7 @@ jobs:
       - name: Restore source tree
         shell: bash
         run: |
+          cat quran-premium-project.part*.b64 > quran-premium-project.tar.gz.b64
           base64 -d quran-premium-project.tar.gz.b64 > quran-premium-project.tar.gz
           tar -xzf quran-premium-project.tar.gz
           test -f quran-premium-android/settings.gradle.kts
