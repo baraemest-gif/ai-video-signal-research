@@ -1,0 +1,43 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="28dp"
+    android:background="@color/bg">
+
+    <TextView
+        android:id="@+id/ringTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="07:00"
+        android:gravity="center"
+        android:textColor="@color/gold"
+        android:textStyle="bold"
+        android:textSize="62sp"/>
+
+    <TextView
+        android:id="@+id/ringLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="المنبّه"
+        android:gravity="center"
+        android:textColor="@color/magenta"
+        android:textSize="24sp"
+        android:layout_marginBottom="38dp"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSnooze"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:text="😴 غفوة 10 دقائق"
+        android:textSize="18sp"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnDismiss"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_marginTop="16dp"
+        android:text="⏹ إيقاف"
+        android:textSize="18sp"/>
+</LinearLayout>
