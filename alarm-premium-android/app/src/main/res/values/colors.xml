@@ -1,0 +1,10 @@
+<resources>
+    <color name="bg">#0A0517</color>
+    <color name="surface">#171027</color>
+    <color name="surface2">#211337</color>
+    <color name="gold">#D9B66E</color>
+    <color name="magenta">#E879F9</color>
+    <color name="purple">#7C3AED</color>
+    <color name="text">#FFF8FF</color>
+    <color name="muted">#C9BDD6</color>
+</resources>
