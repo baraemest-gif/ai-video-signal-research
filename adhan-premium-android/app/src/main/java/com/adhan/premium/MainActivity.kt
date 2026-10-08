@@ -36,6 +36,17 @@ class MainActivity : AppCompatActivity() {
     private var longitude = -3.7038
     private var pendingName = "مؤذن من اختياري"
 
+    private val routeValues = arrayOf(
+        AdhanService.ROUTE_AUTO,
+        AdhanService.ROUTE_HEADPHONES,
+        AdhanService.ROUTE_SPEAKER
+    )
+    private val routeLabels = arrayOf(
+        "🎧 تلقائي · السماعات عند الاتصال",
+        "🎧 السماعات فقط",
+        "🔊 مكبر صوت الهاتف"
+    )
+
     private val audioPicker = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri != null) {
             try { contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION) } catch (_: Throwable) {}
@@ -61,6 +72,7 @@ class MainActivity : AppCompatActivity() {
         latitude = prefs.getString("lat", "40.4168")!!.toDoubleOrNull() ?: 40.4168
         longitude = prefs.getString("lon", "-3.7038")!!.toDoubleOrNull() ?: -3.7038
         b.muezzinValue.text = prefs.getString("muezzin", MuezzinCatalog.DEFAULT_ID)
+        updateAudioRouteLabel()
         wireUi()
         requestNeededPermissions()
         refreshTimes()
@@ -72,6 +84,7 @@ class MainActivity : AppCompatActivity() {
         b.btnMethod.setOnClickListener { chooseMethod() }
         b.btnMuezzin.setOnClickListener { chooseMuezzin() }
         b.btnCustom.setOnClickListener { addCustomMuezzin() }
+        b.btnAudioRoute.setOnClickListener { chooseAudioRoute() }
         b.btnExactAlarm.setOnClickListener { requestExactAlarmAccess() }
         b.btnTest.setOnClickListener {
             ContextCompat.startForegroundService(
@@ -82,6 +95,34 @@ class MainActivity : AppCompatActivity() {
                 }
             )
         }
+    }
+
+    private fun chooseAudioRoute() {
+        val current = prefs.getString("audio_route", AdhanService.ROUTE_AUTO) ?: AdhanService.ROUTE_AUTO
+        val checked = routeValues.indexOf(current).coerceAtLeast(0)
+        AlertDialog.Builder(this)
+            .setTitle("🎧 إخراج صوت الأذان")
+            .setSingleChoiceItems(routeLabels, checked) { d, which ->
+                prefs.edit().putString("audio_route", routeValues[which]).apply()
+                updateAudioRouteLabel()
+                d.dismiss()
+                Toast.makeText(
+                    this,
+                    when (routeValues[which]) {
+                        AdhanService.ROUTE_HEADPHONES -> "سيُفضّل الأذان السماعات، وإن لم توجد فسيستخدم الهاتف"
+                        AdhanService.ROUTE_SPEAKER -> "سيُفضّل الأذان مكبر صوت الهاتف"
+                        else -> "تلقائي: السماعات إن كانت متصلة، وإلا مكبر الهاتف"
+                    },
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            .show()
+    }
+
+    private fun updateAudioRouteLabel() {
+        val current = prefs.getString("audio_route", AdhanService.ROUTE_AUTO) ?: AdhanService.ROUTE_AUTO
+        val i = routeValues.indexOf(current).coerceAtLeast(0)
+        b.audioRouteValue.text = routeLabels[i]
     }
 
     private fun requestNeededPermissions() {
@@ -161,11 +202,7 @@ class MainActivity : AppCompatActivity() {
                     name == "مؤذن من اختياري" -> addCustomMuezzin()
                     else -> {
                         pendingName = name
-                        Toast.makeText(
-                            this,
-                            "اختر تسجيل الأذان لـ $name من هاتفك",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        Toast.makeText(this, "اختر تسجيل الأذان لـ $name من هاتفك", Toast.LENGTH_LONG).show()
                         audioPicker.launch(arrayOf("audio/*"))
                     }
                 }
