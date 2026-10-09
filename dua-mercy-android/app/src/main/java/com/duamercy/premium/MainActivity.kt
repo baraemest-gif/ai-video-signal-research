@@ -1,12 +1,20 @@
 package com.duamercy.premium
 
 import android.Manifest
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
-import android.speech.tts.TextToSpeech
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.BackgroundColorSpan
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.SeekBar
@@ -25,9 +33,43 @@ class MainActivity : AppCompatActivity() {
     private var fontSize = 30f
     private val rates = floatArrayOf(0.8f, 0.9f, 1.0f, 1.15f, 1.3f)
 
+    private val textViews = mutableMapOf<Int, TextView>()
+    private val cards = mutableMapOf<Int, MaterialCardView>()
+    private var activeId: Int? = null
+
     private val notificationPermission = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { }
+
+    private val syncReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action != DuaAudioService.ACTION_SYNC) return
+            val id = intent.getIntExtra(DuaAudioService.EXTRA_ID, -1)
+            val start = intent.getIntExtra(DuaAudioService.EXTRA_RANGE_START, -1)
+            val end = intent.getIntExtra(DuaAudioService.EXTRA_RANGE_END, -1)
+            val state = intent.getStringExtra(DuaAudioService.EXTRA_STATE) ?: DuaAudioService.STATE_RANGE
+            if (id <= 0) return
+
+            when (state) {
+                DuaAudioService.STATE_START -> {
+                    activeId = id
+                    clearHighlights(exceptId = id)
+                    showDua(id, -1, -1, true)
+                }
+                DuaAudioService.STATE_RANGE -> {
+                    activeId = id
+                    showDua(id, start, end, true)
+                }
+                DuaAudioService.STATE_DONE -> {
+                    showDua(id, -1, -1, false)
+                }
+                DuaAudioService.STATE_STOP -> {
+                    activeId = null
+                    clearHighlights()
+                }
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,6 +134,13 @@ class MainActivity : AppCompatActivity() {
             notificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
 
+        ContextCompat.registerReceiver(
+            this,
+            syncReceiver,
+            IntentFilter(DuaAudioService.ACTION_SYNC),
+            ContextCompat.RECEIVER_NOT_EXPORTED
+        )
+
         render()
     }
 
@@ -106,15 +155,26 @@ class MainActivity : AppCompatActivity() {
 
     private fun render() {
         b.duaList.removeAllViews()
+        textViews.clear()
+        cards.clear()
+
         DuaRepository.byCategory(category).forEach { item ->
-            b.duaList.addView(makeCard(item))
+            val card = makeCard(item)
+            cards[item.id] = card
+            b.duaList.addView(card)
         }
+
         val sizeLabel = when {
             fontSize >= 40f -> "الخط: كبير جداً"
             fontSize >= 35f -> "الخط: كبير"
             else -> "تكبير الخط"
         }
         b.btnFont.text = sizeLabel
+        b.countLabel.text = DuaRepository.byCategory(category).size.toString() + " دعاء"
+
+        activeId?.let { id ->
+            if (textViews.containsKey(id)) showDua(id, -1, -1, false)
+        }
     }
 
     private fun makeCard(item: DuaItem): MaterialCardView {
@@ -152,6 +212,7 @@ class MainActivity : AppCompatActivity() {
             setLineSpacing(10f, 1.22f)
             setPadding(0, 16, 0, 16)
         }
+        textViews[item.id] = textView
 
         val source = TextView(this).apply {
             text = item.source
@@ -179,5 +240,70 @@ class MainActivity : AppCompatActivity() {
         box.addView(play)
         card.addView(box)
         return card
+    }
+
+    private fun showDua(id: Int, start: Int, end: Int, scroll: Boolean) {
+        val item = DuaRepository.byId(id) ?: return
+        val tv = textViews[id] ?: return
+
+        val span = SpannableString(item.text)
+        if (start >= 0 && end > start && start < item.text.length) {
+            val safeEnd = end.coerceAtMost(item.text.length)
+            span.setSpan(
+                BackgroundColorSpan(Color.parseColor("#55E879F9")),
+                start,
+                safeEnd,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            span.setSpan(
+                ForegroundColorSpan(Color.parseColor("#D9B66E")),
+                start,
+                safeEnd,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            span.setSpan(
+                StyleSpan(Typeface.BOLD),
+                start,
+                safeEnd,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+        tv.text = span
+
+        cards[id]?.apply {
+            strokeWidth = 3
+            setStrokeColor(Color.parseColor("#E879F9"))
+        }
+
+        if (scroll) scrollToCard(id)
+    }
+
+    private fun clearHighlights(exceptId: Int? = null) {
+        textViews.forEach { (id, tv) ->
+            if (id != exceptId) {
+                DuaRepository.byId(id)?.let { tv.text = it.text }
+            }
+        }
+        cards.forEach { (id, card) ->
+            if (id != exceptId) {
+                card.strokeWidth = 1
+                card.setStrokeColor(Color.parseColor("#D9B66E"))
+            }
+        }
+    }
+
+    private fun scrollToCard(id: Int) {
+        val card = cards[id] ?: return
+        b.mainScroll.post {
+            val target = (b.duaList.top + card.top - 90).coerceAtLeast(0)
+            if (kotlin.math.abs(b.mainScroll.scrollY - target) > 20) {
+                b.mainScroll.smoothScrollTo(0, target)
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        runCatching { unregisterReceiver(syncReceiver) }
+        super.onDestroy()
     }
 }
