@@ -46,9 +46,23 @@ class DuaAudioService : Service(), TextToSpeech.OnInitListener {
                 .build()
         )
         engine.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
-            override fun onStart(utteranceId: String?) {}
-            override fun onError(utteranceId: String?) { advance() }
-            override fun onDone(utteranceId: String?) { advance() }
+            override fun onStart(utteranceId: String?) {
+                currentItem()?.let { sendSync(it.id, -1, -1, STATE_START) }
+            }
+
+            override fun onRangeStart(utteranceId: String?, start: Int, end: Int, frame: Int) {
+                currentItem()?.let { sendSync(it.id, start, end, STATE_RANGE) }
+            }
+
+            override fun onError(utteranceId: String?) {
+                currentItem()?.let { sendSync(it.id, -1, -1, STATE_DONE) }
+                advance()
+            }
+
+            override fun onDone(utteranceId: String?) {
+                currentItem()?.let { sendSync(it.id, -1, -1, STATE_DONE) }
+                advance()
+            }
         })
         ready = true
         if (queue.isNotEmpty()) speakCurrent()
@@ -71,19 +85,24 @@ class DuaAudioService : Service(), TextToSpeech.OnInitListener {
 
     private fun startQueue(items: List<DuaItem>) {
         if (items.isEmpty()) return
+        tts?.stop()
         queue = items
         index = 0
         acquireWakeLock()
         showNotification(queue.first().title)
+        sendSync(queue.first().id, -1, -1, STATE_START)
         if (ready) speakCurrent()
     }
 
+    private fun currentItem(): DuaItem? = queue.getOrNull(index)
+
     private fun speakCurrent() {
-        val item = queue.getOrNull(index) ?: return stopNow()
+        val item = currentItem() ?: return stopNow()
         val prefs = getSharedPreferences("dua_prefs", MODE_PRIVATE)
         val rate = prefs.getFloat("speech_rate", 1.0f).coerceIn(0.7f, 1.4f)
         tts?.setSpeechRate(rate)
         showNotification(item.title)
+        sendSync(item.id, -1, -1, STATE_START)
         tts?.speak(
             item.text,
             TextToSpeech.QUEUE_FLUSH,
@@ -100,6 +119,18 @@ class DuaAudioService : Service(), TextToSpeech.OnInitListener {
         }
         index++
         if (index < queue.size) speakCurrent() else stopNow()
+    }
+
+    private fun sendSync(id: Int, start: Int, end: Int, state: String) {
+        sendBroadcast(
+            Intent(ACTION_SYNC).apply {
+                setPackage(packageName)
+                putExtra(EXTRA_ID, id)
+                putExtra(EXTRA_RANGE_START, start)
+                putExtra(EXTRA_RANGE_END, end)
+                putExtra(EXTRA_STATE, state)
+            }
+        )
     }
 
     private fun showNotification(title: String) {
@@ -133,11 +164,12 @@ class DuaAudioService : Service(), TextToSpeech.OnInitListener {
         wakeLock = (getSystemService(POWER_SERVICE) as PowerManager)
             .newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "DuaMercy:Audio").apply {
                 setReferenceCounted(false)
-                acquire(30 * 60 * 1000L)
+                acquire(60 * 60 * 1000L)
             }
     }
 
     private fun stopNow() {
+        currentItem()?.let { sendSync(it.id, -1, -1, STATE_STOP) }
         tts?.stop()
         queue = emptyList()
         index = 0
@@ -160,8 +192,19 @@ class DuaAudioService : Service(), TextToSpeech.OnInitListener {
         const val ACTION_PLAY_ONE = "com.duamercy.premium.PLAY_ONE"
         const val ACTION_PLAY_ALL = "com.duamercy.premium.PLAY_ALL"
         const val ACTION_STOP = "com.duamercy.premium.STOP"
+        const val ACTION_SYNC = "com.duamercy.premium.SYNC"
+
         const val EXTRA_ID = "dua_id"
         const val EXTRA_CATEGORY = "category"
+        const val EXTRA_RANGE_START = "range_start"
+        const val EXTRA_RANGE_END = "range_end"
+        const val EXTRA_STATE = "state"
+
+        const val STATE_START = "start"
+        const val STATE_RANGE = "range"
+        const val STATE_DONE = "done"
+        const val STATE_STOP = "stop"
+
         private const val CHANNEL = "dua_mercy_audio"
         private const val NOTIFICATION_ID = 9301
     }
