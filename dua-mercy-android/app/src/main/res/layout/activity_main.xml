@@ -1,0 +1,139 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg"
+    android:fillViewport="true">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="أدعية لأبي وأمي وأخي"
+            android:textColor="@color/gold"
+            android:textStyle="bold"
+            android:textSize="28sp"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="رحمهم الله رحمةً واسعة"
+            android:textColor="@color/magenta"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:layout_marginBottom="14dp"/>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnAll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="الجميع"/>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnFather"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="أبي"/>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnMother"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="أمي"/>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnBrother"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="أخي"/>
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:cardBackgroundColor="@color/surface2"
+            app:strokeColor="@color/gold"
+            app:strokeWidth="1dp"
+            app:cardCornerRadius="18dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="14dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnPlayAll"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="▶ استماع للكل"/>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnStop"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="⏹ إيقاف"/>
+                </LinearLayout>
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switchRepeat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="🔁 تكرار الدعاء"
+                    android:textColor="@color/text"/>
+
+                <TextView
+                    android:id="@+id/speedLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="سرعة الصوت: 1.0×"
+                    android:textColor="@color/muted"
+                    android:layout_marginTop="4dp"/>
+
+                <SeekBar
+                    android:id="@+id/speedSeek"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="4"
+                    android:progress="2"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnFont"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="تكبير الخط"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+            android:id="@+id/duaList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="12dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="الصوت يعتمد على محرك النطق العربي في الهاتف. إذا لم يكن صوت العربية مثبتاً، سيطلب Android تنزيل بيانات النطق."
+            android:textColor="@color/muted"
+            android:textSize="12sp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="24dp"/>
+    </LinearLayout>
+</ScrollView>
