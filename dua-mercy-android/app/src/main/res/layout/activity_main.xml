@@ -1,5 +1,6 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mainScroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg"
@@ -25,7 +26,17 @@
             android:text="رحمهم الله رحمةً واسعة"
             android:textColor="@color/magenta"
             android:textSize="16sp"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/countLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="79 دعاء"
+            android:textColor="@color/muted"
+            android:textSize="14sp"
             android:gravity="center"
+            android:layout_marginTop="4dp"
             android:layout_marginBottom="14dp"/>
 
         <HorizontalScrollView
@@ -120,6 +131,15 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="أثناء الاستماع سيتحرك النص تلقائياً ويُبرز الجزء الذي تتم قراءته"
+            android:textColor="@color/magenta"
+            android:textSize="13sp"
+            android:gravity="center"
+            android:layout_marginTop="10dp"/>
+
         <LinearLayout
             android:id="@+id/duaList"
             android:layout_width="match_parent"
@@ -130,7 +150,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="الصوت يعتمد على محرك النطق العربي في الهاتف. إذا لم يكن صوت العربية مثبتاً، سيطلب Android تنزيل بيانات النطق."
+            android:text="النصوص القرآنية والنبوية مبيّنة بمصدرها، وباقي النصوص موسومة بوضوح «دعاء عام». الصوت يعتمد على محرك النطق العربي في الهاتف."
             android:textColor="@color/muted"
             android:textSize="12sp"
             android:layout_marginTop="12dp"
