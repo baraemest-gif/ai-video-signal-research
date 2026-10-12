@@ -170,3 +170,98 @@ gs = gs.replace('versionName = "1.2.0-premium"', 'versionName = "1.3.0-premium"'
 g.write_text(gs)
 
 print("Quran Premium v1.3 repeat-surah button patch applied")
+
+# Add Abdullah Al-Johany recitations to the native APK only.
+# Leave all existing reciters and app styling unchanged.
+app = Path("quran-premium-android/app/src/main/java/com/quran/premium/AppConfig.kt")
+a = app.read_text()
+for old, new in [
+    (
+        """        "عبدالباسط · مجوّد"
+    )
+
+    val primaryAudio = listOf(""",
+        """        "عبدالباسط · مجوّد",
+        "عبدالله عواد الجهني"
+    )
+
+    val primaryAudio = listOf("""
+    ),
+    (
+        """        "https://cdn.mp3quran.net/audio/abdulbasit-abdulsamad/r1/"
+    )
+
+    val backupAudio = listOf(""",
+        """        "https://cdn.mp3quran.net/audio/abdulbasit-abdulsamad/r1/",
+        "https://cdn.mp3quran.net/audio/abdullah-juhani/r1/"
+    )
+
+    val backupAudio = listOf("""
+    ),
+    (
+        """        "https://cdn.mp3quran.net/audio/abdulbasit-abdulsamad/r1/"
+    )
+}""",
+        """        "https://cdn.mp3quran.net/audio/abdulbasit-abdulsamad/r1/",
+        "https://server13.mp3quran.net/jhn/"
+    )
+}"""
+    ),
+]:
+    if a.count(old) != 1:
+        raise SystemExit("Johany AppConfig target not found or ambiguous")
+    a = a.replace(old, new, 1)
+app.write_text(a)
+
+# The web audio proxy supports readers 0..8, so ensure reader 9
+# never falls back to someone else's voice.
+sp = Path("quran-premium-android/app/src/main/java/com/quran/premium/playback/QuranPlaybackService.kt")
+q = sp.read_text()
+old = '''            2 -> "${AppConfig.API_BASE}/audio/file?reader=$readerIndex&surah=$surah&source=0&native=1"'''
+new = '''            2 -> if (readerIndex == 9) {
+                AppConfig.primaryAudio[readerIndex] + surah.toString().padStart(3, '0') + ".mp3"
+            } else {
+                "${AppConfig.API_BASE}/audio/file?reader=$readerIndex&surah=$surah&source=0&native=1"
+            }'''
+if q.count(old) != 1:
+    raise SystemExit("Johany playback fallback target not found or ambiguous")
+sp.write_text(q.replace(old, new, 1))
+
+# The web timing endpoint also supports readers 0..8 only.
+# Fetch Abdullah Al-Johany's own timing metadata (read 62);
+# on missing/incomplete timing, keep the existing approximate-follow fallback.
+rp = Path("quran-premium-android/app/src/main/java/com/quran/premium/data/QuranRepository.kt")
+r = rp.read_text()
+old = '''                val c = URL("${AppConfig.API_BASE}/api/timing?reader=$reader&surah=$surah&native=1").openConnection() as HttpURLConnection'''
+new = '''                val timingUrl = if (reader == 9)
+                    "https://mp3quran.net/api/v3/ayat_timing?surah=$surah&read=62"
+                else "${AppConfig.API_BASE}/api/timing?reader=$reader&surah=$surah&native=1"
+                val c = URL(timingUrl).openConnection() as HttpURLConnection'''
+if r.count(old) != 1:
+    raise SystemExit("Johany timing endpoint target not found or ambiguous")
+r = r.replace(old, new, 1)
+old = '''                    val j = JSONObject(c.inputStream.bufferedReader().use { it.readText() })
+                    val a = j.getJSONArray("t")
+                    LongArray(a.length()) { a.getLong(it) }'''
+new = '''                    val responseText = c.inputStream.bufferedReader().use { it.readText() }
+                    if (reader == 9) {
+                        val array = org.json.JSONArray(responseText)
+                        val verses = (0 until array.length()).map { array.getJSONObject(it) }
+                            .filter { it.optInt("ayah", 0) >= 1 }
+                        val expected = surahs.getOrNull(surah - 1)?.ayahs?.size ?: 0
+                        if (verses.size != expected ||
+                            verses.withIndex().any { (index, verse) -> verse.optInt("ayah", -1) != index + 1 }) {
+                            null
+                        } else {
+                            val starts = LongArray(verses.size) { verses[it].getLong("start_time") }
+                            if (starts.zipWithNext().any { (first, second) -> second < first }) null else starts
+                        }
+                    } else {
+                        val j = JSONObject(responseText)
+                        val a = j.getJSONArray("t")
+                        LongArray(a.length()) { a.getLong(it) }
+                    }'''
+if r.count(old) != 1:
+    raise SystemExit("Johany timing parsing target not found or ambiguous")
+rp.write_text(r.replace(old, new, 1))
+print("Added Abdullah Al-Johany to Quran Premium native without modifying other reciters")
