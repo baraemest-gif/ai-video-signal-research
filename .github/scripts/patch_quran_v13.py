@@ -254,7 +254,7 @@ new = '''                    val responseText = c.inputStream.bufferedReader().u
                             null
                         } else {
                             val starts = LongArray(verses.size) { verses[it].getLong("start_time") }
-                            if (starts.zipWithNext().any { (first, second) -> second < first }) null else starts
+                            if (starts.indices.drop(1).any { starts[it] < starts[it - 1] }) null else starts
                         }
                     } else {
                         val j = JSONObject(responseText)
