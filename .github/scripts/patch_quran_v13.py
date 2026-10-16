@@ -338,3 +338,65 @@ if r.count(old) != 1:
 p.write_text(r.replace(old, new, 1))
 
 print("Added Ahmad Al-Ajmy to Quran Premium native; no other changes")
+
+# Add Hani Al-Azouni official recitations (available surahs only).
+# His full 114-surah audio catalog has not been verified. NEVER substitute another voice.
+# This is a selection of links to his own SoundCloud tracks; other readers are unchanged.
+app = Path("quran-premium-android/app/src/main/java/com/quran/premium/AppConfig.kt")
+cfg = app.read_text()
+old = '''        "أحمد بن علي العجمي"
+    )
+
+    val primaryAudio = listOf('''
+new = '''        "أحمد بن علي العجمي",
+        "هاني العزوني · تلاوات مختارة"
+    )
+
+    val primaryAudio = listOf('''
+if cfg.count(old) != 1:
+    raise SystemExit("Hani Al-Azouni reciter list target not found")
+app.write_text(cfg.replace(old, new, 1))
+
+# Selecting Hani opens a small chooser of authentic published recordings instead
+# of sending invalid/unverified MP3 URLs into the 114-surah native playlist.
+p = Path("quran-premium-android/app/src/main/java/com/quran/premium/MainActivity.kt")
+s = p.read_text()
+old = '''            .setSingleChoiceItems(AppConfig.reciterNames.toTypedArray(), currentReader) { d, which ->
+                currentReader = which'''
+new = '''            .setSingleChoiceItems(AppConfig.reciterNames.toTypedArray(), currentReader) { d, which ->
+                if (which == 11) {
+                    d.dismiss()
+                    showHaniRecitationsDialog()
+                    return@setSingleChoiceItems
+                }
+                currentReader = which'''
+if s.count(old) != 1:
+    raise SystemExit("Hani recitation selection target not found")
+s = s.replace(old, new, 1)
+old = '''    private fun showSurahDialog() {'''
+new = '''    private fun showHaniRecitationsDialog() {
+        val labels = arrayOf("سورة ق · هاني العزوني", "سورة الإنسان · هاني العزوني", "تلاوات أخرى من حساب القارئ")
+        val links = arrayOf(
+            "https://soundcloud.com/hany-al-tmsah/3lbos6jm3kpy",
+            "https://soundcloud.com/hany-al-tmsah/nb1yo7omc45w",
+            "https://soundcloud.com/hany-al-tmsah"
+        )
+        AlertDialog.Builder(this)
+            .setTitle("هاني العزوني · التلاوات المنشورة")
+            .setItems(labels) { _, i ->
+                val intent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse(links[i]))
+                try {
+                    startActivity(intent)
+                } catch (_: android.content.ActivityNotFoundException) {
+                    Toast.makeText(this, "لا يوجد متصفح لفتح التلاوة", Toast.LENGTH_LONG).show()
+                }
+            }
+            .setNegativeButton("إلغاء", null)
+            .show()
+    }
+
+    private fun showSurahDialog() {'''
+if s.count(old) != 1:
+    raise SystemExit("Hani dialog insertion target not found")
+p.write_text(s.replace(old, new, 1))
+print("Added Hani Al-Azouni official recitations; other readers and the visual design unchanged")
