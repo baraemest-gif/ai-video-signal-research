@@ -265,3 +265,76 @@ if r.count(old) != 1:
     raise SystemExit("Johany timing parsing target not found or ambiguous")
 rp.write_text(r.replace(old, new, 1))
 print("Added Abdullah Al-Johany to Quran Premium native without modifying other reciters")
+
+# Add Ahmad bin Ali Al-Ajmy as the eleventh native reciter.
+# Keep all existing names, their indexes, the layout and other app behavior untouched.
+p = Path("quran-premium-android/app/src/main/java/com/quran/premium/AppConfig.kt")
+a = p.read_text()
+for old, new in [
+    (
+        '''        "عبدالله عواد الجهني"
+    )
+
+    val primaryAudio = listOf(''',
+        '''        "عبدالله عواد الجهني",
+        "أحمد بن علي العجمي"
+    )
+
+    val primaryAudio = listOf('''
+    ),
+    (
+        '''        "https://cdn.mp3quran.net/audio/abdullah-juhani/r1/"
+    )
+
+    val backupAudio = listOf(''',
+        '''        "https://cdn.mp3quran.net/audio/abdullah-juhani/r1/",
+        "https://cdn.mp3quran.net/download/audio/ahmad-ajmi/r1/"
+    )
+
+    val backupAudio = listOf('''
+    ),
+    (
+        '''        "https://server13.mp3quran.net/jhn/"
+    )
+}''',
+        '''        "https://server13.mp3quran.net/jhn/",
+        "https://server10.mp3quran.net/ajm/"
+    )
+}'''
+    ),
+]:
+    if a.count(old) != 1:
+        raise SystemExit("Ahmad Al-Ajmy AppConfig target missing or ambiguous")
+    a = a.replace(old, new, 1)
+p.write_text(a)
+
+# Prevent proxy fallback from serving a different reader's audio for native-only readers.
+p = Path("quran-premium-android/app/src/main/java/com/quran/premium/playback/QuranPlaybackService.kt")
+q = p.read_text()
+old = "            2 -> if (readerIndex == 9) {"
+new = "            2 -> if (readerIndex == 9 || readerIndex == 10) {"
+if q.count(old) != 1:
+    raise SystemExit("Ahmad Al-Ajmy fallback target missing")
+p.write_text(q.replace(old, new, 1))
+
+# The Ajmy recording has an official per-ayah timing feed: read=5.
+p = Path("quran-premium-android/app/src/main/java/com/quran/premium/data/QuranRepository.kt")
+r = p.read_text()
+old = '''                val timingUrl = if (reader == 9)
+                    "https://mp3quran.net/api/v3/ayat_timing?surah=$surah&read=62"
+                else "${AppConfig.API_BASE}/api/timing?reader=$reader&surah=$surah&native=1"'''
+new = '''                val timingUrl = when (reader) {
+                    9 -> "https://mp3quran.net/api/v3/ayat_timing?surah=$surah&read=62"
+                    10 -> "https://mp3quran.net/api/v3/ayat_timing?surah=$surah&read=5"
+                    else -> "${AppConfig.API_BASE}/api/timing?reader=$reader&surah=$surah&native=1"
+                }'''
+if r.count(old) != 1:
+    raise SystemExit("Ahmad Al-Ajmy timing endpoint target missing")
+r = r.replace(old, new, 1)
+old = "                    if (reader == 9) {"
+new = "                    if (reader == 9 || reader == 10) {"
+if r.count(old) != 1:
+    raise SystemExit("Ahmad Al-Ajmy timing response target missing")
+p.write_text(r.replace(old, new, 1))
+
+print("Added Ahmad Al-Ajmy to Quran Premium native; no other changes")
