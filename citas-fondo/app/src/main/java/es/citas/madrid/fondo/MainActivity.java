@@ -62,7 +62,7 @@ public class MainActivity extends Activity {
     });
     btn(l,"COMPROBAR CONEXIÓN AHORA",()->{
       if(!Engine.active(this))Engine.start(this);
-      sendBroadcast(new Intent(this,CheckReceiver.class).setAction("es.citas.madrid.fondo.CHECK"));
+      sendBroadcast(new Intent(this,CheckReceiverPublic.class).setAction("es.citas.madrid.fondo.CHECK"));
       Toast.makeText(this,"Comprobación técnica solicitada",Toast.LENGTH_SHORT).show();
     });
     btn(l,"ABRIR TRÁMITE OFICIAL",()->{
@@ -110,7 +110,7 @@ final class Engine {
   static boolean active(Context c){return prefs(c).getBoolean("active",false);}
   static void note(Context c,String result){prefs(c).edit().putString("result",result).putLong("last",System.currentTimeMillis()).apply();}
   static PendingIntent pending(Context c){
-    Intent intent=new Intent(c,CheckReceiver.class).setAction("es.citas.madrid.fondo.CHECK");
+    Intent intent=new Intent(c,CheckReceiverPublic.class).setAction("es.citas.madrid.fondo.CHECK");
     return PendingIntent.getBroadcast(c,19,intent,PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);
   }
   static void start(Context c){prefs(c).edit().putBoolean("active",true).apply();schedule(c);}
