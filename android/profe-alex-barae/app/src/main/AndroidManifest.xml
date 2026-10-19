@@ -7,9 +7,10 @@
     <uses-feature android:name="android.hardware.microphone" android:required="false" />
     <queries>
         <intent><action android:name="android.speech.action.RECOGNIZE_SPEECH" /></intent>
+        <intent><action android:name="android.speech.RecognitionService" /></intent>
         <intent><action android:name="android.media.action.IMAGE_CAPTURE" /></intent>
     </queries>
-    <application android:label="Profe Alex Barae"
+    <application android:label="Profe Alex Voz"
                  android:icon="@drawable/ic_profe_alex"
                  android:roundIcon="@drawable/ic_profe_alex"
                  android:allowBackup="false"
