@@ -44,6 +44,7 @@ public final class MainActivity extends Activity {
     private ValueCallback<Uri[]> fileCallback;
     private Uri cameraUri;
     private PermissionRequest pendingAudio;
+    private VoiceController nativeVoice;
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
@@ -74,6 +75,7 @@ public final class MainActivity extends Activity {
         s.setCacheMode(WebSettings.LOAD_DEFAULT);
         if(Build.VERSION.SDK_INT>=26) s.setSafeBrowsingEnabled(true);
         WebView.setWebContentsDebuggingEnabled(false);
+        nativeVoice=new VoiceController(this,web);
         web.addJavascriptInterface(new AndroidFeatures(),"ProfeAlexAndroid");
 
         web.setWebViewClient(new WebViewClient() {
@@ -90,7 +92,7 @@ public final class MainActivity extends Activity {
                 loader.setVisibility(View.GONE);
                 if(url.startsWith(HOME)) {
                     errorView.setVisibility(View.GONE);
-                    installVoiceSupport();
+                    nativeVoice.pageLoaded();
                 }
             }
             @Override public void onReceivedError(WebView view,WebResourceRequest req,WebResourceError error) {
@@ -151,10 +153,6 @@ public final class MainActivity extends Activity {
         web.loadUrl(HOME);
     }
 
-    private void installVoiceSupport() {
-        web.evaluateJavascript("(function(){var b=document.getElementById('mic');if(!b||b.dataset.nativeVoiceReady)return;b.dataset.nativeVoiceReady='1';b.addEventListener('click',function(e){e.preventDefault();e.stopImmediatePropagation();ProfeAlexAndroid.startSpeech();},true);})();",null);
-    }
-
     private LinearLayout createErrorView() {
         LinearLayout outer=new LinearLayout(this);
         outer.setOrientation(LinearLayout.VERTICAL);
@@ -178,17 +176,24 @@ public final class MainActivity extends Activity {
     }
 
     private final class AndroidFeatures {
-        @JavascriptInterface public void startSpeech() {
-            runOnUiThread(()-> {
-                Intent intent=new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE,"es-ES");
-                intent.putExtra(RecognizerIntent.EXTRA_PROMPT,"Barae, ¿qué quieres decirle al profe?");
-                try {startActivityForResult(intent,VOICE);}
-                catch(ActivityNotFoundException e) {
-                    Toast.makeText(MainActivity.this,"Usa el teclado si no tienes dictado por voz",Toast.LENGTH_LONG).show();
-                }
-            });
+        @JavascriptInterface public int voiceVersion() { return 2; }
+        @JavascriptInterface public void startSpeech(String lang) {
+            runOnUiThread(()->nativeVoice.startSpeech(lang));
+        }
+        @JavascriptInterface public void startConversation(String lang) {
+            runOnUiThread(()->nativeVoice.startConversation(lang));
+        }
+        @JavascriptInterface public void stopConversation() {
+            runOnUiThread(()->nativeVoice.stopConversation());
+        }
+        @JavascriptInterface public void stopTalking() {
+            runOnUiThread(()->nativeVoice.stopTalking());
+        }
+        @JavascriptInterface public void tutorError() {
+            runOnUiThread(()->nativeVoice.tutorError());
+        }
+        @JavascriptInterface public void speak(String text,String lang) {
+            runOnUiThread(()->nativeVoice.speak(text,lang));
         }
     }
 
@@ -217,6 +222,10 @@ public final class MainActivity extends Activity {
 
     @Override public void onRequestPermissionsResult(int req,String[] perms,int[] grants) {
         super.onRequestPermissionsResult(req,perms,grants);
+        if(req==VoiceController.MIC_PERMISSION_REQUEST) {
+            nativeVoice.microphonePermission(grants.length>0&&grants[0]==PackageManager.PERMISSION_GRANTED);
+            return;
+        }
         if(req==AUDIO&&pendingAudio!=null) {
             if(grants.length>0&&grants[0]==PackageManager.PERMISSION_GRANTED)
                 pendingAudio.grant(new String[]{PermissionRequest.RESOURCE_AUDIO_CAPTURE});
@@ -232,8 +241,17 @@ public final class MainActivity extends Activity {
         else super.onBackPressed();
     }
 
+    @Override protected void onPause() {
+        if(nativeVoice!=null)nativeVoice.pause();
+        super.onPause();
+    }
+    @Override protected void onResume() {
+        super.onResume();
+        if(nativeVoice!=null)nativeVoice.resume();
+    }
     @Override protected void onDestroy() {
         if(fileCallback!=null){fileCallback.onReceiveValue(null);fileCallback=null;}
+        if(nativeVoice!=null)nativeVoice.destroy();
         web.removeJavascriptInterface("ProfeAlexAndroid");
         web.destroy();
         super.onDestroy();
