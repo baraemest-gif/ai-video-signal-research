@@ -400,3 +400,82 @@ if s.count(old) != 1:
     raise SystemExit("Hani dialog insertion target not found")
 p.write_text(s.replace(old, new, 1))
 print("Added Hani Al-Azouni official recitations; other readers and the visual design unchanged")
+
+# Add Alaa Aql and Ahmed Akl to Quran Premium; preserve all existing readers/design.
+# Alaa: 114 verified native MP3 files (Way2Quran). Ahmed: 60 published surahs (Assabile),
+# opened directly in the source catalog rather than fabricating missing audio URLs.
+app = Path("quran-premium-android/app/src/main/java/com/quran/premium/AppConfig.kt")
+a = app.read_text()
+old = '''        "هاني العزوني · تلاوات مختارة"
+    )
+
+    val primaryAudio = listOf('''
+new = '''        "هاني العزوني · تلاوات مختارة",
+        "علاء عقل",
+        "أحمد عقل · 60 سورة متاحة"
+    )
+
+    val primaryAudio = listOf('''
+if a.count(old) != 1:
+    raise SystemExit("Alaa/Ahmed AppConfig reciter insertion target not found")
+app.write_text(a.replace(old, new, 1))
+
+# Keep indexes 0..10 and Hani selection 11 unchanged. Alaa is reader 12, Ahmed reader 13.
+main = Path("quran-premium-android/app/src/main/java/com/quran/premium/MainActivity.kt")
+m = main.read_text()
+old = '''                if (which == 11) {
+                    d.dismiss()
+                    showHaniRecitationsDialog()
+                    return@setSingleChoiceItems
+                }
+                currentReader = which'''
+new = '''                if (which == 11) {
+                    d.dismiss()
+                    showHaniRecitationsDialog()
+                    return@setSingleChoiceItems
+                }
+                if (which == 13) {
+                    d.dismiss()
+                    val link = android.net.Uri.parse("https://ar.assabile.com/ahmed-akl/quran")
+                    try {
+                        startActivity(Intent(Intent.ACTION_VIEW, link))
+                    } catch (_: android.content.ActivityNotFoundException) {
+                        Toast.makeText(this, "لا يوجد متصفح لفتح تلاوات أحمد عقل", Toast.LENGTH_LONG).show()
+                    }
+                    return@setSingleChoiceItems
+                }
+                currentReader = which'''
+if m.count(old) != 1:
+    raise SystemExit("Alaa/Ahmed reader selector insertion target not found")
+main.write_text(m.replace(old, new, 1))
+
+# Route only the newly added native reader directly to his own 114-track catalog.
+# Do not index original 11-entry audio arrays using readerIndex 12 or 13.
+svc = Path("quran-premium-android/app/src/main/java/com/quran/premium/playback/QuranPlaybackService.kt")
+q = svc.read_text()
+old = "        val uri = when (slot) {"
+new = """        val uri = if (readerIndex == 12) {
+            "https://media.way2quran.com/alaa-aql/hafs-an-asim/" +
+                surah.toString().padStart(3, '0') + ".mp3"
+        } else when (slot) {"""
+if q.count(old) != 1:
+    raise SystemExit("Alaa direct MP3 playback target not found")
+svc.write_text(q.replace(old, new, 1))
+
+# Do not request timing for reader 12 from the web proxy, which only supports
+# old reader indexes. Use the native reader's pre-existing approximate ayah follow.
+repo = Path("quran-premium-android/app/src/main/java/com/quran/premium/data/QuranRepository.kt")
+r = repo.read_text()
+old = '''    fun timing(reader: Int, surah: Int, callback: (LongArray?) -> Unit) {
+        executor.execute {'''
+new = '''    fun timing(reader: Int, surah: Int, callback: (LongArray?) -> Unit) {
+        if (reader == 12) {
+            main.post { callback(null) }
+            return
+        }
+        executor.execute {'''
+if r.count(old) != 1:
+    raise SystemExit("Alaa timing fallback target not found")
+repo.write_text(r.replace(old, new, 1))
+
+print("Add Alaa Aql and Ahmed Akl to Quran Premium: unchanged previous readers/design")
