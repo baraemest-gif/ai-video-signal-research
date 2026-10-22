@@ -20,6 +20,7 @@ import android.content.Intent;
 
 public final class MainActivity extends Activity {
     private static final String RECITER_URL = "https://ar.assabile.com/ahmed-akl/quran";
+    private static final String ALAA_AQL_URL = "https://way2quran.com/ar/reciters/alaa-aql/hafs-an-asim";
     private static final String QURAN_URL = "https://ar.assabile.com/quran";
     private WebView browser;
     private ProgressBar progress;
@@ -45,7 +46,7 @@ public final class MainActivity extends Activity {
         root.addView(heading, new LinearLayout.LayoutParams(-1, -2));
 
         TextView subtitle = new TextView(this);
-        subtitle.setText("أحمد عقل · ٦٠ سورة متاحة · اتصال بالإنترنت");
+        subtitle.setText("أحمد عقل وعلاء عقل · الاستماع عبر الإنترنت");
         subtitle.setTextSize(15);
         subtitle.setTextColor(Color.rgb(240, 201, 135));
         subtitle.setGravity(Gravity.CENTER);
@@ -55,9 +56,11 @@ public final class MainActivity extends Activity {
         LinearLayout tabs = new LinearLayout(this);
         tabs.setGravity(Gravity.CENTER);
         tabs.setPadding(10, 0, 10, 10);
-        Button reader = makeButton("تلاوات أحمد عقل");
-        Button complete = makeButton("قراءة القرآن");
+        Button reader = makeButton("أحمد عقل");
+        Button alaa = makeButton("علاء عقل");
+        Button complete = makeButton("المصحف");
         tabs.addView(reader, new LinearLayout.LayoutParams(0, 52, 1));
+        tabs.addView(alaa, new LinearLayout.LayoutParams(0, 52, 1));
         tabs.addView(complete, new LinearLayout.LayoutParams(0, 52, 1));
         root.addView(tabs);
 
@@ -94,6 +97,7 @@ public final class MainActivity extends Activity {
         setContentView(root);
 
         reader.setOnClickListener(v -> open(RECITER_URL));
+        alaa.setOnClickListener(v -> open(ALAA_AQL_URL));
         complete.setOnClickListener(v -> open(QURAN_URL));
         if (state != null) {
             browser.restoreState(state);
