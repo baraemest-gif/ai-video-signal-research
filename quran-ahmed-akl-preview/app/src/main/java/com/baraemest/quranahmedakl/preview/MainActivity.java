@@ -59,10 +59,18 @@ public final class MainActivity extends Activity {
         Button reader = makeButton("أحمد عقل");
         Button alaa = makeButton("علاء عقل");
         Button complete = makeButton("المصحف");
-        tabs.addView(reader, new LinearLayout.LayoutParams(0, 52, 1));
-        tabs.addView(alaa, new LinearLayout.LayoutParams(0, 52, 1));
-        tabs.addView(complete, new LinearLayout.LayoutParams(0, 52, 1));
+        tabs.addView(reader, new LinearLayout.LayoutParams(0, dp(54), 1));
+        tabs.addView(alaa, new LinearLayout.LayoutParams(0, dp(54), 1));
+        tabs.addView(complete, new LinearLayout.LayoutParams(0, dp(54), 1));
         root.addView(tabs);
+
+        TextView hint = new TextView(this);
+        hint.setText("إذا بقيت الصفحة بيضاء، اضغط «فتح في المتصفح» أسفل الشاشة");
+        hint.setTextColor(Color.WHITE);
+        hint.setTextSize(13);
+        hint.setGravity(Gravity.CENTER);
+        hint.setPadding(dp(10), dp(4), dp(10), dp(8));
+        root.addView(hint);
 
         progress = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
         progress.setMax(100);
@@ -94,6 +102,13 @@ public final class MainActivity extends Activity {
             }
         });
         root.addView(browser, new LinearLayout.LayoutParams(-1, 0, 1));
+
+        Button openExternal = makeButton("فتح التلاوات في المتصفح");
+        root.addView(openExternal, new LinearLayout.LayoutParams(-1, dp(54)));
+        openExternal.setOnClickListener(v -> {
+            try { startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(currentUrl))); }
+            catch (Exception ignored) { hint.setText("لا يوجد متصفح متاح لفتح الصفحة"); }
+        });
         setContentView(root);
 
         reader.setOnClickListener(v -> open(RECITER_URL));
@@ -106,10 +121,14 @@ public final class MainActivity extends Activity {
         }
     }
 
+    private int dp(int value) {
+        return (int) (value * getResources().getDisplayMetrics().density + 0.5f);
+    }
+
     private Button makeButton(String label) {
         Button b = new Button(this);
         b.setText(label);
-        b.setTextSize(15);
+        b.setTextSize(14);
         b.setAllCaps(false);
         b.setTextColor(Color.WHITE);
         b.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.rgb(47, 25, 99)));
