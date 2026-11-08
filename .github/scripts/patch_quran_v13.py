@@ -479,3 +479,53 @@ if r.count(old) != 1:
 repo.write_text(r.replace(old, new, 1))
 
 print("Add Alaa Aql and Ahmed Akl to Quran Premium: unchanged previous readers/design")
+
+# Add Salah Abu Khater recitations to Quran Premium, leaving all readers and UI intact.
+# Reader 14 plays all 114 surahs directly from MP3Quran's verified original catalog.
+p = Path("quran-premium-android/app/src/main/java/com/quran/premium/AppConfig.kt")
+s = p.read_text()
+old = '''        "أحمد عقل · 60 سورة متاحة"
+    )
+
+    val primaryAudio = listOf('''
+new = '''        "أحمد عقل · 60 سورة متاحة",
+        "صلاح أبو خاطر"
+    )
+
+    val primaryAudio = listOf('''
+if s.count(old) != 1:
+    raise SystemExit("Salah reciter list target missing or ambiguous")
+p.write_text(s.replace(old, new, 1))
+
+# Reader 14 has its own MP3 stream, no indexing legacy reader arrays and no
+# fallback to other reciters' audio through the old Cloudflare proxy.
+p = Path("quran-premium-android/app/src/main/java/com/quran/premium/playback/QuranPlaybackService.kt")
+s = p.read_text()
+old = '''        val uri = if (readerIndex == 12) {
+            "https://media.way2quran.com/alaa-aql/hafs-an-asim/" +
+                surah.toString().padStart(3, '0') + ".mp3"
+        } else when (slot) {'''
+new = '''        val uri = if (readerIndex == 14) {
+            "https://cdn.mp3quran.net/audio/salah-bukhatir/r1/" +
+                surah.toString().padStart(3, '0') + ".mp3"
+        } else if (readerIndex == 12) {
+            "https://media.way2quran.com/alaa-aql/hafs-an-asim/" +
+                surah.toString().padStart(3, '0') + ".mp3"
+        } else when (slot) {'''
+if s.count(old) != 1:
+    raise SystemExit("Salah direct playback target missing or ambiguous")
+p.write_text(s.replace(old, new, 1))
+
+# The original API timing endpoint has no Salah reader index. Preserve the app's
+# existing approximate ayah-follow fallback instead of returning unrelated timings.
+p = Path("quran-premium-android/app/src/main/java/com/quran/premium/data/QuranRepository.kt")
+s = p.read_text()
+old = '''        if (reader == 12) {
+            main.post { callback(null) }'''
+new = '''        if (reader == 12 || reader == 14) {
+            main.post { callback(null) }'''
+if s.count(old) != 1:
+    raise SystemExit("Salah timing fallback target missing or ambiguous")
+p.write_text(s.replace(old, new, 1))
+
+print("Add Salah Abu Khater recitations to Quran Premium: other readers/design unchanged")
