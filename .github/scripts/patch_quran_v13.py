@@ -548,3 +548,59 @@ if txt.count('versionName = "1.3.0-premium"') != 1:
 txt = txt.replace('versionName = "1.3.0-premium"', 'versionName = "1.3.1-compatible"', 1)
 build.write_text(txt)
 print("Separate package ID enabled: installs safely beside original without uninstalling")
+
+# Abu Rayan Al-Qaza'a recording status: user-requested name but no verifiable
+# Quran recitation source currently found. Clearly label as unavailable and
+# never substitute someone else's voice or feed into the 114-track playlist.
+p = Path("quran-premium-android/app/src/main/java/com/quran/premium/AppConfig.kt")
+s = p.read_text()
+old = '''        "صلاح أبو خاطر"
+    )
+
+    val primaryAudio = listOf('''
+new = '''        "صلاح أبو خاطر",
+        "أبو ريان القزعة · التسجيلات غير متاحة"
+    )
+
+    val primaryAudio = listOf('''
+if s.count(old) != 1:
+    raise SystemExit("Abu Rayan name insertion target missing")
+p.write_text(s.replace(old, new, 1))
+
+# Show honest availability notice. Do NOT persist 15 or attempt to play as a
+# reciter: old indexed stream lists cannot provide this reader's authentic audio.
+p = Path("quran-premium-android/app/src/main/java/com/quran/premium/MainActivity.kt")
+s = p.read_text()
+old = '''                currentReader = which
+                prefs.edit().putInt("reader", which).apply()'''
+new = '''                if (which == 15) {
+                    d.dismiss()
+                    AlertDialog.Builder(this)
+                        .setTitle("أبو ريان القزعة")
+                        .setMessage("لم نعثر بعد على تسجيلات قرآنية موثوقة منسوبة لهذا القارئ. لم نغيّر أصوات القراء الآخرين. يمكن إضافة تلاواته عند توفر مصدر موثوق.")
+                        .setPositiveButton("حسنًا", null)
+                        .show()
+                    return@setSingleChoiceItems
+                }
+                currentReader = which
+                prefs.edit().putInt("reader", which).apply()'''
+if s.count(old) != 1:
+    raise SystemExit("Abu Rayan selector insertion target missing")
+p.write_text(s.replace(old, new, 1))
+
+# GitHub runners generate different debug signing keys per run. Use a fresh
+# package ID, so Samsung can install alongside last compatible build safely
+# without uninstalling or deleting user data.
+p = Path("quran-premium-android/app/build.gradle.kts")
+s = p.read_text()
+checks = [
+    ('applicationId = "com.quran.premium.compat"', 'applicationId = "com.quran.premium.aburayyan"'),
+    ('versionCode = 104', 'versionCode = 105'),
+    ('versionName = "1.3.1-compatible"', 'versionName = "1.3.2-aburayyan"'),
+]
+for old, new in checks:
+    if s.count(old) != 1:
+        raise SystemExit("Package version target missing: " + old)
+    s = s.replace(old, new, 1)
+p.write_text(s)
+print("Abu Rayan Al-Qaza'a labeled as audio unavailable; existing readers unchanged")
