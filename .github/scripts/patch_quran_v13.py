@@ -529,3 +529,22 @@ if s.count(old) != 1:
 p.write_text(s.replace(old, new, 1))
 
 print("Add Salah Abu Khater recitations to Quran Premium: other readers/design unchanged")
+
+# Fix Android "App not installed" caused by different GitHub-runner debug signing keys.
+# Use a separate application ID to install alongside the existing app without deleting its data.
+# This does not alter app UI, existing reciters, playback functionality, or other projects.
+build = Path("quran-premium-android/app/build.gradle.kts")
+txt = build.read_text()
+old = 'applicationId = "com.quran.premium"'
+new = 'applicationId = "com.quran.premium.compat"'
+if txt.count(old) != 1:
+    raise SystemExit("Separate-install package target missing or ambiguous")
+txt = txt.replace(old, new, 1)
+if txt.count("versionCode = 103") != 1:
+    raise SystemExit("Expected versionCode 103 is missing")
+txt = txt.replace("versionCode = 103", "versionCode = 104", 1)
+if txt.count('versionName = "1.3.0-premium"') != 1:
+    raise SystemExit("Expected versionName 1.3.0 is missing")
+txt = txt.replace('versionName = "1.3.0-premium"', 'versionName = "1.3.1-compatible"', 1)
+build.write_text(txt)
+print("Separate package ID enabled: installs safely beside original without uninstalling")
