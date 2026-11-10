@@ -604,3 +604,357 @@ for old, new in checks:
     s = s.replace(old, new, 1)
 p.write_text(s)
 print("Abu Rayan Al-Qaza'a labeled as audio unavailable; existing readers unchanged")
+
+
+# Offline-first Quran Premium v1.4
+# Keep the entire Qur'an text in APK assets; bundle 38 surahs of Sudais audio
+# (Al-Fatiha and Juz Amma), and provide system-managed permanent downloads
+# for other surahs/readers via Wi-Fi. No account, subscription, or new API.
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from urllib.request import Request, urlopen
+import json
+from pathlib import Path
+
+root = Path("quran-premium-android/app/src/main")
+assets = root / "assets"
+assets.mkdir(parents=True, exist_ok=True)
+
+# Exact format already parsed by the existing native QuranRepository.
+text_urls = [
+    "https://quran-kareem.baraemest.workers.dev/api/quran",
+    "https://api.alquran.cloud/v1/quran/quran-uthmani",
+]
+quran_data = None
+for source in text_urls:
+    try:
+        req = Request(source, headers={"User-Agent": "QuranPremiumOffline/1.4", "Accept": "application/json"})
+        with urlopen(req, timeout=45) as response:
+            body = response.read(6500000)
+        candidate = json.loads(body)
+        surahs = candidate["data"]["surahs"]
+        count = sum(len(s["ayahs"]) for s in surahs)
+        assert len(surahs) == 114, "Missing surahs"
+        assert 6200 <= count <= 6300, "Unexpected ayah count"
+        assert [s["number"] for s in surahs] == list(range(1, 115)), "Surah order"
+        assert all(s.get("name") and len(s["ayahs"]) > 0 for s in surahs), "Empty surah"
+        assert all(a.get("text") and a.get("numberInSurah") == i
+                   for s in surahs for i, a in enumerate(s["ayahs"], 1)), "Incomplete Quran verses"
+        quran_data = candidate
+        print("OFFLINE_QURAN_TEXT", source, count, "ayahs")
+        break
+    except Exception as exc:
+        print("Quran source unavailable", source, str(exc)[:240])
+if quran_data is None:
+    raise SystemExit("Quran text verification failed: do not ship an incomplete offline Mushaf")
+(assets / "quran.json").write_text(
+    json.dumps(quran_data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+
+# Package a genuinely offline listening library in the APK:
+# Reader 0 (Abdulrahman Al-Sudais), Al-Fatiha + all Juz Amma (78..114).
+# Each MP3 is validated before it can be added to the Android assets.
+audio_assets = assets / "audio" / "r0"
+audio_assets.mkdir(parents=True, exist_ok=True)
+surah_numbers = [1] + list(range(78, 115))
+def get_audio(surah):
+    fn = f"{surah:03d}.mp3"
+    for base in (
+        "https://server11.mp3quran.net/sds/",
+        "https://cdn.mp3quran.net/audio/abdulrahman-sudais/r1/",
+    ):
+        try:
+            request = Request(base + fn, headers={"User-Agent": "Mozilla/5.0", "Accept": "audio/mpeg,*/*"})
+            with urlopen(request, timeout=25) as response:
+                result = response.read(18000000)
+            if not 4096 < len(result) < 18000000:
+                raise ValueError("Not an MP3 file size")
+            if not (result.startswith(b"ID3") or result[0] == 255):
+                raise ValueError("Invalid MP3 signature")
+            (audio_assets / fn).write_bytes(result)
+            return surah, len(result)
+        except Exception as exc:
+            print("Offline audio mirror failed", surah, str(exc)[:140])
+    return surah, 0
+
+with ThreadPoolExecutor(max_workers=8) as pool:
+    audio_results = list(pool.map(get_audio, surah_numbers))
+available_surahs = sorted(s for s, n in audio_results if n > 0)
+total_audio_bytes = sum(n for s, n in audio_results)
+if 1 not in available_surahs or len(available_surahs) < 30:
+    raise SystemExit("Insufficient verified bundled offline audio: "
+                     + repr(available_surahs))
+(assets / "offline_manifest.json").write_text(
+    json.dumps({"reader": 0, "surahs": available_surahs,
+                "audio_bytes": total_audio_bytes}, separators=(",", ":")), encoding="utf-8")
+print("OFFLINE_AUDIO_BUNDLED", len(available_surahs), "surahs", total_audio_bytes, "bytes")
+
+# Qt repository reads the bundled exact Uthmani Quran text without ever
+# contacting the internet. Search, juz, bookmarks and text all remain local.
+p = root / "java/com/quran/premium/data/QuranRepository.kt"
+s = p.read_text()
+old = '''                val json = tryNetwork() ?: if (cacheFile.exists()) cacheFile.readText() else error("Quran data unavailable")'''
+new = '''                val json = context.assets.open("quran.json").bufferedReader(Charsets.UTF_8).use { it.readText() }'''
+if s.count(old) != 1:
+    raise SystemExit("Offline Quran text repository patch target not found")
+s = s.replace(old, new, 1)
+old = '''    fun timing(reader: Int, surah: Int, callback: (LongArray?) -> Unit) {
+        if (reader == 12 || reader == 14) {'''
+new = '''    fun timing(reader: Int, surah: Int, callback: (LongArray?) -> Unit) {
+        if (!com.quran.premium.data.OfflineAudio.isConnected(context) || reader == 12 || reader == 14) {'''
+if s.count(old) != 1:
+    raise SystemExit("Offline timing patch target not found")
+s = s.replace(old, new, 1)
+p.write_text(s)
+
+# Persistent file-based audio library + system DownloadManager, so a download
+# continues even after the app UI closes. Uses Wi-Fi-only by default.
+p = root / "java/com/quran/premium/data/OfflineAudio.kt"
+p.write_text('''package com.quran.premium.data
+
+import android.app.DownloadManager
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.net.Uri
+import android.os.Environment
+import com.quran.premium.AppConfig
+import java.io.File
+
+object OfflineAudio {
+    private var bundledFiles: Set<String>? = null
+
+    fun isConnected(context: Context): Boolean {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val caps = cm.getNetworkCapabilities(cm.activeNetwork) ?: return false
+        return caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+            caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+    }
+
+    private fun filename(surah: Int): String = surah.toString().padStart(3, '0') + ".mp3"
+
+    private fun downloadFile(context: Context, reader: Int, surah: Int): File? {
+        val music = context.getExternalFilesDir(Environment.DIRECTORY_MUSIC) ?: return null
+        return File(music, "quran/r" + reader + "/" + filename(surah))
+    }
+
+    private fun bundled(context: Context): Set<String> {
+        bundledFiles?.let { return it }
+        return synchronized(this) {
+            bundledFiles ?: (context.assets.list("audio/r0")?.toSet() ?: emptySet<String>())
+                .also { bundledFiles = it }
+        }
+    }
+
+    fun uri(context: Context, reader: Int, surah: Int): Uri? {
+        val downloaded = downloadFile(context, reader, surah)
+        if (downloaded?.isFile == true && downloaded.length() > 4096L) {
+            return Uri.fromFile(downloaded)
+        }
+        if (reader == 0 && filename(surah) in bundled(context)) {
+            return Uri.parse("asset:///audio/r0/" + filename(surah))
+        }
+        return null
+    }
+
+    fun availableCount(context: Context, reader: Int): Int =
+        (1..114).count { uri(context, reader, it) != null }
+
+    fun onlineUrl(reader: Int, surah: Int): String? {
+        val file = filename(surah)
+        return when (reader) {
+            in 0..8 -> AppConfig.primaryAudio[reader] + file
+            9 -> "https://cdn.mp3quran.net/audio/abdullah-juhani/r1/" + file
+            10 -> "https://cdn.mp3quran.net/download/audio/ahmad-ajmi/r1/" + file
+            12 -> "https://media.way2quran.com/alaa-aql/hafs-an-asim/" + file
+            14 -> "https://cdn.mp3quran.net/audio/salah-bukhatir/r1/" + file
+            else -> null
+        }
+    }
+
+    // System DownloadManager persists jobs across process death and network interruption.
+    // Returns number of newly enqueued surahs; already saved or bundled are skipped.
+    fun enqueue(context: Context, reader: Int, surahs: Iterable<Int>): Int {
+        val manager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        var queued = 0
+        for (surah in surahs) {
+            if (surah !in 1..114 || uri(context, reader, surah) != null) continue
+            val url = onlineUrl(reader, surah) ?: continue
+            val target = downloadFile(context, reader, surah) ?: continue
+            target.parentFile?.mkdirs()
+            if (target.exists() && target.length() <= 4096L) target.delete()
+            val request = DownloadManager.Request(Uri.parse(url))
+                .setTitle("القرآن الكريم • " + AppConfig.reciterNames[reader])
+                .setDescription("سورة " + surah)
+                .setDestinationInExternalFilesDir(
+                    context, Environment.DIRECTORY_MUSIC,
+                    "quran/r" + reader + "/" + filename(surah))
+                .setAllowedOverMetered(false)
+                .setAllowedOverRoaming(false)
+                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
+            try {
+                manager.enqueue(request)
+                queued++
+            } catch (_: Exception) {
+                // If Android denies this particular URL/slot, leave other surahs intact.
+            }
+        }
+        return queued
+    }
+}
+''', encoding="utf-8")
+
+# Keep ExoPlayer's native background playback, but prefer bundled or downloaded
+# offline media before online streams, preserving the reader's correct voice.
+p = root / "java/com/quran/premium/playback/QuranPlaybackService.kt"
+s = p.read_text()
+if "import com.quran.premium.AppConfig" not in s:
+    raise SystemExit("Offline audio service import target not found")
+s = s.replace("import com.quran.premium.AppConfig",
+              "import com.quran.premium.AppConfig\\nimport com.quran.premium.data.OfflineAudio", 1)
+old = '''        val uri = if (readerIndex == 14) {'''
+new = '''        val savedUri = OfflineAudio.uri(this, readerIndex, surah)
+        val uri = savedUri?.toString() ?: if (readerIndex == 14) {'''
+if s.count(old) != 1:
+    raise SystemExit("Offline ExoPlayer URI patch target not found")
+s = s.replace(old, new, 1)
+old = '''    private fun recoverSource(reason: String) {
+        if (player.mediaItemCount == 0) return'''
+new = '''    private fun recoverSource(reason: String) {
+        if (!OfflineAudio.isConnected(this)) {
+            player.pause()
+            return
+        }
+        if (player.mediaItemCount == 0) return'''
+if s.count(old) != 1:
+    raise SystemExit("Offline media source recovery patch target not found")
+s = s.replace(old, new, 1)
+p.write_text(s)
+
+# Add a discrete offline library control, matching current button style.
+p = root / "res/layout/activity_main.xml"
+s = p.read_text()
+old = '''                android:text="🔁 تكرار السورة" />'''
+new = '''                android:text="🔁 تكرار السورة" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnOffline"
+                style="@style/Widget.QuranPremium.Chip"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="6dp"
+                android:text="⬇ حفظ السور للاستماع بدون إنترنت" />'''
+if s.count(old) != 1:
+    raise SystemExit("Offline button layout patch target not found")
+p.write_text(s.replace(old, new, 1))
+
+p = root / "java/com/quran/premium/MainActivity.kt"
+s = p.read_text()
+old = '''import com.quran.premium.data.QuranRepository'''
+new = '''import com.quran.premium.data.QuranRepository
+import com.quran.premium.data.OfflineAudio'''
+if s.count(old) != 1:
+    raise SystemExit("Offline MainActivity import target not found")
+s = s.replace(old, new, 1)
+old = '''        b.btnShare.setOnClickListener { shareCurrentAyah() }'''
+new = '''        b.btnShare.setOnClickListener { shareCurrentAyah() }
+        b.btnOffline.setOnClickListener { showOfflineLibraryDialog() }'''
+if s.count(old) != 1:
+    raise SystemExit("Offline button action target not found")
+s = s.replace(old, new, 1)
+old = '''            b.status.text = "جاهز · النص والصوت متزامنان"'''
+new = '''            b.status.text = "المصحف كاملًا بلا إنترنت • الصوت المحفوظ يعمل دون اتصال"'''
+if s.count(old) != 1:
+    raise SystemExit("Offline Quran UI status target not found")
+s = s.replace(old, new, 1)
+old = '''    private fun showSurahDialog() {'''
+new = '''    private fun showOfflineLibraryDialog() {
+        val ready = OfflineAudio.availableCount(this, currentReader)
+        val readerName = AppConfig.reciterNames[currentReader]
+        AlertDialog.Builder(this)
+            .setTitle("المكتبة الصوتية بدون إنترنت")
+            .setMessage(readerName + " • المحفوظ " + ready + " من 114 سورة" +
+                "\\nالمصحف مكتمل ويمكن قراءته والبحث فيه دون إنترنت. التلاوات غير المحفوظة تحتاج تنزيلًا واحدًا عبر Wi-Fi.")
+            .setItems(arrayOf("⬇ حفظ السورة الحالية", "⬇ حفظ 114 سورة لهذا القارئ عبر Wi-Fi",
+                "تحديث حالة الملفات المحفوظة")) { _, which ->
+                if (which == 2) {
+                    showOfflineLibraryDialog()
+                } else if (OfflineAudio.onlineUrl(currentReader, currentSurah + 1) == null) {
+                    Toast.makeText(this, "التسجيلات الصوتية غير متاحة لهذا القارئ", Toast.LENGTH_LONG).show()
+                } else if (which == 0) {
+                    val queued = OfflineAudio.enqueue(this, currentReader, listOf(currentSurah + 1))
+                    Toast.makeText(this, if (queued > 0) "بدأ تحميل السورة عبر Wi-Fi" else "السورة محفوظة أو التحميل غير متاح",
+                        Toast.LENGTH_LONG).show()
+                } else {
+                    AlertDialog.Builder(this)
+                        .setTitle("حفظ المصحف صوتيًا")
+                        .setMessage("قد تتطلب التلاوات مئات الميغابايت. سيُستعمل Wi-Fi فقط، وستبقى الملفات محفوظة على الهاتف.")
+                        .setPositiveButton("بدء التحميل") { _, _ ->
+                            val queued = OfflineAudio.enqueue(this, currentReader, 1..114)
+                            Toast.makeText(this, "أضيفت " + queued + " سورة لقائمة تنزيلات Wi-Fi",
+                                Toast.LENGTH_LONG).show()
+                        }
+                        .setNegativeButton("إلغاء", null)
+                        .show()
+                }
+            }
+            .setNegativeButton("إغلاق", null)
+            .show()
+    }
+
+    private fun showSurahDialog() {'''
+if s.count(old) != 1:
+    raise SystemExit("Offline library dialog target not found")
+s = s.replace(old, new, 1)
+old = '''    private fun togglePlay() {
+        val c = controller'''
+new = '''    private fun togglePlay() {
+        val c = controller
+        val audioIndex = c?.currentMediaItemIndex?.takeIf { it in 0..113 } ?: currentSurah
+        if (!OfflineAudio.isConnected(this) &&
+            OfflineAudio.uri(this, currentReader, audioIndex + 1) == null) {
+            Toast.makeText(this, "هذه السورة غير محفوظة. اضغط زر حفظ السور عند توفر Wi-Fi.",
+                Toast.LENGTH_LONG).show()
+            return
+        }'''
+if s.count(old) != 1:
+    raise SystemExit("Offline play button guard target not found")
+s = s.replace(old, new, 1)
+old = '''    private fun playSurah(index: Int) {
+        val i = Intent(this, QuranPlaybackService::class.java).apply {'''
+new = '''    private fun playSurah(index: Int) {
+        if (!OfflineAudio.isConnected(this) &&
+            OfflineAudio.uri(this, currentReader, index + 1) == null) {
+            Toast.makeText(this, "الصوت غير محفوظ لهذا القارئ. احفظ السورة عبر Wi-Fi أولًا.",
+                Toast.LENGTH_LONG).show()
+            return
+        }
+        val i = Intent(this, QuranPlaybackService::class.java).apply {'''
+if s.count(old) != 1:
+    raise SystemExit("Offline playSurah guard target not found")
+s = s.replace(old, new, 1)
+p.write_text(s)
+
+# Connectivity status permission; DOWNLOAD_MANAGER is a system service (no other
+# dangerous permission required) and all downloaded files are in app-specific storage.
+p = root / "AndroidManifest.xml"
+s = p.read_text()
+old = '''    <uses-permission android:name="android.permission.INTERNET" />'''
+new = '''    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />'''
+if s.count(old) != 1:
+    raise SystemExit("Offline connectivity manifest patch target not found")
+p.write_text(s.replace(old, new, 1))
+
+# GitHub runners sign debug builds with per-run different keys: ensure the
+# new offline app can install alongside the previous APK without data loss.
+p = Path("quran-premium-android/app/build.gradle.kts")
+s = p.read_text()
+for old, new in [
+    ('applicationId = "com.quran.premium.aburayyan"', 'applicationId = "com.quran.premium.offline"'),
+    ('versionCode = 105', 'versionCode = 106'),
+    ('versionName = "1.3.2-aburayyan"', 'versionName = "1.4.0-offline"'),
+]:
+    if s.count(old) != 1:
+        raise SystemExit("Offline install compatibility target missing: " + old)
+    s = s.replace(old, new, 1)
+p.write_text(s)
+print("QURAN_PREMIUM_OFFLINE_READY - Arabic text and embedded recitations work without connectivity")
