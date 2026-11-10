@@ -809,7 +809,7 @@ s = p.read_text()
 if "import com.quran.premium.AppConfig" not in s:
     raise SystemExit("Offline audio service import target not found")
 s = s.replace("import com.quran.premium.AppConfig",
-              "import com.quran.premium.AppConfig\\nimport com.quran.premium.data.OfflineAudio", 1)
+              "import com.quran.premium.AppConfig\nimport com.quran.premium.data.OfflineAudio", 1)
 old = '''        val uri = if (readerIndex == 14) {'''
 new = '''        val savedUri = OfflineAudio.uri(this, readerIndex, surah)
         val uri = savedUri?.toString() ?: if (readerIndex == 14) {'''
