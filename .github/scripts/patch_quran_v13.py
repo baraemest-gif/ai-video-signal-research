@@ -958,3 +958,59 @@ for old, new in [
     s = s.replace(old, new, 1)
 p.write_text(s)
 print("QURAN_PREMIUM_OFFLINE_READY - Arabic text and embedded recitations work without connectivity")
+
+
+# Fares Muhammad Ibrahim unavailable-recordings entry.
+# Do not confuse this exact requested name with Fares Abbad.
+# No trustworthy audio catalog for this precise name was verified, so keep
+# offline readers intact and show a truthful status instead of mismatched playback.
+p = Path("quran-premium-android/app/src/main/java/com/quran/premium/AppConfig.kt")
+s = p.read_text()
+old = '''        "أبو ريان القزعة · التسجيلات غير متاحة"
+    )
+
+    val primaryAudio = listOf('''
+new = '''        "أبو ريان القزعة · التسجيلات غير متاحة",
+        "فارس محمد إبراهيم · التسجيلات غير متاحة"
+    )
+
+    val primaryAudio = listOf('''
+if s.count(old) != 1:
+    raise SystemExit("Fares Muhammad Ibrahim reader list target missing or ambiguous")
+p.write_text(s.replace(old, new, 1))
+
+# Index 16 is information-only, with no audio to avoid a crash or another voice
+# being mislabeled as Fares Muhammad Ibrahim.
+p = Path("quran-premium-android/app/src/main/java/com/quran/premium/MainActivity.kt")
+s = p.read_text()
+old = '''                currentReader = which
+                prefs.edit().putInt("reader", which).apply()'''
+new = '''                if (which == 16) {
+                    d.dismiss()
+                    AlertDialog.Builder(this)
+                        .setTitle("فارس محمد إبراهيم")
+                        .setMessage("لم يُعثر على تسجيلات قرآنية موثوقة منسوبة لهذا الاسم الكامل. لم نُضف صوت قارئ آخر باسمه. المصحف والقرّاء الآخرون متاحون حسب الملفات المحفوظة دون إنترنت.")
+                        .setPositiveButton("حسنًا", null)
+                        .show()
+                    return@setSingleChoiceItems
+                }
+                currentReader = which
+                prefs.edit().putInt("reader", which).apply()'''
+if s.count(old) != 1:
+    raise SystemExit("Fares Muhammad Ibrahim reader selection insertion target missing")
+p.write_text(s.replace(old, new, 1))
+
+# Prior GitHub Action debug signing keys vary by run. A distinct package ID
+# allows safe side-by-side installation; old app and offline downloads stay intact.
+p = Path("quran-premium-android/app/build.gradle.kts")
+s = p.read_text()
+for old, new in [
+    ('applicationId = "com.quran.premium.offline"', 'applicationId = "com.quran.premium.faresibrahim"'),
+    ('versionCode = 106', 'versionCode = 107'),
+    ('versionName = "1.4.0-offline"', 'versionName = "1.4.1-faresibrahim"'),
+]:
+    if s.count(old) != 1:
+        raise SystemExit("Offline companion package version target missing: " + old)
+    s = s.replace(old, new, 1)
+p.write_text(s)
+print("Fares Muhammad Ibrahim entry added safely; all offline functions preserved")
