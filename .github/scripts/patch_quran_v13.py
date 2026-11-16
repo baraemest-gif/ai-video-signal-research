@@ -1014,3 +1014,125 @@ for old, new in [
     s = s.replace(old, new, 1)
 p.write_text(s)
 print("Fares Muhammad Ibrahim entry added safely; all offline functions preserved")
+
+
+# Abdul Wadud Haneef native/offline reader.
+# MP3Quran lists all 114 surahs for "عبد الودود حنيف" as server8/wdod.
+# Bundle Fatiha + Juz Amma (38 surahs) so his voice works immediately offline,
+# and permit all other 114 tracks to be saved once on Wi-Fi in the existing UI.
+p = root / "java/com/quran/premium/AppConfig.kt"
+s = p.read_text()
+old = '''        "فارس محمد إبراهيم · التسجيلات غير متاحة"
+    )
+
+    val primaryAudio = listOf('''
+new = '''        "فارس محمد إبراهيم · التسجيلات غير متاحة",
+        "عبد الودود حنيف"
+    )
+
+    val primaryAudio = listOf('''
+if s.count(old) != 1:
+    raise SystemExit("Abdul Wadud Haneef reciter list insertion target missing")
+p.write_text(s.replace(old, new, 1))
+
+# Native direct MP3 streaming for reader 17, avoiding the older (0..8) proxy
+# and legacy 11-item reciter URL arrays. Offline media takes precedence.
+p = root / "java/com/quran/premium/playback/QuranPlaybackService.kt"
+s = p.read_text()
+old = '''        val uri = savedUri?.toString() ?: if (readerIndex == 14) {
+            "https://cdn.mp3quran.net/audio/salah-bukhatir/r1/" +'''
+new = '''        val uri = savedUri?.toString() ?: if (readerIndex == 17) {
+            "https://server8.mp3quran.net/wdod/" +
+                surah.toString().padStart(3, '0') + ".mp3"
+        } else if (readerIndex == 14) {
+            "https://cdn.mp3quran.net/audio/salah-bukhatir/r1/" +'''
+if s.count(old) != 1:
+    raise SystemExit("Abdul Wadud Haneef native stream insertion target missing")
+p.write_text(s.replace(old, new, 1))
+
+# Offline DownloadManager for all 114 Wadud surahs, using Wi-Fi by default.
+p = root / "java/com/quran/premium/data/OfflineAudio.kt"
+s = p.read_text()
+old = '''        if (reader == 0 && filename(surah) in bundled(context)) {
+            return Uri.parse("asset:///audio/r0/" + filename(surah))
+        }
+        return null'''
+new = '''        if (reader == 0 && filename(surah) in bundled(context)) {
+            return Uri.parse("asset:///audio/r0/" + filename(surah))
+        }
+        if (reader == 17 && filename(surah) in
+            (context.assets.list("audio/r17")?.toSet() ?: emptySet())) {
+            return Uri.parse("asset:///audio/r17/" + filename(surah))
+        }
+        return null'''
+if s.count(old) != 1:
+    raise SystemExit("Abdul Wadud Haneef bundled audio locator target missing")
+s = s.replace(old, new, 1)
+old = '''            14 -> "https://cdn.mp3quran.net/audio/salah-bukhatir/r1/" + file
+            else -> null'''
+new = '''            14 -> "https://cdn.mp3quran.net/audio/salah-bukhatir/r1/" + file
+            17 -> "https://server8.mp3quran.net/wdod/" + file
+            else -> null'''
+if s.count(old) != 1:
+    raise SystemExit("Abdul Wadud Haneef downloadable audio URL target missing")
+p.write_text(s.replace(old, new, 1))
+
+# The old Cloudflare timing API doesn't support reader 17. Preserve
+# approximate-follow fallback instead of fetching unrelated reader timings.
+p = root / "java/com/quran/premium/data/QuranRepository.kt"
+s = p.read_text()
+old = '''if (!com.quran.premium.data.OfflineAudio.isConnected(context) || reader == 12 || reader == 14) {'''
+new = '''if (!com.quran.premium.data.OfflineAudio.isConnected(context) || reader == 12 || reader == 14 || reader == 17) {'''
+if s.count(old) != 1:
+    raise SystemExit("Abdul Wadud timing fallback patch target missing")
+p.write_text(s.replace(old, new, 1))
+
+# Package real MP3 data for one reciter's useful offline starter library.
+# Refuse to ship mislabeled/empty "offline" audio assets.
+import concurrent.futures
+from urllib.request import Request, urlopen
+wadud_root = assets / "audio" / "r17"
+wadud_root.mkdir(parents=True, exist_ok=True)
+wadud_surahs = [1] + list(range(78, 115))
+def download_wadud(surah):
+    track = f"{surah:03d}.mp3"
+    sources = [
+        "https://server8.mp3quran.net/wdod/",
+        "https://server10.mp3quran.net/wdod/",
+    ]
+    for base in sources:
+        try:
+            req = Request(base + track, headers={"User-Agent": "Mozilla/5.0", "Accept": "audio/mpeg,*/*"})
+            with urlopen(req, timeout=35) as response:
+                blob = response.read(19000000)
+            if not (4096 < len(blob) < 19000000):
+                raise ValueError("MP3 size implausible")
+            if not (blob.startswith(b"ID3") or blob[0] == 255):
+                raise ValueError("MP3 header invalid")
+            (wadud_root / track).write_bytes(blob)
+            return surah, len(blob)
+        except Exception as exc:
+            print("Wadud MP3 source unavailable:", surah, base, str(exc)[:160])
+    return surah, 0
+with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
+    wadud_results = list(pool.map(download_wadud, wadud_surahs))
+wadud_available = sorted(i for i,n in wadud_results if n > 0)
+wadud_bytes = sum(n for i,n in wadud_results)
+if 1 not in wadud_available or len(wadud_available) < 30:
+    raise SystemExit("Wadud offline audio cannot be verified: " + repr(wadud_available))
+print("ABDUL_WADUD_OFFLINE_AUDIO", len(wadud_available), "surahs", wadud_bytes, "bytes")
+
+# GitHub runners create a fresh debug signature, so avoid signature conflict
+# with the previously installed independent APK. No old app data is erased.
+p = Path("quran-premium-android/app/build.gradle.kts")
+s = p.read_text()
+for old,new in [
+    ('applicationId = "com.quran.premium.faresibrahim"', 'applicationId = "com.quran.premium.wadudhanif"'),
+    ('versionCode = 107', 'versionCode = 108'),
+    ('versionName = "1.4.1-faresibrahim"', 'versionName = "1.4.2-wadudhanif"'),
+]:
+    if s.count(old) != 1:
+        raise SystemExit("Abdul Wadud Android standalone package target missing: " + old)
+    s = s.replace(old, new, 1)
+p.write_text(s)
+print("ABUL_WADUD_HANEEF_ADDED_NATIVE_OFFLINE; all previous readers preserved")
