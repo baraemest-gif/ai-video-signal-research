@@ -1136,3 +1136,90 @@ for old,new in [
     s = s.replace(old, new, 1)
 p.write_text(s)
 print("ABUL_WADUD_HANEEF_ADDED_NATIVE_OFFLINE; all previous readers preserved")
+
+
+# Muhammad Al-Muhaisni native offline reader (MP3Quran mhsny).
+p = root / "java/com/quran/premium/AppConfig.kt"
+s = p.read_text()
+old = '''        "عبد الودود حنيف"
+    )
+
+    val primaryAudio = listOf('''
+new = '''        "عبد الودود حنيف",
+        "محمد المحيسني"
+    )
+
+    val primaryAudio = listOf('''
+assert s.count(old) == 1
+p.write_text(s.replace(old, new, 1))
+
+p = root / "java/com/quran/premium/playback/QuranPlaybackService.kt"
+s = p.read_text()
+old = '''        val uri = savedUri?.toString() ?: if (readerIndex == 17) {'''
+new = '''        val uri = savedUri?.toString() ?: if (readerIndex == 18) {
+            "https://server11.mp3quran.net/mhsny/" +
+                surah.toString().padStart(3, '0') + ".mp3"
+        } else if (readerIndex == 17) {'''
+assert s.count(old) == 1
+p.write_text(s.replace(old, new, 1))
+
+p = root / "java/com/quran/premium/data/OfflineAudio.kt"
+s = p.read_text()
+old = '''        if (reader == 17 && filename(surah) in'''
+new = '''        if (reader == 18 && filename(surah) in
+            (context.assets.list("audio/r18")?.toSet() ?: emptySet())) {
+            return Uri.parse("asset:///audio/r18/" + filename(surah))
+        }
+        if (reader == 17 && filename(surah) in'''
+assert s.count(old) == 1
+s = s.replace(old, new, 1)
+old = '''            17 -> "https://server8.mp3quran.net/wdod/" + file'''
+new = '''            17 -> "https://server8.mp3quran.net/wdod/" + file
+            18 -> "https://server11.mp3quran.net/mhsny/" + file'''
+assert s.count(old) == 1
+p.write_text(s.replace(old, new, 1))
+
+p = root / "java/com/quran/premium/data/QuranRepository.kt"
+s = p.read_text()
+old = '''if (!com.quran.premium.data.OfflineAudio.isConnected(context) || reader == 12 || reader == 14 || reader == 17) {'''
+new = '''if (!com.quran.premium.data.OfflineAudio.isConnected(context) || reader == 12 || reader == 14 || reader == 17 || reader == 18) {'''
+assert s.count(old) == 1
+p.write_text(s.replace(old, new, 1))
+
+# Include Fatiha and all Juz Amma tracks; reject incomplete collections.
+mhsny_root = assets / "audio" / "r18"
+mhsny_root.mkdir(parents=True, exist_ok=True)
+mhsny_surahs = [1] + list(range(78, 115))
+def download_mhsny(surah):
+    track = f"{surah:03d}.mp3"
+    for base in ("https://server11.mp3quran.net/mhsny/",
+                 "https://cdn.mp3quran.net/audio/muhammad-muhaisni/r1/"):
+        try:
+            req = Request(base + track, headers={"User-Agent": "Mozilla/5.0", "Accept": "audio/mpeg,*/*"})
+            with urlopen(req, timeout=40) as response:
+                blob = response.read(19000000)
+            if not (4096 < len(blob) < 19000000):
+                raise ValueError("MP3 size invalid")
+            if not (blob.startswith(b"ID3") or (blob[0] == 255 and blob[1] & 224 == 224)):
+                raise ValueError("MP3 header invalid")
+            (mhsny_root / track).write_bytes(blob)
+            return surah, len(blob)
+        except Exception as exc:
+            print("Muhaisni mirror unavailable", surah, str(exc)[:180])
+    return surah, 0
+with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
+    mhsny_results = list(pool.map(download_mhsny, mhsny_surahs))
+assert all(n > 0 for _, n in mhsny_results), "Incomplete Muhaisni offline audio"
+print("MUHAISNI_OFFLINE_AUDIO", len(mhsny_results), "surahs", sum(n for _, n in mhsny_results), "bytes")
+
+p = Path("quran-premium-android/app/build.gradle.kts")
+s = p.read_text()
+for old, new in [
+    ('applicationId = "com.quran.premium.wadudhanif"', 'applicationId = "com.quran.premium.muhaisni"'),
+    ('versionCode = 108', 'versionCode = 109'),
+    ('versionName = "1.4.2-wadudhanif"', 'versionName = "1.4.3-muhaisni"'),
+]:
+    assert s.count(old) == 1
+    s = s.replace(old, new, 1)
+p.write_text(s)
+print("MUHAISNI_OFFLINE_ADDED; previous readers preserved")
