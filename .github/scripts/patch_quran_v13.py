@@ -1311,3 +1311,59 @@ for old, new in [
     s = s.replace(old, new, 1)
 p.write_text(s)
 print("MATROOD_OFFLINE_ADDED; previous readers preserved")
+
+
+# Muhammad Al-Suhaimi name-only, authentic recitation unverified.
+# "محمد حماد السحيمي" has a documented standalone recitation, whereas
+# Muhammad Ahmed Suhaim (قالون) is a different explicitly-named reciter.
+# Never substitute a different reciter or claim bundled offline audio.
+p = root / "java/com/quran/premium/AppConfig.kt"
+s = p.read_text()
+old = '''        "عبدالله المطرود"
+    )
+
+    val primaryAudio = listOf('''
+new = '''        "عبدالله المطرود",
+        "محمد السحيمي · التسجيلات غير متاحة"
+    )
+
+    val primaryAudio = listOf('''
+if s.count(old) != 1:
+    raise SystemExit("Al-Suhaimi list insertion target missing")
+p.write_text(s.replace(old, new, 1))
+
+# Index 20 only opens an explanatory dialog; it never persists an invalid
+# playback reader index or wrongly uses another reciter's sound files.
+p = root / "java/com/quran/premium/MainActivity.kt"
+s = p.read_text()
+old = '''                currentReader = which
+                prefs.edit().putInt("reader", which).apply()'''
+new = '''                if (which == 20) {
+                    d.dismiss()
+                    AlertDialog.Builder(this)
+                        .setTitle("محمد السحيمي")
+                        .setMessage("اسم القارئ أُضيف إلى القائمة، لكن لم نجد مصحفًا صوتيًا موثوقًا لهذا الاسم بالضبط. لن نشغّل تسجيلات قارئ آخر باسمه. المصحف والتلاوات المحفوظة سابقًا تظل متاحة بدون إنترنت.")
+                        .setPositiveButton("حسنًا", null)
+                        .show()
+                    return@setSingleChoiceItems
+                }
+                currentReader = which
+                prefs.edit().putInt("reader", which).apply()'''
+if s.count(old) != 1:
+    raise SystemExit("Al-Suhaimi reader selection target missing")
+p.write_text(s.replace(old, new, 1))
+
+# Android debug APK signatures change per build runner. Install beside the
+# previous app to avoid signature conflicts or uninstalling old downloads.
+p = Path("quran-premium-android/app/build.gradle.kts")
+s = p.read_text()
+for old,new in [
+    ('applicationId = "com.quran.premium.matrood"', 'applicationId = "com.quran.premium.alsuhaimi"'),
+    ('versionCode = 110', 'versionCode = 111'),
+    ('versionName = "1.4.4-matrood"', 'versionName = "1.4.5-suhaimi"'),
+]:
+    if s.count(old) != 1:
+        raise SystemExit("Al-Suhaimi version target missing: " + old)
+    s = s.replace(old, new, 1)
+p.write_text(s)
+print("AL_SUHAIMI_INFO_ENTRY_ADDED; all previous offline surahs preserved")
