@@ -1367,3 +1367,105 @@ for old,new in [
     s = s.replace(old, new, 1)
 p.write_text(s)
 print("AL_SUHAIMI_INFO_ENTRY_ADDED; all previous offline surahs preserved")
+
+
+# Muhammad Al-Faqih native offline reader, verified MP3Quran 114-surah catalog.
+# Source confirmed: https://cdn.mp3quran.net/audio/muhammad-faqih/r1/078.mp3
+# Include Surah Al-Fatiha + all Juz Amma files in Android assets.
+p = root / "java/com/quran/premium/AppConfig.kt"
+s = p.read_text()
+old = '''        "محمد السحيمي · التسجيلات غير متاحة"
+    )
+
+    val primaryAudio = listOf('''
+new = '''        "محمد السحيمي · التسجيلات غير متاحة",
+        "محمد الفقيه"
+    )
+
+    val primaryAudio = listOf('''
+if s.count(old) != 1:
+    raise SystemExit("Muhammad Al-Faqih reciter names insertion missing")
+p.write_text(s.replace(old, new, 1))
+
+# Index 21 plays this reciter's actual voice, never the old fallback indexes.
+p = root / "java/com/quran/premium/playback/QuranPlaybackService.kt"
+s = p.read_text()
+old = '''        val uri = savedUri?.toString() ?: if (readerIndex == 19) {'''
+new = '''        val uri = savedUri?.toString() ?: if (readerIndex == 21) {
+            "https://cdn.mp3quran.net/audio/muhammad-faqih/r1/" +
+                surah.toString().padStart(3, '0') + ".mp3"
+        } else if (readerIndex == 19) {'''
+if s.count(old) != 1:
+    raise SystemExit("Muhammad Al-Faqih media playback branch missing")
+p.write_text(s.replace(old, new, 1))
+
+p = root / "java/com/quran/premium/data/OfflineAudio.kt"
+s = p.read_text()
+old = '''        if (reader == 19 && filename(surah) in'''
+new = '''        if (reader == 21 && filename(surah) in
+            (context.assets.list("audio/r21")?.toSet() ?: emptySet())) {
+            return Uri.parse("asset:///audio/r21/" + filename(surah))
+        }
+        if (reader == 19 && filename(surah) in'''
+if s.count(old) != 1:
+    raise SystemExit("Muhammad Al-Faqih local audio assets resolver missing")
+s = s.replace(old, new, 1)
+old = '''            19 -> "https://cdn.mp3quran.net/audio/abdullah-matrood/r1/" + file'''
+new = '''            19 -> "https://cdn.mp3quran.net/audio/abdullah-matrood/r1/" + file
+            21 -> "https://cdn.mp3quran.net/audio/muhammad-faqih/r1/" + file'''
+if s.count(old) != 1:
+    raise SystemExit("Muhammad Al-Faqih persistent Wi-Fi audio downloads target missing")
+p.write_text(s.replace(old, new, 1))
+
+p = root / "java/com/quran/premium/data/QuranRepository.kt"
+s = p.read_text()
+old = '''if (!com.quran.premium.data.OfflineAudio.isConnected(context) || reader == 12 || reader == 14 || reader == 17 || reader == 18 || reader == 19) {'''
+new = '''if (!com.quran.premium.data.OfflineAudio.isConnected(context) || reader == 12 || reader == 14 || reader == 17 || reader == 18 || reader == 19 || reader == 21) {'''
+if s.count(old) != 1:
+    raise SystemExit("Muhammad Al-Faqih timing safeguard target missing")
+p.write_text(s.replace(old, new, 1))
+
+# Verify the entire starter audio set; don't silently label a partially
+# downloaded set as fully offline. Existing reader recordings are unchanged.
+faqih_root = assets / "audio" / "r21"
+faqih_root.mkdir(parents=True, exist_ok=True)
+faqih_surahs = [1] + list(range(78, 115))
+def download_faqih(surah):
+    track = f"{surah:03d}.mp3"
+    url = "https://cdn.mp3quran.net/audio/muhammad-faqih/r1/" + track
+    for attempt in range(3):
+        try:
+            req = Request(url, headers={"User-Agent": "Mozilla/5.0", "Accept": "audio/mpeg,*/*"})
+            with urlopen(req, timeout=45) as response:
+                blob = response.read(24000000)
+            if not (4096 < len(blob) < 24000000):
+                raise ValueError("MP3 size invalid")
+            if not (blob.startswith(b"ID3") or (blob[0] == 255 and blob[1] & 224 == 224)):
+                raise ValueError("MP3 signature invalid")
+            (faqih_root / track).write_bytes(blob)
+            return surah, len(blob)
+        except Exception as exc:
+            print("Al-Faqih audio download failed", surah, attempt, str(exc)[:180])
+    return surah, 0
+with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
+    faqih_results = list(pool.map(download_faqih, faqih_surahs))
+if not all(n > 0 for _, n in faqih_results):
+    raise SystemExit("Incomplete verified Muhammad Al-Faqih offline MP3s: " +
+                     repr([s for s,n in faqih_results if not n]))
+print("MUHAMMAD_AL_FAQIH_OFFLINE_AUDIO", len(faqih_results), "surahs",
+      sum(n for _, n in faqih_results), "bytes")
+
+# Debug keys differ between CI runs. Package is standalone, so Samsung can
+# install this build without uninstalling the previous Quran Premium version.
+p = Path("quran-premium-android/app/build.gradle.kts")
+s = p.read_text()
+for old, new in [
+    ('applicationId = "com.quran.premium.alsuhaimi"', 'applicationId = "com.quran.premium.alfaqih"'),
+    ('versionCode = 111', 'versionCode = 112'),
+    ('versionName = "1.4.5-suhaimi"', 'versionName = "1.4.6-alfaqih"'),
+]:
+    if s.count(old) != 1:
+        raise SystemExit("Muhammad Al-Faqih APK package version target missing: " + old)
+    s = s.replace(old, new, 1)
+p.write_text(s)
+print("MUHAMMAD_AL_FAQIH_NATIVE_OFFLINE_ADDED; previous voices and offline text preserved")
